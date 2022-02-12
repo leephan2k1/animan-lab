@@ -1,4 +1,18 @@
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config/jwt");
+
+const encodedToken = (userId) => {
+  return jwt.sign(
+    {
+      iss: "admin",
+      sub: userId,
+      iat: new Date().getTime(),
+      exp: new Date().setDate(new Date().getDate() + 3), //3 days
+    },
+    JWT_SECRET
+  );
+};
 
 module.exports = {
   index: async (req, res, next) => {
@@ -19,6 +33,8 @@ module.exports = {
     //create user & save user to db
     const newUser = new User({ first_name, last_name, email, password });
     await newUser.save();
+    const token = encodedToken(newUser._id);
+    res.setHeader("Authorization", token);
 
     return res.status(201).json({ success: true });
   },
