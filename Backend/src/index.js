@@ -7,11 +7,19 @@ const logger = require("morgan");
 const cors = require("cors");
 const logEvents = require("./helper/logEvents");
 const { nanoid } = require("nanoid");
-const route  = require("./routes");
+const route = require("./routes");
 const db = require("./config/db");
 
 //connect mongodb
 db.connect();
+
+//body-parser middleware
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(express.json());
 
 //enable all CORS requests
 app.use(cors());
@@ -25,14 +33,6 @@ app.use(logger("dev"));
 //router
 route(app);
 
-//body-parser middleware
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
-app.use(express.json());
-
 //catch 404
 app.use((req, res, next) => {
   next(createError(404, "404 Not Found!"));
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   const error = app.get("env") === "development" ? err : {};
   const status = err.status || 500;
-  //write message log 
+  //write message log
   logEvents(
     `id:${nanoid(5)} --- ${req.url} --- ${req.method} --- ${JSON.stringify({
       message: error.message,

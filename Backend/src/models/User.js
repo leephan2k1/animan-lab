@@ -8,7 +8,7 @@ const User = new Schema(
     about: { type: String, min: 1, max: 50 },
     birthday: { type: Date },
     email: { type: String, required: true, unique: true, lowercase: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, min: 6 },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     bookmark_posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
