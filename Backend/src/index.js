@@ -7,8 +7,13 @@ const logger = require("morgan");
 const cors = require("cors");
 const logEvents = require("./helper/logEvents");
 const { nanoid } = require("nanoid");
+const route  = require("./routes");
+const db = require("./config/db");
 
-//Enable All CORS Requests
+//connect mongodb
+db.connect();
+
+//enable all CORS requests
 app.use(cors());
 
 //security middleware
@@ -17,11 +22,8 @@ app.use(helmet());
 //logger middleware
 app.use(logger("dev"));
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "hihi",
-  });
-});
+//router
+route(app);
 
 //body-parser middleware
 app.use(
@@ -46,7 +48,6 @@ app.use((err, req, res, next) => {
       message: error.message,
     })}`
   );
-
   return res.status(status).json({
     status,
     message: error.message,
