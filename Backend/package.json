@@ -1,0 +1,27 @@
+{
+  "name": "AniMan-Lab-Backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --inspect src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "date-fns": "^2.28.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "express-promise-router": "^4.1.1",
+    "helmet": "^5.0.2",
+    "http-errors": "^2.0.0",
+    "mongoose": "^6.2.1",
+    "nanoid": "^3.2.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15"
+  }
+}
