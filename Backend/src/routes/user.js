@@ -8,16 +8,31 @@ const {
 const passport = require("passport");
 require("../middlewares/passport");
 
-// /v1/users
+/*
+/v1/users
+*/
 router.get(
   "/",
   passport.authenticate("jwt", { session: false }),
   UserController.index
-); //-> get all users [TEST]
+); //-> get all users [TEST ACCESS TOKEN]
 
-// /v1/users/signup
+/*
+/v1/users/signup
+*/
 router
   .route("/signup")
   .post(validateBody(schemas.signUpSchema), UserController.signUp);
+
+/*
+/v1/users/login
+*/
+router
+  .route("/login")
+  .post(
+    validateBody(schemas.loginSchema),
+    passport.authenticate("local", { session: false }),
+    UserController.login
+  );
 
 module.exports = router;

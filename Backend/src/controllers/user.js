@@ -1,23 +1,10 @@
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/jwt");
-
-const encodedToken = (userId) => {
-  return jwt.sign(
-    {
-      iss: "admin",
-      sub: userId,
-      iat: new Date().getTime(),
-      exp: new Date().setDate(new Date().getDate() + 3), //3 days
-    },
-    JWT_SECRET
-  );
-};
+const signAccessToken = require("../helper/jwtService");
 
 module.exports = {
   index: async (req, res, next) => {
     const users = await User.find({});
-    return res.status(200).json({ users });
+    return res.status(200).json({ success: true, users });
   },
 
   signUp: async (req, res, next) => {
@@ -33,9 +20,17 @@ module.exports = {
     //create user & save user to db
     const newUser = new User({ first_name, last_name, email, password });
     await newUser.save();
-    const token = encodedToken(newUser._id);
+    const token = signAccessToken(newUser._id);
     res.setHeader("Authorization", token);
 
     return res.status(201).json({ success: true });
+  },
+
+  login: async (req, res, next) => {
+    const { user } = req;
+    const token = encodedToken(user._id);
+    res.setHeader("Authorization", token);
+
+    res.json({ success: true });
   },
 };

@@ -1,16 +1,19 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../configs/jwt");
 
-const encodedToken = (userId) => {
+const signAccessToken = (userId) => {
   return jwt.sign(
     {
       iss: "admin",
       sub: userId,
       iat: new Date().getTime(),
-      exp: new Date().setDate(new Date().getDate() + 1), //1 days
+      exp: new Date().setTime(21600000), //6 hours
     },
-    JWT_SECRET
+    JWT_SECRET,
+    {
+      expiresIn: "6h",
+    }
   );
 };
 
-module.exports = encodedToken;
+module.exports = signAccessToken;
