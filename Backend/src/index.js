@@ -8,7 +8,7 @@ const cors = require("cors");
 const logEvents = require("./helper/logEvents");
 const { nanoid } = require("nanoid");
 const route = require("./routes");
-const db = require("./config/db");
+const db = require("./configs/db");
 
 //connect mongodb
 db.connect();

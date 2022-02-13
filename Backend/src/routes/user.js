@@ -5,9 +5,15 @@ const {
   validateParams,
   schemas,
 } = require("../helper/validateRouter");
+const passport = require("passport");
+require("../middlewares/passport");
 
 // /v1/users
-router.get("/", UserController.index); //get all users
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  UserController.index
+); //-> get all users [TEST]
 
 // /v1/users/signup
 router
