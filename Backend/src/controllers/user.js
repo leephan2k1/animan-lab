@@ -1,5 +1,10 @@
 const User = require("../models/User");
-const { signAccessToken } = require("../helper/jwtService");
+const {
+  signAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+} = require("../helper/jwtService");
+const createError = require("http-errors");
 
 module.exports = {
   index: async (req, res, next) => {
@@ -8,7 +13,6 @@ module.exports = {
   },
 
   signUp: async (req, res, next) => {
-    console.log(req.verified.body);
     const { first_name, last_name, email, password } = req.verified.body;
     //check email was registered
     const existEmail = await User.findOne({ email });
@@ -20,17 +24,40 @@ module.exports = {
     //create user & save user to db
     const newUser = new User({ first_name, last_name, email, password });
     await newUser.save();
-    const token = signAccessToken(newUser._id);
+    const token = await signAccessToken(newUser._id);
+    const refreshToken = await signRefreshToken(user._id);
     res.setHeader("Authorization", token);
+    res.setHeader("RefreshToken", refreshToken);
 
     return res.status(201).json({ success: true });
   },
 
-  login: async (req, res, next) => {
+  signIn: async (req, res, next) => {
     const { user } = req;
-    const token = signAccessToken(user._id);
+    const token = await signAccessToken(user._id);
+    const refreshToken = await signRefreshToken(user._id);
     res.setHeader("Authorization", token);
+    res.setHeader("RefreshToken", refreshToken);
 
     res.json({ success: true });
+  },
+
+  refreshToken: async (req, res, next) => {
+    try {
+      const { refreshToken } = req.body;
+      if (!refreshToken) throw createError.BadRequest();
+
+      const { sub } = await verifyRefreshToken(refreshToken);
+
+      const newToken = await signAccessToken(sub);
+      const newRefreshToken = await signRefreshToken(sub);
+
+      res.setHeader("Authorization", newToken);
+      res.setHeader("RefreshToken", newRefreshToken);
+
+      res.status(201).json({ success: true });
+    } catch (err) {
+      next(err);
+    }
   },
 };
