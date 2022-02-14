@@ -7,13 +7,14 @@ const {
 } = require("../helper/validateRouter");
 const passport = require("passport");
 require("../middlewares/passport");
+const { verifyAccessToken } = require("../helper/jwtService")
 
 /*
 /v1/users
 */
 router.get(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  verifyAccessToken,
   UserController.index
 ); //-> get all users [TEST ACCESS TOKEN]
 
@@ -21,14 +22,14 @@ router.get(
 /v1/users/signup
 */
 router
-  .route("/signup")
+  .route("/sign_up")
   .post(validateBody(schemas.signUpSchema), UserController.signUp);
 
 /*
 /v1/users/login
 */
 router
-  .route("/login")
+  .route("/sign_in")
   .post(
     validateBody(schemas.loginSchema),
     passport.authenticate("local", { session: false }),

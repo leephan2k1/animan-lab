@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const signAccessToken = require("../helper/jwtService");
+const { signAccessToken } = require("../helper/jwtService");
 
 module.exports = {
   index: async (req, res, next) => {
@@ -28,7 +28,7 @@ module.exports = {
 
   login: async (req, res, next) => {
     const { user } = req;
-    const token = encodedToken(user._id);
+    const token = signAccessToken(user._id);
     res.setHeader("Authorization", token);
 
     res.json({ success: true });
