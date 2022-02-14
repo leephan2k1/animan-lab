@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const RefreshToken = require("../models/Token");
 const {
   signAccessToken,
   signRefreshToken,
@@ -42,22 +43,32 @@ module.exports = {
     res.json({ success: true });
   },
 
-  refreshToken: async (req, res, next) => {
-    try {
-      const { refreshToken } = req.body;
-      if (!refreshToken) throw createError.BadRequest();
-
-      const { sub } = await verifyRefreshToken(refreshToken);
-
-      const newToken = await signAccessToken(sub);
-      const newRefreshToken = await signRefreshToken(sub);
-
-      res.setHeader("Authorization", newToken);
-      res.setHeader("RefreshToken", newRefreshToken);
-
-      res.status(201).json({ success: true });
-    } catch (err) {
-      next(err);
+  signOut: async (req, res, next) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      throw createError.BadRequest();
     }
+    const { sub } = await verifyRefreshToken(refreshToken);
+    const refreshTokenOdd = await RefreshToken.findOne({ userId: sub });
+    await refreshTokenOdd.remove();
+    res.status(200).json({
+      success: true,
+    });
   },
+
+  refreshToken: async (req, res, next) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken) throw createError.BadRequest();
+
+    const { sub } = await verifyRefreshToken(refreshToken);
+
+    const newToken = await signAccessToken(sub);
+    const newRefreshToken = await signRefreshToken(sub);
+
+    res.setHeader("Authorization", newToken);
+    res.setHeader("RefreshToken", newRefreshToken);
+
+    res.status(201).json({ success: true });
+  },
+  
 };

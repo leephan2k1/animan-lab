@@ -15,22 +15,29 @@ const { verifyAccessToken } = require("../helper/jwtService");
 router.get("/", verifyAccessToken, UserController.index); //-> get all users [TEST ACCESS TOKEN]
 
 /*
-/v1/users/sign_up
+/v1/users/sign-up
 */
 router
-  .route("/sign_up")
+  .route("/sign-up")
   .post(validateBody(schemas.signUpSchema), UserController.signUp);
 
 /*
 /v1/users/sign_in
 */
 router
-  .route("/sign_in")
+  .route("/sign-in")
   .post(
     validateBody(schemas.loginSchema),
     passport.authenticate("local", { session: false }),
     UserController.signIn
   );
+
+/*
+/v1/users/sign-out
+*/
+router
+  .route("/sign-out")
+  .delete(UserController.signOut);
 
 /*
 /v1/users/refresh-token
