@@ -21,11 +21,12 @@ router
 /*
 /v1/post/create-post
 */
-// router
-//   .route("/delete-post")
-//   .delete(
-//     verifyAccessToken,
-//     PostController.deletePost
-//   );
+router
+  .route("/delete-post")
+  .delete(
+    validateBody(schemas.deletePostSchema),
+    verifyAccessToken,
+    PostController.deletePost
+  );
 
 module.exports = router;

@@ -25,8 +25,10 @@ module.exports = {
     //create user & save user to db
     const newUser = new User({ first_name, last_name, email, password });
     await newUser.save();
+
     const token = await signAccessToken(newUser._id);
-    const refreshToken = await signRefreshToken(user._id);
+    const refreshToken = await signRefreshToken(newUser._id);
+
     res.setHeader("Authorization", token);
     res.setHeader("RefreshToken", refreshToken);
 
@@ -70,5 +72,4 @@ module.exports = {
 
     res.status(201).json({ success: true });
   },
-  
 };

@@ -56,6 +56,9 @@ const schemas = {
     images_url: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
     tags: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
   }),
+  deletePostSchema: Joi.object().keys({
+    slug: Joi.string().min(1).required(),
+  }),
 };
 
 module.exports = {
