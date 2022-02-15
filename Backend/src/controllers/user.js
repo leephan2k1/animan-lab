@@ -14,7 +14,8 @@ module.exports = {
   },
 
   signUp: async (req, res, next) => {
-    const { first_name, last_name, email, password } = req.verified.body;
+    const { first_name, last_name, user_name, email, password } =
+      req.verified.body;
     //check email was registered
     const existEmail = await User.findOne({ email });
     if (existEmail) {
@@ -22,8 +23,22 @@ module.exports = {
         .status(401)
         .json({ success: false, message: "email is already registered" });
     }
+    //check user_name was registered
+    const existUserName = await User.findOne({ user_name });
+    if (existUserName) {
+      return res
+        .status(401)
+        .json({ success: false, message: "user name already exists" });
+    }
+
     //create user & save user to db
-    const newUser = new User({ first_name, last_name, email, password });
+    const newUser = new User({
+      first_name,
+      last_name,
+      user_name,
+      email,
+      password,
+    });
     await newUser.save();
 
     const token = await signAccessToken(newUser._id);
