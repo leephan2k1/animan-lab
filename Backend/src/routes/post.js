@@ -8,6 +8,11 @@ const {
 const { verifyAccessToken } = require("../helper/jwtService");
 
 /*
+/v1/posts
+*/
+router.route("/").get(PostController.index);
+
+/*
 /v1/post/create-post
 */
 router
@@ -17,7 +22,6 @@ router
     verifyAccessToken,
     PostController.createPost
   );
-
 /*
 /v1/post/create-post
 */

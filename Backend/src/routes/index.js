@@ -6,7 +6,7 @@ function route(app) {
 
   app.use(`/${version}/users`, userRoute);
   
-  app.use(`/${version}/post`, postRoute);
+  app.use(`/${version}/posts`, postRoute);
 }
 
 module.exports = route;

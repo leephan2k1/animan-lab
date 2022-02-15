@@ -3,6 +3,11 @@ const User = require("../models/User");
 const urlSlug = require("url-slug");
 
 module.exports = {
+  index: async (req, res, next) => {
+    const posts = await Post.find({});
+    return res.status(200).json({ success: true, posts });
+  },
+
   createPost: async (req, res, next) => {
     const { sub } = req.payload; // -> userId (access token return)
     const postPayload = req.verified.body;
