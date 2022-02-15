@@ -55,6 +55,7 @@ module.exports = {
     const { slug } = req.verified.body;
     const user = await User.findById(sub);
     const post = await Post.findOne({ slug });
+
     if (!post) {
       return res.status(401).json({
         success: false,
@@ -66,7 +67,14 @@ module.exports = {
       await post.remove();
       //TODO:
       // + delete comment in collection Comments
-      // + pull post Array in collection User
+
+      // pull post Array in collection User
+      const ownerPost = await User.findById(post.author_id);
+      if (ownerPost) {
+        ownerPost.posts.pull(post);
+        await ownerPost.save();
+      }
+
       return res.status(200).json({
         success: true,
         message: "The post has been deleted by the admin",
@@ -74,7 +82,14 @@ module.exports = {
     }
     //check owner -> [true] delete by owner
     else if (post.author_id.toString() === sub) {
+      //TODO:
+      // + delete comment in collection Comments
+
       await post.remove();
+      // pull post Array in collection User
+      user.posts.pull(post);
+      await user.save();
+
       return res.status(200).json({
         success: true,
         message: "The post has been deleted by the owner",
