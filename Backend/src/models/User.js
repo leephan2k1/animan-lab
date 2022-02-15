@@ -37,6 +37,10 @@ const User = new Schema(
 //password encoded
 User.pre("save", async function (next) {
   try {
+    // only hash the password if it has been modified (or is new)
+    const user = this;
+    if (!user.isModified('password')) return next();
+
     //IMPORTANT: arrow function not working with 'this'! use keyword function.
     const salt = await bcrypt.genSalt(10);
     const passwordHashed = await bcrypt.hash(this.password, salt);

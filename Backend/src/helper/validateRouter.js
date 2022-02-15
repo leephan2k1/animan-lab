@@ -52,7 +52,7 @@ const schemas = {
     password: Joi.string().min(6).required(),
   }),
   postSchema: Joi.object().keys({
-    title: Joi.string().required().min(3).max(30),
+    title: Joi.string().required().min(3).max(100),
     content: Joi.string().required().min(10),
     images_url: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
     tags: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
