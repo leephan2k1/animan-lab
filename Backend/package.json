@@ -23,7 +23,8 @@
     "mongoose": "^6.2.1",
     "nanoid": "^3.2.0",
     "passport": "^0.5.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "url-slug": "^3.0.3"
   },
   "devDependencies": {
     "morgan": "^1.10.0",

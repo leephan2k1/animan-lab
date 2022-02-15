@@ -35,15 +35,11 @@ router
 /*
 /v1/users/sign-out
 */
-router
-  .route("/sign-out")
-  .delete(UserController.signOut);
+router.route("/sign-out").delete(UserController.signOut);
 
 /*
 /v1/users/refresh-token
 */
-router
-  .route("/refresh-token")
-  .post(UserController.refreshToken);
+router.route("/refresh-token").post(UserController.refreshToken);
 
 module.exports = router;
