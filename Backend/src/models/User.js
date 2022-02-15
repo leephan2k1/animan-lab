@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 const bcrypt = require("bcryptjs");
 
 const User = new Schema(
@@ -8,13 +8,19 @@ const User = new Schema(
     last_name: { type: String, min: 1, max: 20 },
     about: { type: String, min: 1, max: 50 },
     birthday: { type: Date },
-    email: { type: String, required: true, unique: true, lowercase: true, index: true},
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      index: true,
+    },
     password: { type: String, required: true, min: 6 },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-    can_post: {type: Boolean, default: true},
+    can_post: { type: Boolean, default: true },
     bookmark_posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    can_comment: {type: Boolean, default: true},
+    can_comment: { type: Boolean, default: true },
     avatar: { type: Schema.Types.ObjectId, ref: "Image" },
     favorite_list: [{ type: Schema.Types.ObjectId, ref: "Animan" }],
     roles: { type: Array, default: ["user"] },
