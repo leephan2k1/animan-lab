@@ -10,6 +10,7 @@ module.exports = {
 
   createPost: async (req, res, next) => {
     const { sub } = req.payload; // -> userId (access token return)
+    const owner = await User.findById(sub);
     const postPayload = req.verified.body;
     const { title, content } = postPayload;
 
@@ -25,16 +26,22 @@ module.exports = {
     //generator slug
     const slug = urlSlug(title);
 
+    //get name author
+    const { user_name } = owner;
+
     const post = new Post({
       title,
       content,
-      author: sub,
+      author_id: sub,
+      author_name: user_name,
       images_url: postPayload?.images_url || [],
       tags: postPayload?.tags || [],
       slug,
     });
 
     await post.save();
+    owner.posts.push(post._id);
+    await owner.save();
 
     res.status(201).json({
       success: true,
@@ -57,13 +64,16 @@ module.exports = {
     //check admin -> [true] delete by admin
     if (user.roles.find((role) => role === "admin")) {
       await post.remove();
+      //TODO:
+      // + delete comment in collection Comments
+      // + pull post Array in collection User
       return res.status(200).json({
         success: true,
         message: "The post has been deleted by the admin",
       });
     }
     //check owner -> [true] delete by owner
-    else if (post.author.toString() === sub) {
+    else if (post.author_id.toString() === sub) {
       await post.remove();
       return res.status(200).json({
         success: true,
