@@ -8,6 +8,19 @@ module.exports = {
     return res.status(200).json({ success: true, posts });
   },
 
+  getPost: async (req, res, next) => {
+    const { slug } = req.params;
+
+    const post = await Post.findOne({ slug });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "post not found" });
+    }
+
+    return res.status(200).json({ success: true, post });
+  },
+
   createPost: async (req, res, next) => {
     const { sub } = req.payload; // -> userId (access token return)
     const owner = await User.findById(sub);
@@ -31,7 +44,7 @@ module.exports = {
 
     //check admin owner post -> [true] approve post = true
     let isAdmin = false;
-    if(owner.roles.find(role => role === 'admin')){
+    if (owner.roles.find((role) => role === "admin")) {
       isAdmin = true;
     }
 
@@ -64,9 +77,9 @@ module.exports = {
     const post = await Post.findOne({ slug });
 
     if (!post) {
-      return res.status(401).json({
+      return res.status(404).json({
         success: false,
-        message: "Not found post!",
+        message: "post not found",
       });
     }
     //check admin -> [true] delete by admin

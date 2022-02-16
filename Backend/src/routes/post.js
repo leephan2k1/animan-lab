@@ -13,6 +13,11 @@ const { verifyAccessToken } = require("../helper/jwtService");
 router.route("/").get(PostController.index);
 
 /*
+/v1/posts/:slug
+*/
+router.route("/:slug").get(PostController.getPost);
+
+/*
 /v1/post/create-post
 */
 router
