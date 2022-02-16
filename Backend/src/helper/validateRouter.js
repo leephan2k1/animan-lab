@@ -60,6 +60,10 @@ const schemas = {
   deletePostSchema: Joi.object().keys({
     slug: Joi.string().min(1).required(),
   }),
+  updatePostSchema: Joi.object().keys({
+    title: Joi.string().min(3).max(100),
+    content: Joi.string().min(10),
+  })
 };
 
 module.exports = {

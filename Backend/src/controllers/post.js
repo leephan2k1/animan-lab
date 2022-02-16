@@ -69,6 +69,56 @@ module.exports = {
     });
   },
 
+  updatePost: async (req, res, next) => {
+    const { sub } = req.payload; // (userId Access token)
+    const { slug } = req.params;
+    const payload = req.verified.body;
+
+    const postOwner = await User.findById(sub);
+    const post = await Post.findOne({ slug });
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "post not found" });
+    }
+
+    //check post owner or check the user's permission to be able to modify the post
+    if (
+      postOwner._id.toString() !== post.author_id.toString() ||
+      !postOwner.can_post
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "UnAuthorization",
+      });
+    }
+
+    //check title if exist:
+    if (payload.title) {
+      //check exist post title
+      const duplicatedTitle = await Post.findOne({ title: payload.title });
+      if (duplicatedTitle) {
+        return res.status(401).json({
+          success: false,
+          message: "Duplicated title",
+        });
+      }
+      //save new title
+      post.title = payload.title;
+      //save new slug
+      post.slug = urlSlug(payload.title);
+    }
+
+    //check content if exist:
+    if (payload.content) {
+      post.content = payload.content;
+    }
+
+    await post.save();
+
+    return res.status(200).json({ success: true, post });
+  },
+
   deletePost: async (req, res, next) => {
     //check admin or owner post
     const { sub } = req.payload; // -> userId (access token return)

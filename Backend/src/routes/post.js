@@ -1,10 +1,6 @@
 const router = require("express-promise-router")();
 const PostController = require("../controllers/post");
-const {
-  validateBody,
-  validateParams,
-  schemas,
-} = require("../helper/validateRouter");
+const { validateBody, schemas } = require("../helper/validateRouter");
 const { verifyAccessToken } = require("../helper/jwtService");
 
 /*
@@ -15,7 +11,14 @@ router.route("/").get(PostController.index);
 /*
 /v1/posts/:slug
 */
-router.route("/:slug").get(PostController.getPost);
+router
+  .route("/:slug")
+  .get(PostController.getPost)
+  .patch(
+    validateBody(schemas.updatePostSchema),
+    verifyAccessToken,
+    PostController.updatePost
+  );
 
 /*
 /v1/post/create-post
@@ -28,7 +31,7 @@ router
     PostController.createPost
   );
 /*
-/v1/post/create-post
+/v1/post/delete-post
 */
 router
   .route("/delete-post")
