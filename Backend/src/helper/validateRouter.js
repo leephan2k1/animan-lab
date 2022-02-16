@@ -63,6 +63,10 @@ const schemas = {
   updatePostSchema: Joi.object().keys({
     title: Joi.string().min(3).max(100),
     content: Joi.string().min(10),
+  }),
+  commentSchema: Joi.object().keys({
+    content: Joi.string().required().min(3),
+    postSlug: Joi.string().required().min(3),
   })
 };
 

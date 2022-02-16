@@ -66,6 +66,7 @@ module.exports = {
     res.status(201).json({
       success: true,
       post: postPayload,
+      slug,
     });
   },
 
