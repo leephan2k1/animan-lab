@@ -29,7 +29,14 @@ module.exports = {
     //get name author
     const { user_name } = owner;
 
+    //check admin owner post -> [true] approve post = true
+    let isAdmin = false;
+    if(owner.roles.find(role => role === 'admin')){
+      isAdmin = true;
+    }
+
     const post = new Post({
+      approve: isAdmin,
       title,
       content,
       author_id: sub,
