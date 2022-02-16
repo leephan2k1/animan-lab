@@ -1,5 +1,6 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
+const Comment = require("../models/Comment");
 const urlSlug = require("url-slug");
 
 module.exports = {
@@ -135,9 +136,9 @@ module.exports = {
     }
     //check admin -> [true] delete by admin
     if (user.roles.find((role) => role === "admin")) {
+      // delete comment in collection Comments
+      await Comment.deleteMany({ post: post._id });
       await post.remove();
-      //TODO:
-      // + delete comment in collection Comments
 
       // pull post Array in collection User
       const ownerPost = await User.findById(post.author_id);
@@ -153,9 +154,8 @@ module.exports = {
     }
     //check owner -> [true] delete by owner
     else if (post.author_id.toString() === sub) {
-      //TODO:
-      // + delete comment in collection Comments
-
+      // delete comment in collection Comments
+      await Comment.deleteMany({ post: post._id });
       await post.remove();
       // pull post Array in collection User
       user.posts.pull(post);
