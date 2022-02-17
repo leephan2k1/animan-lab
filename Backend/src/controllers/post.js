@@ -136,14 +136,19 @@ module.exports = {
     }
     //check admin -> [true] delete by admin
     if (user.roles.find((role) => role === "admin")) {
-      // delete comment in collection Comments
+      // delete comment in collection Comments & comments in user
+      const commentsId = await Comment.find({ post: post._id }, "_id");
+      await User.updateMany(
+        { comments: { $in: commentsId } },
+        { $pullAll: { comments: commentsId } }
+      );
       await Comment.deleteMany({ post: post._id });
       await post.remove();
 
       // pull post Array in collection User
       const ownerPost = await User.findById(post.author_id);
       if (ownerPost) {
-        ownerPost.posts.pull(post);
+        await ownerPost.posts.pull(post);
         await ownerPost.save();
       }
 
@@ -154,11 +159,16 @@ module.exports = {
     }
     //check owner -> [true] delete by owner
     else if (post.author_id.toString() === sub) {
-      // delete comment in collection Comments
+      // delete comment in collection Comments & comments in user
+      const commentsId = await Comment.find({ post: post._id }, "_id");
+      await User.updateMany(
+        { comments: { $in: commentsId } },
+        { $pullAll: { comments: commentsId } }
+      );
       await Comment.deleteMany({ post: post._id });
       await post.remove();
       // pull post Array in collection User
-      user.posts.pull(post);
+      await user.posts.pull(post);
       await user.save();
 
       return res.status(200).json({
@@ -168,6 +178,6 @@ module.exports = {
     }
 
     //not owner, not admin -> not permission!
-    res.status(200).json({ success: false, message: "Unauthorized" });
+    res.status(401).json({ success: false, message: "Unauthorized" });
   },
 };
