@@ -57,6 +57,9 @@ const schemas = {
     images_url: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
     tags: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
   }),
+  deleteCommentSchema: Joi.object().keys({
+    id: Joi.string().regex(/^[0-9A-Fa-f]{24}$/),
+  }),
   deletePostSchema: Joi.object().keys({
     slug: Joi.string().min(1).required(),
   }),
@@ -67,7 +70,7 @@ const schemas = {
   commentSchema: Joi.object().keys({
     content: Joi.string().required().min(3),
     postSlug: Joi.string().required().min(3),
-  })
+  }),
 };
 
 module.exports = {

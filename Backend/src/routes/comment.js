@@ -18,4 +18,13 @@ router.post(
   CommentController.createComment
 );
 
+/*
+/v1/comments/delete-comment/:id
+*/
+router.delete(
+  "/delete-comment/:id",
+  verifyAccessToken,
+  CommentController.deleteComment
+);
+
 module.exports = router;
