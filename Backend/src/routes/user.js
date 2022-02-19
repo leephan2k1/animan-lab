@@ -7,8 +7,6 @@ const {
 } = require("../helper/validateRouter");
 const passport = require("passport");
 require("../middlewares/passport");
-const { verifyAccessToken } = require("../helper/jwtService");
-
 
 /*
 /v1/users/sign-up
