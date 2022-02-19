@@ -81,4 +81,22 @@ module.exports = {
 
     return res.status(401).json({ success: false, message: "Unauthorized" });
   },
+
+  updateComment: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.params;
+
+    const comment = await Comment.findById(id);
+    //check owner comment:
+    if (comment.author_id.toString() !== sub.toString()) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const { content } = req.verified.body;
+    await comment.updateOne({ content });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Comment has been updated" });
+  },
 };
