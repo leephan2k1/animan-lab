@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const User = require("./User");
+const Post = require("./Post");
 
 const Comment = new Schema(
   {
@@ -15,5 +17,19 @@ const Comment = new Schema(
     timestamps: true,
   }
 );
+
+Comment.pre("remove", async function (next) {
+  try {
+    const comment = this;
+    const user = await User.findById(comment.author_id);
+    const post = await Post.findById(comment.post);
+    await user.comments.pull(comment);
+    await user.save();
+    await post.comments.pull(comment);
+    await post.save();
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = mongoose.model("Comment", Comment);

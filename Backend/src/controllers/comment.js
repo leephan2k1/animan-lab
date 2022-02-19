@@ -44,7 +44,7 @@ module.exports = {
 
   deleteComment: async (req, res, next) => {
     const { sub } = req.payload;
-    const commentId = req.params.id;
+    const commentId = req.verified.params.id;
     const comment = await Comment.findById(commentId);
 
     if (!comment) {
@@ -58,26 +58,18 @@ module.exports = {
     const post = await Post.findById(comment.post);
     //check roles
     if (user.roles.find((role) => role === "admin")) {
-      const ownerPost = await User.findById(comment.author_id);
       await comment.remove();
-      //remove comment in post & user
-      await post.comments.pull(comment);
-      await ownerPost.comments.pull(comment);
+      //remove comment in post & user in middleware model Comment
       return res
         .status(200)
         .json({ success: true, message: "comment has been deleted by admin" });
     } else if (user._id.toString() === comment.author_id.toString()) {
       await comment.remove();
-      //remove comment in post & user
-      await post.comments.pull(comment);
-      await user.comments.pull(comment);
+      //remove comment in post & user in middleware model Comment
       return res
         .status(200)
         .json({ success: true, message: "comment has been deleted by owner" });
     }
-
-    await user.save();
-    await post.save();
 
     return res.status(401).json({ success: false, message: "Unauthorized" });
   },
