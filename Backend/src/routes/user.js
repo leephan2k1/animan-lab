@@ -9,10 +9,6 @@ const passport = require("passport");
 require("../middlewares/passport");
 const { verifyAccessToken } = require("../helper/jwtService");
 
-/*
-/v1/users
-*/
-router.get("/", verifyAccessToken, UserController.index); //-> get all users [TEST ACCESS TOKEN]
 
 /*
 /v1/users/sign-up

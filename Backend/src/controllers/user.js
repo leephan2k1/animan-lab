@@ -8,11 +8,6 @@ const {
 const createError = require("http-errors");
 
 module.exports = {
-  index: async (req, res, next) => {
-    const users = await User.find({});
-    return res.status(200).json({ success: true, users });
-  },
-
   signUp: async (req, res, next) => {
     const { first_name, last_name, user_name, email, password } =
       req.verified.body;
@@ -47,7 +42,7 @@ module.exports = {
     res.setHeader("Authorization", token);
     res.setHeader("RefreshToken", refreshToken);
 
-    return res.status(201).json({ success: true });
+    return res.status(201).json({ success: true, user: { user_name } });
   },
 
   signIn: async (req, res, next) => {
@@ -57,7 +52,10 @@ module.exports = {
     res.setHeader("Authorization", token);
     res.setHeader("RefreshToken", refreshToken);
 
-    res.json({ success: true });
+    res.json({
+      success: true,
+      user: { avatar: user.avatar, user_name: user.user_name },
+    });
   },
 
   signOut: async (req, res, next) => {
