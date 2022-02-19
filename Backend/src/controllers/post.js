@@ -12,7 +12,7 @@ module.exports = {
   getPost: async (req, res, next) => {
     const { slug } = req.params;
 
-    const post = await Post.findOne({ slug });
+    const post = await Post.findOne({ slug }, { __v: 0 }).populate("comments");
     if (!post) {
       return res
         .status(404)
