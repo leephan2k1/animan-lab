@@ -37,6 +37,14 @@ module.exports = {
       });
     }
 
+    //check user has been banned:
+    if (!owner.can_post) {
+      return res.status(401).json({
+        success: false,
+        message: "User has been banned",
+      });
+    }
+
     //generator slug
     const slug = urlSlug(title);
 
@@ -82,6 +90,14 @@ module.exports = {
       return res
         .status(404)
         .json({ success: false, message: "post not found" });
+    }
+
+    //check user has been banned:
+    if (!postOwner.can_post) {
+      return res.status(401).json({
+        success: false,
+        message: "User has been banned",
+      });
     }
 
     //check post owner or check the user's permission to be able to modify the post

@@ -16,6 +16,30 @@ module.exports = {
         .json({ success: false, message: "Post not found" });
     }
     await post.updateOne({ approve: true });
-    res.status(200).json({ success: true});
+    res.status(200).json({ success: true });
+  },
+
+  banUser: async (req, res, next) => {
+    const { id } = req.verified.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: true, message: "User not found" });
+    }
+
+    await user.updateOne({ can_post: false, can_comment: false });
+
+    res.status(200).json({ success: true });
+  },
+
+  unbanUser: async (req, res, next) => {
+    const { id } = req.verified.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: true, message: "User not found" });
+    }
+
+    await user.updateOne({ can_post: true, can_comment: true });
+
+    res.status(200).json({ success: true });
   },
 };

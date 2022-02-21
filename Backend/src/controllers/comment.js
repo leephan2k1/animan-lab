@@ -22,6 +22,11 @@ module.exports = {
         message: "Slug not match any post",
       });
     }
+    if (!user.can_comment) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User has been banned" });
+    }
 
     const comment = new Comment({
       author_id: user._id,
@@ -78,10 +83,16 @@ module.exports = {
     const { sub } = req.payload;
     const { id } = req.verified.params;
 
-    const comment = await Comment.findById(id);
+    const comment = await Comment.findById(id).populate("author_id");
     //check owner comment:
-    if (comment.author_id.toString() !== sub.toString()) {
+    if (comment.author_id._id.toString() !== sub.toString()) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    //check can_comment permission:
+    if (!comment.author_id.can_comment) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User has been banned" });
     }
 
     const { content } = req.verified.body;

@@ -1,7 +1,7 @@
 const router = require("express-promise-router")();
 const { verifyAccessToken } = require("../helper/jwtService");
 const ManagementController = require("../controllers/management");
-const { checkApprover } = require("../middlewares/permission");
+const { checkApprover, isAdmin } = require("../middlewares/permission");
 const { validateBody, schemas } = require("../helper/validateRouter");
 
 /*
@@ -13,7 +13,7 @@ router
   .get(verifyAccessToken, checkApprover, ManagementController.getPost);
 
 /*
-/v1/managements/approve-post (approve: false)
+/v1/managements/approve-post
 roles: admin || mod
 */
 router
@@ -23,6 +23,32 @@ router
     checkApprover,
     validateBody(schemas.objectIdRequiredSchema),
     ManagementController.approvePost
+  );
+
+/*
+/v1/managements/ban-user
+roles: admin
+*/
+router
+  .route("/ban-user")
+  .post(
+    verifyAccessToken,
+    isAdmin,
+    validateBody(schemas.objectIdRequiredSchema),
+    ManagementController.banUser
+  );
+
+/*
+/v1/managements/unban-user
+roles: admin
+*/
+router
+  .route("/unban-user")
+  .post(
+    verifyAccessToken,
+    isAdmin,
+    validateBody(schemas.objectIdRequiredSchema),
+    ManagementController.unbanUser
   );
 
 module.exports = router;
