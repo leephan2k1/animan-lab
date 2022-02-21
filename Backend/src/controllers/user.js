@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Post = require("../models/Post");
 const RefreshToken = require("../models/Token");
 const {
   signAccessToken,
@@ -95,5 +96,72 @@ module.exports = {
     res.setHeader("RefreshToken", newRefreshToken);
 
     res.status(201).json({ success: true });
+  },
+
+  addBookmark: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+    const { user_name } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+    const user = await User.findById(sub);
+
+    if (user_name !== user.user_name) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    const { bookmark_posts } = user;
+    if (!bookmark_posts.includes(id.toString())) {
+      bookmark_posts.push(id);
+    }
+    await user.updateOne({ bookmark_posts });
+    return res.status(200).json({ success: true });
+  },
+
+  getBookmark: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { user_name } = req.params;
+
+    const user = await User.findById(sub).populate("bookmark_posts");
+    if (user_name !== user.user_name) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, bookmark_posts: user.bookmark_posts });
+  },
+
+  removeBookmark: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+    const { user_name } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+    const user = await User.findById(sub);
+    if (user_name !== user.user_name) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    let { bookmark_posts } = user;
+    if (bookmark_posts.includes(id.toString())) {
+      bookmark_posts = bookmark_posts.filter((post) => post.toString() !== id);
+    }
+    await user.updateOne({ bookmark_posts });
+    return res.status(200).json({ success: true });
   },
 };

@@ -7,6 +7,7 @@ const {
 } = require("../helper/validateRouter");
 const passport = require("passport");
 require("../middlewares/passport");
+const { verifyAccessToken } = require("../helper/jwtService");
 
 /*
 /v1/users/:user-name
@@ -16,6 +17,23 @@ router
   .get(
     validateParams(schemas.userNameSchema, "user_name"),
     UserController.getInfo
+  );
+
+/*
+/v1/users/:user_name/bookmark
+*/
+router
+  .route("/:user_name/bookmark")
+  .get(verifyAccessToken, UserController.getBookmark)
+  .post(
+    validateBody(schemas.objectIdRequiredSchema),
+    verifyAccessToken,
+    UserController.addBookmark
+  )
+  .delete(
+    validateBody(schemas.objectIdRequiredSchema),
+    verifyAccessToken,
+    UserController.removeBookmark
   );
 
 /*
