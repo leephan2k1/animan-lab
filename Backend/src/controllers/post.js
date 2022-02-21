@@ -166,6 +166,11 @@ module.exports = {
       if (ownerPost) {
         await ownerPost.posts.pull(post);
         await ownerPost.save();
+
+        //delete by admin -> -10 points
+        let { points } = ownerPost;
+        points -= 10;
+        await ownerPost.update({ points });
       }
 
       return res.status(200).json({

@@ -15,12 +15,21 @@ module.exports = {
   approvePost: async (req, res, next) => {
     const { id } = req.verified.body;
     const post = await Post.findById(id);
+    const { approve } = post;
     if (!post) {
       return res
         .status(404)
         .json({ success: false, message: "Post not found" });
     }
-    await post.updateOne({ approve: true });
+
+    if (!approve) {
+      await post.updateOne({ approve: true });
+      const user = await User.findById(post.author_id);
+      let { points } = user;
+      points += 10;
+      await user.updateOne({ points });
+    }
+
     res.status(200).json({ success: true });
   },
 
