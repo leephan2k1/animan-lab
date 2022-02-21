@@ -47,4 +47,32 @@ module.exports = {
 
     res.status(200).json({ success: true });
   },
+
+  appointMod: async (req, res, next) => {
+    const { id } = req.verified.body;
+    const user = await User.findById(id);
+    const { roles } = user;
+    if (!user) {
+      return res.status(404).json({ success: true, message: "User not found" });
+    }
+    if (!roles.includes("mod")) {
+      roles.push("mod");
+      await user.updateOne({ roles });
+    }
+    res.status(200).json({ success: true });
+  },
+
+  deposedMod: async (req, res, next) => {
+    const { id } = req.verified.body;
+    const user = await User.findById(id);
+    let { roles } = user;
+    if (!user) {
+      return res.status(404).json({ success: true, message: "User not found" });
+    }
+    if (roles.includes("mod")) {
+      roles = roles.filter((role) => role !== "mod");
+      await user.updateOne({ roles });
+    }
+    res.status(200).json({ success: true });
+  },
 };

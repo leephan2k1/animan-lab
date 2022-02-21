@@ -59,4 +59,29 @@ router
     ManagementController.unbanUser
   );
 
+/*
+/v1/managements/appoint-user
+roles: admin
+*/
+router
+  .route("/appoint-user")
+  .post(
+    verifyAccessToken,
+    isAdmin,
+    validateBody(schemas.objectIdRequiredSchema),
+    ManagementController.appointMod
+  );
+/*
+/v1/managements/appoint-user
+roles: admin
+*/
+router
+  .route("/deposed-user")
+  .post(
+    verifyAccessToken,
+    isAdmin,
+    validateBody(schemas.objectIdRequiredSchema),
+    ManagementController.deposedMod
+  );
+
 module.exports = router;
