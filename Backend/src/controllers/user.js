@@ -164,4 +164,89 @@ module.exports = {
     await user.updateOne({ bookmark_posts });
     return res.status(200).json({ success: true });
   },
+
+  getLikedList: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+    const { user_name } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+    const user = await User.findById(sub).populate("like_list");
+    if (user_name !== user.user_name) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    return res.status(200).json({ success: true, like_list: user.like_list });
+  },
+
+  addLikePost: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+    const { user_name } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+    const user = await User.findById(sub);
+    if (user_name !== user.user_name) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    let { like_list } = user;
+    if (!like_list.includes(id)) {
+      like_list.push(id);
+      await user.updateOne({ like_list });
+      //up point for author
+      const ownerPost = await User.findById(post.author_id);
+      if (ownerPost) {
+        let { points } = ownerPost;
+        points++;
+        await ownerPost.updateOne({ points });
+      }
+    }
+
+    return res.status(200).json({ success: true });
+  },
+
+  removeLikePost: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+    const { user_name } = req.params;
+    const post = await Post.findById(id);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+    const user = await User.findById(sub);
+    if (user_name !== user.user_name) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    let { like_list } = user;
+    if (like_list.includes(id)) {
+      like_list = like_list.filter((post) => post.toString() !== id);
+      await user.updateOne({ like_list });
+      //down point for author
+      const ownerPost = await User.findById(post.author_id);
+      if (ownerPost) {
+        let { points } = ownerPost;
+        points--;
+        await ownerPost.updateOne({ points });
+      }
+    }
+
+    return res.status(200).json({ success: true });
+  },
 };

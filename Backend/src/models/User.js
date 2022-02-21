@@ -16,19 +16,18 @@ const User = new Schema(
       lowercase: true,
       index: true,
     },
-    gender: {type: String, min: 1},
+    gender: { type: String, min: 1 },
     password: { type: String, required: true, min: 6 },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     can_post: { type: Boolean, default: true },
     bookmark_posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     can_comment: { type: Boolean, default: true },
-    avatar: { type: Schema.Types.ObjectId, ref: "Image" },
+    avatar: { type: String, min: 4 },
     favorite_list: [{ type: Schema.Types.ObjectId, ref: "Animan" }],
     roles: { type: Array, default: ["user"] },
     points: { type: Number, default: 0 },
-    like_count: { type: Number, default: 0 },
-    comment_count: { type: Number, default: 0 },
+    like_list: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   },
   {
     timestamps: true,
@@ -40,7 +39,7 @@ User.pre("save", async function (next) {
   try {
     // only hash the password if it has been modified (or is new)
     const user = this;
-    if (!user.isModified('password')) return next();
+    if (!user.isModified("password")) return next();
 
     //IMPORTANT: arrow function not working with 'this'! use keyword function.
     const salt = await bcrypt.genSalt(10);

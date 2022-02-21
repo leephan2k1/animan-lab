@@ -37,6 +37,23 @@ router
   );
 
 /*
+/v1/users/:user_name/like
+*/
+router
+  .route("/:user_name/like")
+  .get(verifyAccessToken, UserController.getLikedList)
+  .post(
+    validateBody(schemas.objectIdRequiredSchema),
+    verifyAccessToken,
+    UserController.addLikePost
+  )
+  .delete(
+    validateBody(schemas.objectIdRequiredSchema),
+    verifyAccessToken,
+    UserController.removeLikePost
+  );
+
+/*
 /v1/users/sign-up
 */
 router
