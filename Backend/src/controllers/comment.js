@@ -102,4 +102,58 @@ module.exports = {
       .status(200)
       .json({ success: true, message: "Comment has been updated" });
   },
+
+  likeComment: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+    const comment = await Comment.findById(id);
+    if (!comment) {
+      return res
+        .staus(404)
+        .json({ success: false, message: "Comment not found" });
+    }
+    const user = await User.findById(sub);
+    let { like_comments } = user;
+    if (!like_comments.includes(id)) {
+      like_comments.push(id);
+      await user.updateOne({ like_comments });
+      let { like } = comment;
+      like++;
+      await comment.updateOne({ like });
+      //up point for owner comment
+      if (comment.author_id.toString() !== user._id.toString()) {
+        const ownerComment = await User.findById(comment.author_id);
+        let { points } = ownerComment;
+        points++;
+        await ownerComment.updateOne({ points });
+      }
+    }
+    return res.status(200).json({ success: true });
+  },
+
+  unlikeComment: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+    const comment = await Comment.findById(id);
+    const user = await User.findById(sub);
+    let { like_comments } = user;
+
+    if (like_comments.includes(id)) {
+      like_comments = like_comments.filter(
+        (likeCmt) => likeCmt.toString() !== id
+      );
+      await user.updateOne({ like_comments });
+      let { like } = comment;
+      like--;
+      await comment.updateOne({ like });
+      //down point for owner comment
+      if (comment.author_id.toString() !== user._id.toString()) {
+        const ownerComment = await User.findById(comment.author_id);
+        let { points } = ownerComment;
+        points--;
+        await ownerComment.updateOne({ points });
+      }
+    }
+    return res.status(200).json({ success: true });
+  },
 };

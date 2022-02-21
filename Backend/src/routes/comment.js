@@ -13,6 +13,27 @@ const {
 router.get("/", CommentController.index);
 
 /*
+/v1/comments/like
+*/
+router.post(
+  "/like",
+  validateBody(schemas.objectIdRequiredSchema),
+  verifyAccessToken,
+  CommentController.likeComment
+);
+
+/*
+/v1/comments/unlike
+*/
+router.post(
+  "/unlike",
+  validateBody(schemas.objectIdRequiredSchema),
+  verifyAccessToken,
+  CommentController.unlikeComment
+);
+
+
+/*
 /v1/comments/create-comment
 */
 router.post(

@@ -22,6 +22,7 @@ const User = new Schema(
     can_post: { type: Boolean, default: true },
     bookmark_posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    like_comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     can_comment: { type: Boolean, default: true },
     avatar: { type: String, min: 4 },
     favorite_list: [{ type: Schema.Types.ObjectId, ref: "Animan" }],
