@@ -9,6 +9,16 @@ const passport = require("passport");
 require("../middlewares/passport");
 
 /*
+/v1/users/:user-name
+*/
+router
+  .route("/:user_name")
+  .get(
+    validateParams(schemas.userNameSchema, "user_name"),
+    UserController.getInfo
+  );
+
+/*
 /v1/users/sign-up
 */
 router

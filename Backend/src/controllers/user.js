@@ -58,6 +58,17 @@ module.exports = {
     });
   },
 
+  getInfo: async (req, res, next) => {
+    const { user_name } = req.verified.params;
+    const user = await User.findOne({ user_name }, { __v: 0, password: 0 });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  },
+
   signOut: async (req, res, next) => {
     const { refreshToken } = req.body;
     if (!refreshToken) {

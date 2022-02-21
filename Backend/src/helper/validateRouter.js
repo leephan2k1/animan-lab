@@ -51,6 +51,9 @@ const schemas = {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
   }),
+  userNameSchema: Joi.object().keys({
+    user_name: Joi.string().min(1),
+  }),
   postSchema: Joi.object().keys({
     title: Joi.string().required().min(3).max(100),
     content: Joi.string().required().min(10),
