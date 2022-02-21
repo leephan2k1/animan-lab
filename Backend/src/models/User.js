@@ -16,6 +16,7 @@ const User = new Schema(
       lowercase: true,
       index: true,
     },
+    gender: {type: String, min: 1},
     password: { type: String, required: true, min: 6 },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     can_post: { type: Boolean, default: true },
