@@ -68,8 +68,13 @@ const schemas = {
     content: Joi.string().required().min(3),
     postSlug: Joi.string().required().min(3),
   }),
-  idCommentSchema: Joi.object().keys({
+  objectIdSchema: Joi.object().keys({
     id: Joi.string().regex(/^[0-9A-Fa-f]{24}$/),
+  }),
+  objectIdRequiredSchema: Joi.object().keys({
+    id: Joi.string()
+      .required()
+      .regex(/^[0-9A-Fa-f]{24}$/),
   }),
   updateCommentSchema: Joi.object().keys({
     content: Joi.string().required().min(3),

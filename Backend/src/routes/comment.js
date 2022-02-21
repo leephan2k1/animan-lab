@@ -27,7 +27,7 @@ router.post(
 */
 router.delete(
   "/delete-comment/:id",
-  validateParams(schemas.idCommentSchema, "id"),
+  validateParams(schemas.objectIdSchema, "id"),
   verifyAccessToken,
   CommentController.deleteComment
 );
@@ -37,7 +37,7 @@ router.delete(
 */
 router.patch(
   "/update-comment/:id",
-  validateParams(schemas.idCommentSchema, "id"),
+  validateParams(schemas.objectIdSchema, "id"),
   validateBody(schemas.updateCommentSchema),
   verifyAccessToken,
   CommentController.updateComment

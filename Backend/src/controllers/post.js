@@ -5,7 +5,7 @@ const urlSlug = require("url-slug");
 
 module.exports = {
   index: async (req, res, next) => {
-    const posts = await Post.find({});
+    const posts = await Post.find({ approve: true }, { __v: 0 });
     return res.status(200).json({ success: true, posts });
   },
 
@@ -13,10 +13,10 @@ module.exports = {
     const { slug } = req.params;
 
     const post = await Post.findOne({ slug }, { __v: 0 }).populate("comments");
-    if (!post) {
+    if (!post || !post.approve) {
       return res
         .status(404)
-        .json({ success: false, message: "post not found" });
+        .json({ success: false, message: "Post not found or not approved" });
     }
 
     return res.status(200).json({ success: true, post });
