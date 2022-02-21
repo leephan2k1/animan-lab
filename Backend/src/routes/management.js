@@ -13,6 +13,14 @@ router
   .get(verifyAccessToken, checkApprover, ManagementController.getPost);
 
 /*
+/v1/managements/get-flag-post (approve: false)
+roles: admin || mod
+*/
+router
+  .route("/get-flag-post")
+  .get(verifyAccessToken, checkApprover, ManagementController.getFlagPost);
+
+/*
 /v1/managements/approve-post
 roles: admin || mod
 */

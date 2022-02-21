@@ -3,7 +3,12 @@ const Post = require("../models/Post");
 
 module.exports = {
   getPost: async (req, res, next) => {
-    const posts = await Post.find({ approve: false });
+    const posts = await Post.find({ approve: false }, { __v: 0 });
+    return res.status(200).json({ success: true, posts });
+  },
+
+  getFlagPost: async (req, res, next) => {
+    const posts = await Post.find({ is_flag: true }, { __v: 0 });
     return res.status(200).json({ success: true, posts });
   },
 
