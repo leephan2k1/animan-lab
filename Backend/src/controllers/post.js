@@ -154,11 +154,24 @@ module.exports = {
     //check admin -> [true] delete by admin
     if (user.roles.find((role) => role === "admin")) {
       // delete comment in collection Comments & comments in user
+
+      //pull all comments
       const commentsId = await Comment.find({ post: post._id }, "_id");
       await User.updateMany(
         { comments: { $in: commentsId } },
         { $pullAll: { comments: commentsId } }
       );
+      // pull all list like post
+      await User.updateMany(
+        { like_list: { $in: [post._id] } },
+        { $pull: { like_list: { $in: [post._id] } } }
+      );
+      // pull all list bookmark post
+      await User.updateMany(
+        { bookmark_posts: { $in: [post._id] } },
+        { $pull: { bookmark_posts: { $in: [post._id] } } }
+      );
+
       await Comment.deleteMany({ post: post._id });
       await Report.deleteMany({ post_id: post._id });
       await post.remove();
@@ -187,6 +200,16 @@ module.exports = {
       await User.updateMany(
         { comments: { $in: commentsId } },
         { $pullAll: { comments: commentsId } }
+      );
+      // pull all list like post
+      await User.updateMany(
+        { like_list: { $in: [post._id] } },
+        { $pull: { like_list: { $in: [post._id] } } }
+      );
+      // pull all list bookmark post
+      await User.updateMany(
+        { bookmark_posts: { $in: [post._id] } },
+        { $pull: { bookmark_posts: { $in: [post._id] } } }
       );
       await Comment.deleteMany({ post: post._id });
       await Report.deleteMany({ post_id: post._id });

@@ -162,6 +162,11 @@ module.exports = {
     if (!like_list.includes(id)) {
       like_list.push(id);
       await user.updateOne({ like_list });
+      //up like for post
+      let { like } = post;
+      like++;
+      await post.updateOne({ like });
+
       //up point for author
       const ownerPost = await User.findById(post.author_id);
       if (ownerPost) {
@@ -183,6 +188,11 @@ module.exports = {
     if (like_list.includes(id)) {
       like_list = like_list.filter((post) => post.toString() !== id);
       await user.updateOne({ like_list });
+      //down like post
+      let { like } = post;
+      like--;
+      await post.updateOne({ like });
+
       //down point for author
       const ownerPost = await User.findById(post.author_id);
       if (ownerPost) {
