@@ -36,6 +36,11 @@ module.exports = {
       content,
     });
 
+    //up point when comment
+    let { points } = user;
+    points++;
+    await user.updateOne({ points });
+
     await comment.save();
     post.comments.push(comment._id);
     user.comments.push(comment._id);
