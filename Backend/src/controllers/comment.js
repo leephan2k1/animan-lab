@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Comment = require("../models/Comment");
 const Post = require("../models/Post");
+const Report = require("../models/Report");
 
 module.exports = {
   index: async (req, res, next) => {
@@ -154,6 +155,29 @@ module.exports = {
         await ownerComment.updateOne({ points });
       }
     }
+    return res.status(200).json({ success: true });
+  },
+
+  reportComment: async (req, res, next) => {
+    const reportObj = req.verified.body;
+    const { post_id } = reportObj;
+
+    const report = new Report(reportObj);
+    await report.save();
+
+    const comment = await Comment.findById(post_id);
+    if (!comment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Comment not found" });
+    }
+
+    let { report_list } = comment;
+    if (!report_list.includes(report._id.toString())) {
+      report_list.push(report._id);
+      await comment.updateOne({ report_list, flag: true });
+    }
+
     return res.status(200).json({ success: true });
   },
 };

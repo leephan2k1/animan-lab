@@ -10,7 +10,10 @@ const {
 /*
 /v1/comments
 */
-router.get("/", CommentController.index);
+router
+  .route("/")
+  .get(CommentController.index)
+  .post(validateBody(schemas.reportSchema), CommentController.reportComment);
 
 /*
 /v1/comments/like
@@ -31,7 +34,6 @@ router.post(
   verifyAccessToken,
   CommentController.unlikeComment
 );
-
 
 /*
 /v1/comments/create-comment

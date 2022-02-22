@@ -11,6 +11,7 @@ const Comment = new Schema(
     content: { type: String, required: true, min: 3 },
     banned: { type: Boolean, default: false },
     flag: { type: Boolean, default: false },
+    report_list: [{ type: Schema.Types.ObjectId, ref: "Report" }],
     like: { type: Number, default: 0 },
   },
   {

@@ -211,6 +211,12 @@ module.exports = {
     await report.save();
 
     const post = await Post.findById(post_id);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+
     let { report_list } = post;
     if (!report_list.includes(report._id.toString())) {
       report_list.push(report._id);
