@@ -61,15 +61,16 @@ module.exports = {
     }
 
     const user = await User.findById(sub);
-    const post = await Post.findById(comment.post);
     //check roles
     if (user.roles.find((role) => role === "admin")) {
+      await Report.deleteMany({ post_id: comment._id });
       await comment.remove();
       //remove comment in post & user in middleware model Comment
       return res
         .status(200)
         .json({ success: true, message: "comment has been deleted by admin" });
     } else if (user._id.toString() === comment.author_id.toString()) {
+      await Report.deleteMany({ post_id: comment._id });
       await comment.remove();
       //remove comment in post & user in middleware model Comment
       return res

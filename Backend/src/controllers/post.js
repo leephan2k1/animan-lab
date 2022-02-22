@@ -160,6 +160,7 @@ module.exports = {
         { $pullAll: { comments: commentsId } }
       );
       await Comment.deleteMany({ post: post._id });
+      await Report.deleteMany({ post_id: post._id });
       await post.remove();
 
       // pull post Array in collection User
@@ -188,6 +189,7 @@ module.exports = {
         { $pullAll: { comments: commentsId } }
       );
       await Comment.deleteMany({ post: post._id });
+      await Report.deleteMany({ post_id: post._id });
       await post.remove();
       // pull post Array in collection User
       await user.posts.pull(post);
