@@ -1,6 +1,7 @@
 const Post = require("../models/Post");
 const User = require("../models/User");
 const Comment = require("../models/Comment");
+const Report = require("../models/Report");
 const urlSlug = require("url-slug");
 
 module.exports = {
@@ -200,5 +201,22 @@ module.exports = {
 
     //not owner, not admin -> not permission!
     res.status(401).json({ success: false, message: "Unauthorized" });
+  },
+
+  report: async (req, res, next) => {
+    const reportObj = req.verified.body;
+    const { post_id } = reportObj;
+
+    const report = new Report(reportObj);
+    await report.save();
+
+    const post = await Post.findById(post_id);
+    let { report_list } = post;
+    if (!report_list.includes(report._id.toString())) {
+      report_list.push(report._id);
+      await post.updateOne({ report_list, is_flag: true });
+    }
+
+    return res.status(200).json({ success: true });
   },
 };

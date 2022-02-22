@@ -82,6 +82,15 @@ const schemas = {
   updateCommentSchema: Joi.object().keys({
     content: Joi.string().required().min(3),
   }),
+  reportSchema: Joi.object().keys({
+    author_email: Joi.string().required().email(),
+    author_name: Joi.string().required().min(2),
+    post_id: Joi.string()
+    .required()
+    .regex(/^[0-9A-Fa-f]{24}$/),
+    report_title: Joi.string().required().min(2),
+    report_content: Joi.string().required().min(3)
+  }),
 };
 
 module.exports = {

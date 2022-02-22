@@ -5,6 +5,7 @@ const Post = new Schema(
   {
     approve: { type: Boolean, default: false },
     is_flag: { type: Boolean, default: false },
+    report_list: [{ type: Schema.Types.ObjectId, ref: "Report" }],
     title: { type: String, required: true, min: 3, unique: true },
     slug: { type: String, unique: true },
     content: { type: String, required: true, min: 10 },

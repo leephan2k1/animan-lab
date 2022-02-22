@@ -14,6 +14,10 @@ router.route("/").get(PostController.index);
 router
   .route("/:slug")
   .get(PostController.getPost)
+  .post(
+    validateBody(schemas.reportSchema),
+    PostController.report
+  )
   .patch(
     validateBody(schemas.updatePostSchema),
     verifyAccessToken,
