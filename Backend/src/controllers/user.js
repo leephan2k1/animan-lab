@@ -101,20 +101,7 @@ module.exports = {
   addBookmark: async (req, res, next) => {
     const { sub } = req.payload;
     const { id } = req.verified.body;
-    const { user_name } = req.params;
-    const post = await Post.findById(id);
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    }
     const user = await User.findById(sub);
-
-    if (user_name !== user.user_name) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
 
     const { bookmark_posts } = user;
     if (!bookmark_posts.includes(id.toString())) {
@@ -128,7 +115,9 @@ module.exports = {
     const { sub } = req.payload;
     const { user_name } = req.params;
 
-    const user = await User.findById(sub).populate("bookmark_posts");
+    const user = await User.findById(sub).populate("bookmark_posts", {
+      __v: 0,
+    });
     if (user_name !== user.user_name) {
       return res
         .status(404)
@@ -143,39 +132,19 @@ module.exports = {
   removeBookmark: async (req, res, next) => {
     const { sub } = req.payload;
     const { id } = req.verified.body;
-    const { user_name } = req.params;
-    const post = await Post.findById(id);
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    }
     const user = await User.findById(sub);
-    if (user_name !== user.user_name) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
     let { bookmark_posts } = user;
     if (bookmark_posts.includes(id.toString())) {
       bookmark_posts = bookmark_posts.filter((post) => post.toString() !== id);
+      await user.updateOne({ bookmark_posts });
     }
-    await user.updateOne({ bookmark_posts });
     return res.status(200).json({ success: true });
   },
 
   getLikedList: async (req, res, next) => {
     const { sub } = req.payload;
-    const { id } = req.verified.body;
     const { user_name } = req.params;
-    const post = await Post.findById(id);
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    }
-    const user = await User.findById(sub).populate("like_list");
+    const user = await User.findById(sub).populate("like_list", { __v: 0 });
     if (user_name !== user.user_name) {
       return res
         .status(404)
@@ -187,20 +156,8 @@ module.exports = {
   addLikePost: async (req, res, next) => {
     const { sub } = req.payload;
     const { id } = req.verified.body;
-    const { user_name } = req.params;
     const post = await Post.findById(id);
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    }
     const user = await User.findById(sub);
-    if (user_name !== user.user_name) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
     let { like_list } = user;
     if (!like_list.includes(id)) {
       like_list.push(id);
@@ -220,20 +177,8 @@ module.exports = {
   removeLikePost: async (req, res, next) => {
     const { sub } = req.payload;
     const { id } = req.verified.body;
-    const { user_name } = req.params;
     const post = await Post.findById(id);
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    }
     const user = await User.findById(sub);
-    if (user_name !== user.user_name) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
     let { like_list } = user;
     if (like_list.includes(id)) {
       like_list = like_list.filter((post) => post.toString() !== id);

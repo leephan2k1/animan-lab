@@ -8,6 +8,7 @@ const {
 const passport = require("passport");
 require("../middlewares/passport");
 const { verifyAccessToken } = require("../helper/jwtService");
+const { checkExistPost_UserName } = require("../middlewares/validateModel")
 
 /*
 /v1/users/:user-name
@@ -28,11 +29,13 @@ router
   .post(
     validateBody(schemas.objectIdRequiredSchema),
     verifyAccessToken,
+    checkExistPost_UserName,
     UserController.addBookmark
   )
   .delete(
     validateBody(schemas.objectIdRequiredSchema),
     verifyAccessToken,
+    checkExistPost_UserName,
     UserController.removeBookmark
   );
 
@@ -45,11 +48,13 @@ router
   .post(
     validateBody(schemas.objectIdRequiredSchema),
     verifyAccessToken,
+    checkExistPost_UserName,
     UserController.addLikePost
   )
   .delete(
     validateBody(schemas.objectIdRequiredSchema),
     verifyAccessToken,
+    checkExistPost_UserName,
     UserController.removeLikePost
   );
 
