@@ -20,6 +20,11 @@ module.exports = {
         .json({ success: false, message: "Post not found or not approved" });
     }
 
+    //up view for post
+    let { view } = post;
+    view++;
+    await post.updateOne({ view });
+
     return res.status(200).json({ success: true, post });
   },
 
