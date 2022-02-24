@@ -17,12 +17,14 @@ module.exports = {
     const { content, postSlug } = req.verified.body;
     const user = await User.findById(sub);
     const post = await Post.findOne({ slug: postSlug });
+
     if (!post) {
       return res.status(404).json({
         success: false,
         message: "Slug not match any post",
       });
     }
+
     if (!user.can_comment) {
       return res
         .status(401)
@@ -66,6 +68,7 @@ module.exports = {
     }
 
     const user = await User.findById(sub);
+
     //check roles
     if (user.roles.find((role) => role === "admin")) {
       await Report.deleteMany({ post_id: comment._id });
@@ -75,8 +78,10 @@ module.exports = {
         .status(200)
         .json({ success: true, message: "comment has been deleted by admin" });
     } else if (user._id.toString() === comment.author_id.toString()) {
+
       await Report.deleteMany({ post_id: comment._id });
       await comment.remove();
+      
       //remove comment in post & user in middleware model Comment
       return res
         .status(200)
@@ -114,11 +119,13 @@ module.exports = {
     const { sub } = req.payload;
     const { id } = req.verified.body;
     const comment = await Comment.findById(id);
+
     if (!comment) {
       return res
         .staus(404)
         .json({ success: false, message: "Comment not found" });
     }
+    
     const user = await User.findById(sub);
     let { like_comments } = user;
     if (!like_comments.includes(id)) {

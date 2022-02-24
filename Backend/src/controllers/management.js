@@ -16,6 +16,7 @@ module.exports = {
     const { id } = req.verified.body;
     const post = await Post.findById(id);
     const { approve } = post;
+    
     if (!post) {
       return res
         .status(404)
@@ -36,6 +37,7 @@ module.exports = {
   banUser: async (req, res, next) => {
     const { id } = req.verified.body;
     const user = await User.findById(id);
+
     if (!user) {
       return res.status(404).json({ success: true, message: "User not found" });
     }
@@ -48,6 +50,7 @@ module.exports = {
   unbanUser: async (req, res, next) => {
     const { id } = req.verified.body;
     const user = await User.findById(id);
+
     if (!user) {
       return res.status(404).json({ success: true, message: "User not found" });
     }
@@ -61,13 +64,16 @@ module.exports = {
     const { id } = req.verified.body;
     const user = await User.findById(id);
     const { roles } = user;
+
     if (!user) {
       return res.status(404).json({ success: true, message: "User not found" });
     }
+
     if (!roles.includes("mod")) {
       roles.push("mod");
       await user.updateOne({ roles });
     }
+
     res.status(200).json({ success: true });
   },
 
@@ -75,13 +81,16 @@ module.exports = {
     const { id } = req.verified.body;
     const user = await User.findById(id);
     let { roles } = user;
+
     if (!user) {
       return res.status(404).json({ success: true, message: "User not found" });
     }
+
     if (roles.includes("mod")) {
       roles = roles.filter((role) => role !== "mod");
       await user.updateOne({ roles });
     }
+    
     res.status(200).json({ success: true });
   },
 };

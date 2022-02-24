@@ -2,6 +2,7 @@ const userRoute = require("./user");
 const postRoute = require("./post");
 const commentRoute = require("./comment");
 const managementRoute = require("./management");
+const SearchController = require("../controllers/search");
 
 function route(app) {
   const version = "v1";
@@ -13,6 +14,8 @@ function route(app) {
   app.use(`/${version}/comments`, commentRoute);
 
   app.use(`/${version}/managements`, managementRoute);
+
+  app.use(`/${version}/search`, SearchController.filters);
 }
 
 module.exports = route;
