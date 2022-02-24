@@ -13,12 +13,20 @@ router
   .get(verifyAccessToken, checkApprover, ManagementController.getPost);
 
 /*
-/v1/managements/get-flag-post (approve: false)
+/v1/managements/get-flag-post (is_flag: false)
 roles: admin || mod
 */
 router
   .route("/get-flag-post")
   .get(verifyAccessToken, checkApprover, ManagementController.getFlagPost);
+
+/*
+/v1/managements/get-flag-post (is_flag: false)
+roles: admin || mod
+*/
+router
+  .route("/get-flag-comment")
+  .get(verifyAccessToken, checkApprover, ManagementController.getFlagComment);
 
 /*
 /v1/managements/approve-post

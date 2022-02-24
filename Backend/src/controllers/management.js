@@ -16,7 +16,7 @@ module.exports = {
     const { id } = req.verified.body;
     const post = await Post.findById(id);
     const { approve } = post;
-    
+
     if (!post) {
       return res
         .status(404)
@@ -90,7 +90,12 @@ module.exports = {
       roles = roles.filter((role) => role !== "mod");
       await user.updateOne({ roles });
     }
-    
+
     res.status(200).json({ success: true });
+  },
+
+  getFlagComment: async (req, res, next) => {
+    const comment = await Post.find({ flag: true }, { __v: 0 });
+    return res.status(200).json({ success: true, comment });
   },
 };
