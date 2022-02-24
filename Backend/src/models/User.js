@@ -30,6 +30,7 @@ const User = new Schema(
     roles: { type: Array, default: ["user"] },
     points: { type: Number, default: 0 },
     like_list: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+    myLove_list: [{type: Schema.Types.ObjectId, ref: "MyLove"}]
   },
   {
     timestamps: true,
