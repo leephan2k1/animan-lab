@@ -17,7 +17,7 @@ const MyLove = new Schema(
       type: String,
       min: 5,
     },
-    tags: [{ type: String, min: 5 }],
+    tags: [{ type: String, min: 2 }],
     type: {
       type: String,
       required: true,

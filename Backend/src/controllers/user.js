@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const MyLove = require("../models/MyLove");
 const RefreshToken = require("../models/Token");
 const {
   signAccessToken,
@@ -203,5 +204,22 @@ module.exports = {
     }
 
     return res.status(200).json({ success: true });
+  },
+
+  createMyLove: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { title, type, description, image, tags } = req.body;
+    const myLove = new MyLove({
+      title,
+      type,
+      author: sub,
+      description: description || "",
+      image: image || "",
+      tags: tags || [],
+    });
+
+    await myLove.save();
+
+    return res.status(200).json({ success: true, myLove });
   },
 };

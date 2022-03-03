@@ -8,7 +8,7 @@ const {
 const passport = require("passport");
 require("../middlewares/passport");
 const { verifyAccessToken } = require("../helper/jwtService");
-const { checkExistPost_UserName } = require("../middlewares/validateModel")
+const { checkExistPost_UserName } = require("../middlewares/validateModel");
 
 /*
 /v1/users/:user-name
@@ -37,6 +37,16 @@ router
     verifyAccessToken,
     checkExistPost_UserName,
     UserController.removeBookmark
+  );
+/*
+/v1/users/:user_name/mylove
+*/
+router
+  .route("/:user_name/mylove")
+  .post(
+    verifyAccessToken,
+    validateBody(schemas.myLoveSchema),
+    UserController.createMyLove
   );
 
 /*
