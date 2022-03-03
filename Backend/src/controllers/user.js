@@ -217,7 +217,11 @@ module.exports = {
       image: image || "",
       tags: tags || [],
     });
+    const owner = await User.findById(sub);
+    const { myLove_list } = owner;
 
+    myLove_list.push(myLove._id);
+    await owner.updateOne({ myLove_list });
     await myLove.save();
 
     return res.status(200).json({ success: true, myLove });
@@ -240,5 +244,27 @@ module.exports = {
     const myLoves = await MyLove.find(conditions, { __v: 0 });
 
     return res.status(200).json({ success: true, myLoves });
+  },
+
+  removeMyLove: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { id } = req.verified.body;
+
+    const myLove = await MyLove.findById(id);
+    const owner = await User.findById(sub);
+    if (!myLove) {
+      return res
+        .staus(404)
+        .json({ success: false, message: "my love not found" });
+    }
+    
+    if (owner._id.toString() !== myLove.author.toString()) {
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+
+    await myLove.remove();
+    await owner.myLove_list.pull(id);
+
+    return res.status(200).json({ success: true });
   },
 };

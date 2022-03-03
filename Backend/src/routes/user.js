@@ -48,6 +48,11 @@ router
     verifyAccessToken,
     validateBody(schemas.myLoveSchema),
     UserController.createMyLove
+  )
+  .delete(
+    verifyAccessToken,
+    validateBody(schemas.objectIdSchema),
+    UserController.removeMyLove
   );
 
 /*
