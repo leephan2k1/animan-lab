@@ -43,6 +43,7 @@ router
 */
 router
   .route("/:user_name/mylove")
+  .get(UserController.getMyLove)
   .post(
     verifyAccessToken,
     validateBody(schemas.myLoveSchema),

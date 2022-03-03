@@ -222,4 +222,23 @@ module.exports = {
 
     return res.status(200).json({ success: true, myLove });
   },
+
+  getMyLove: async (req, res, next) => {
+    const { user_name } = req.params;
+    const { type } = req.query;
+    const ownerMyLove = await User.findOne({ user_name });
+
+    if (!ownerMyLove) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    const { _id } = ownerMyLove;
+
+    const conditions = { author: _id };
+    if (type) conditions.type = type;
+    const myLoves = await MyLove.find(conditions, { __v: 0 });
+
+    return res.status(200).json({ success: true, myLoves });
+  },
 };
