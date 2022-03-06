@@ -3,6 +3,7 @@ const User = require("../models/User");
 const Comment = require("../models/Comment");
 const Report = require("../models/Report");
 const urlSlug = require("url-slug");
+const { existChecker, nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
   index: async (req, res, next) => {
@@ -36,20 +37,10 @@ module.exports = {
 
     //check exist post title
     const duplicatedTitle = await Post.findOne({ title });
-    if (duplicatedTitle) {
-      return res.status(401).json({
-        success: false,
-        message: "Duplicated title",
-      });
-    }
+    existChecker(duplicatedTitle, "Duplicated title", res);
 
     //check user has been banned:
-    if (!owner.can_post) {
-      return res.status(401).json({
-        success: false,
-        message: "User has been banned",
-      });
-    }
+    nonExistChecker(owner.can_post, "User has been banned", res);
 
     //generator slug
     const slug = urlSlug(title);
@@ -78,7 +69,7 @@ module.exports = {
     owner.posts.push(post._id);
     await owner.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       post: postPayload,
       slug,
@@ -92,19 +83,11 @@ module.exports = {
 
     const postOwner = await User.findById(sub);
     const post = await Post.findOne({ slug });
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "post not found" });
-    }
+
+    nonExistChecker(post, "post not found", res);
 
     //check user has been banned:
-    if (!postOwner.can_post) {
-      return res.status(401).json({
-        success: false,
-        message: "User has been banned",
-      });
-    }
+    nonExistChecker(postOwner.can_post, "User has been banned", res);
 
     //check post owner or check the user's permission to be able to modify the post
     if (
@@ -121,12 +104,7 @@ module.exports = {
     if (payload.title) {
       //check exist post title
       const duplicatedTitle = await Post.findOne({ title: payload.title });
-      if (duplicatedTitle) {
-        return res.status(401).json({
-          success: false,
-          message: "Duplicated title",
-        });
-      }
+      existChecker(duplicatedTitle, "Duplicated title", res);
       //save new title
       post.title = payload.title;
       //save new slug
@@ -150,12 +128,8 @@ module.exports = {
     const user = await User.findById(sub);
     const post = await Post.findOne({ slug });
 
-    if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: "post not found",
-      });
-    }
+    nonExistChecker(post, "post not found", res);
+
     //check admin -> [true] delete by admin
     if (user.roles.find((role) => role === "admin")) {
       // delete comment in collection Comments & comments in user
@@ -241,11 +215,7 @@ module.exports = {
     await report.save();
 
     const post = await Post.findById(post_id);
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    }
+    nonExistChecker(post, "Post not found", res);
 
     let { report_list } = post;
     if (!report_list.includes(report._id.toString())) {

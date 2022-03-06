@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const { nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
   getPost: async (req, res, next) => {
@@ -17,11 +18,7 @@ module.exports = {
     const post = await Post.findById(id);
     const { approve } = post;
 
-    if (!post) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Post not found" });
-    }
+    nonExistChecker(post, "Post not found", res);
 
     if (!approve) {
       await post.updateOne({ approve: true });
@@ -38,9 +35,7 @@ module.exports = {
     const { id } = req.verified.body;
     const user = await User.findById(id);
 
-    if (!user) {
-      return res.status(404).json({ success: true, message: "User not found" });
-    }
+    nonExistChecker(user, "User not found", res);
 
     await user.updateOne({ can_post: false, can_comment: false });
 
@@ -51,9 +46,7 @@ module.exports = {
     const { id } = req.verified.body;
     const user = await User.findById(id);
 
-    if (!user) {
-      return res.status(404).json({ success: true, message: "User not found" });
-    }
+    nonExistChecker(user, "User not found", res);
 
     await user.updateOne({ can_post: true, can_comment: true });
 
@@ -65,9 +58,7 @@ module.exports = {
     const user = await User.findById(id);
     const { roles } = user;
 
-    if (!user) {
-      return res.status(404).json({ success: true, message: "User not found" });
-    }
+    nonExistChecker(user, "User not found", res);
 
     if (!roles.includes("mod")) {
       roles.push("mod");
@@ -82,9 +73,7 @@ module.exports = {
     const user = await User.findById(id);
     let { roles } = user;
 
-    if (!user) {
-      return res.status(404).json({ success: true, message: "User not found" });
-    }
+    nonExistChecker(user, "User not found", res);
 
     if (roles.includes("mod")) {
       roles = roles.filter((role) => role !== "mod");
