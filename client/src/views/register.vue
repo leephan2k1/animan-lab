@@ -35,7 +35,7 @@
               type="text"
               required
               name="firstName"
-              v-model="formValues.firstName"
+              v-model="formValues.first_name"
               class="h-8 p-2 rounded-md border-[1px] border-gray-700 focus:ring focus:border-blue-500"
               placeholder="Nhập tên của bạn..."
             />
@@ -47,7 +47,7 @@
             <input
               type="text"
               required
-              v-model="formValues.lastName"
+              v-model="formValues.last_name"
               class="h-8 p-2 rounded-md border-[1px] border-gray-700 focus:ring focus:border-blue-500"
               placeholder="Nhập họ của bạn..."
             />
@@ -58,16 +58,18 @@
             </label>
             <div
               class="message text-red-500 text-sm"
-              v-if="validateForm.existUserName === true"
+              v-if="validateForm.existUserName"
             >
               <p>User name đã tồn tại</p>
             </div>
             <input
               type="text"
               required
+              name="userName"
               class="h-8 p-2 rounded-md border-[1px] border-gray-700 focus:ring focus:border-blue-500"
               placeholder="Nhập tên người dùng..."
               @keyup="onChangeUserName($event)"
+              v-model="formValues.user_name"
             />
             <p class="text-gray-400 h-fit my-2">
               Thông tin này sẽ được hiển thị trên website sau này, không thể
@@ -82,12 +84,11 @@
               class="message text-red-500 text-sm"
               v-if="!validateForm.validEmail || validateForm.existEmail"
             >
-              <p>
-                {{
-                  !validateForm.validEmail
-                    ? "Email không hợp lệ"
-                    : "Email đã được sử dụng"
-                }}
+              <p v-if="validateForm.existEmail && validateForm.validEmail">
+                Email đã được sử dụng
+              </p>
+              <p v-if="!validateForm.validEmail && !validateForm.existEmail">
+                Email không hợp lệ
               </p>
             </div>
             <input
@@ -168,12 +169,15 @@
 import OptionalButton from "@/components/VueButton.vue";
 import { ref, reactive, onMounted } from "vue";
 import RepositoryFactory from "@/api/repositoryFactory";
+import useSignUp from "@/hooks/useSignUp";
 
 export default {
   components: {
     OptionalButton,
   },
   setup() {
+    const { signUp, err, isPending } = useSignUp();
+
     const formRef = ref();
     const validateForm = reactive({
       validEmail: true,
@@ -183,8 +187,8 @@ export default {
       matchPassword: true,
     });
     const formValues = reactive({
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       user_name: "",
       email: "",
       password: "",
@@ -192,38 +196,63 @@ export default {
     const userRepository = RepositoryFactory.get("users");
     let debounceInput = ref(null);
 
-    function onSubmit() {
-      //checking strong password:
+    async function onSubmit() {
+      //check strong password:
       if (!validatePassword(formValues.password)) {
         validateForm.weakPassword = true;
         formRef.value["password"].classList.add("error");
         return;
       }
-      //checking match re-password:
+
+      //check match re-password:
       if (formRef.value["re-password"].value !== formValues.password) {
         validateForm.matchPassword = false;
         formRef.value["re-password"].classList.add("error");
         return;
       }
 
+      //check email exist
+      try {
+        const res = await userRepository.search({ email: formValues.email });
+        if (res.success) {
+          validateForm.existEmail = true;
+          formRef.value["email"].classList.add("error");
+          return;
+        } else {
+          validateForm.existEmail = false;
+          formRef.value["email"].classList.remove("error");
+        }
+      } catch (err) {}
+
+      //check user name exist
+      try {
+        const res = await userRepository.search({
+          user_name: formValues.user_name,
+        });
+        console.log(res);
+        if (res.success) {
+          validateForm.existUserName = true;
+          formRef.value["userName"].classList.add("error");
+          return;
+        } else {
+          validateForm.existUserName = false;
+          formRef.value["userName"].classList.remove("error");
+        }
+      } catch (err) {}
+
       //call api register
       console.log("form values: ", formValues);
     }
 
     function onChangeUserName(event) {
-      if (debounceInput) {
-        clearTimeout(debounceInput);
-      }
-
-      debounceInput = setTimeout(() => {
-        formValues.user_name = event.target.value;
-
-        //call api check user name:
-        console.log(formValues.user_name);
-      }, 800);
+      // reset css
+      validateForm.existUserName = false;
+      formRef.value["userName"].classList.remove("error");
     }
 
     function onChangeEmail(event) {
+      //reset css
+      validateForm.existEmail = false;
       if (debounceInput) {
         clearTimeout(debounceInput);
       }
@@ -241,9 +270,6 @@ export default {
           validateForm.validEmail = true;
           formRef.value["email"].classList.remove("error");
         }
-
-        //call api check email:
-        console.log(formValues.email);
       }, 1200);
     }
 
@@ -255,6 +281,7 @@ export default {
       validateForm.matchPassword = true;
       formRef.value["re-password"].classList.remove("error");
     }
+
     function resetCSSpassword() {
       validateForm.weakPassword = false;
       formRef.value["password"].classList.remove("error");

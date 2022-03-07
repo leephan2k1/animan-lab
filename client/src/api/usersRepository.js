@@ -4,7 +4,10 @@ const resource = "/users";
 
 const usersAPI = {
   search: (params) => {
-    axiosClient.get(resource, { params });
+    return axiosClient.get(`${resource}/search`, { params });
+  },
+  register: (payload) => {
+    return axiosClient.post(`${resource}/sign-up`, payload);
   },
 };
 
