@@ -11,6 +11,21 @@ const createError = require("http-errors");
 const { existChecker, nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
+  filters: async (req, res, next) => {
+    const { email, user_name } = req.query;
+
+    const conditions = {};
+    if (email) conditions.email = email;
+    if (user_name) conditions.user_name = user_name;
+
+    const user = await User.findOne(conditions, { __v: 0 });
+    nonExistChecker(user, "User not found", res);
+
+    return res.status(200).json({
+      success: true,
+    });
+  },
+
   signUp: async (req, res, next) => {
     const { first_name, last_name, user_name, email, password } =
       req.verified.body;
@@ -58,7 +73,7 @@ module.exports = {
     const { user_name } = req.verified.params;
     const user = await User.findOne({ user_name }, { __v: 0, password: 0 });
 
-    nonExistChecker(user, "User not found", res)
+    nonExistChecker(user, "User not found", res);
 
     res.status(200).json({ success: true, user });
   },
@@ -234,7 +249,7 @@ module.exports = {
     const { type } = req.query;
     const ownerMyLove = await User.findOne({ user_name });
 
-    nonExistChecker(ownerMyLove, "User not found", res)
+    nonExistChecker(ownerMyLove, "User not found", res);
 
     const { _id } = ownerMyLove;
     const conditions = { author: _id };
@@ -252,7 +267,7 @@ module.exports = {
     const myLove = await MyLove.findById(id);
     const owner = await User.findById(sub);
 
-    nonExistChecker(myLove, "my love not found", res)
+    nonExistChecker(myLove, "my love not found", res);
 
     if (owner._id.toString() !== myLove.author.toString()) {
       return res.status(403).json({ success: false, message: "Unauthorized" });
