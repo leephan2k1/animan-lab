@@ -1,0 +1,11 @@
+@font-face {
+  font-family: "SVN-Kashima Brush";
+  src: url("@/assets/fonts/SVN-KashimaBrush.woff") format("woff2"),
+    url("@/assets/fonts/SVN-KashimaBrush.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+*:focus {
+  outline: none;
+}

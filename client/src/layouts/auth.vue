@@ -1,4 +1,5 @@
 <template>
-  <h1>Auth layout</h1>
-  <slot />
+  <div class="bg-main w-full h-screen overflow-x-hidden flex items-center">
+    <slot />
+  </div>
 </template>

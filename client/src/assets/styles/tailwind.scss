@@ -8,3 +8,8 @@
     @apply font-body;
   }
 }
+@layer components {
+  .absolute-center {
+    @apply flex justify-center items-center;
+  }
+}
