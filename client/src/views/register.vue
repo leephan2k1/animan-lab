@@ -167,6 +167,7 @@
 <script>
 import OptionalButton from "@/components/VueButton.vue";
 import { ref, reactive, onMounted } from "vue";
+import RepositoryFactory from "@/api/repositoryFactory";
 
 export default {
   components: {
@@ -188,6 +189,7 @@ export default {
       email: "",
       password: "",
     });
+    const userRepository = RepositoryFactory.get("users");
     let debounceInput = ref(null);
 
     function onSubmit() {
