@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Comment = require("../models/Comment");
 const Post = require("../models/Post");
 const Report = require("../models/Report");
+const { existChecker, nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
   index: async (req, res, next) => {
@@ -18,12 +19,7 @@ module.exports = {
     const user = await User.findById(sub);
     const post = await Post.findOne({ slug: postSlug });
 
-    if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: "Slug not match any post",
-      });
-    }
+    nonExistChecker(post, "Slug not match any post", res);
 
     if (!user.can_comment) {
       return res
@@ -60,12 +56,7 @@ module.exports = {
     const commentId = req.verified.params.id;
     const comment = await Comment.findById(commentId);
 
-    if (!comment) {
-      return res.status(404).json({
-        success: false,
-        message: "comment id is not valid",
-      });
-    }
+    nonExistChecker(comment, "comment id is not valid", res);
 
     const user = await User.findById(sub);
 
@@ -78,10 +69,9 @@ module.exports = {
         .status(200)
         .json({ success: true, message: "comment has been deleted by admin" });
     } else if (user._id.toString() === comment.author_id.toString()) {
-
       await Report.deleteMany({ post_id: comment._id });
       await comment.remove();
-      
+
       //remove comment in post & user in middleware model Comment
       return res
         .status(200)
@@ -120,12 +110,8 @@ module.exports = {
     const { id } = req.verified.body;
     const comment = await Comment.findById(id);
 
-    if (!comment) {
-      return res
-        .staus(404)
-        .json({ success: false, message: "Comment not found" });
-    }
-    
+    nonExistChecker(comment, "Comment not found", res);
+
     const user = await User.findById(sub);
     let { like_comments } = user;
     if (!like_comments.includes(id)) {
@@ -179,11 +165,7 @@ module.exports = {
     await report.save();
 
     const comment = await Comment.findById(post_id);
-    if (!comment) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Comment not found" });
-    }
+    nonExistChecker(comment, "Comment not found", res);
 
     let { report_list } = comment;
     if (!report_list.includes(report._id.toString())) {

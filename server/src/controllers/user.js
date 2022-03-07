@@ -8,25 +8,34 @@ const {
   verifyRefreshToken,
 } = require("../helper/jwtService");
 const createError = require("http-errors");
+const { existChecker, nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
+  filters: async (req, res, next) => {
+    const { email, user_name } = req.query;
+
+    const conditions = {};
+    if (email) conditions.email = email;
+    if (user_name) conditions.user_name = user_name;
+
+    const user = await User.findOne(conditions, { __v: 0 });
+    nonExistChecker(user, "User not found", res);
+
+    return res.status(200).json({
+      success: true,
+    });
+  },
+
   signUp: async (req, res, next) => {
     const { first_name, last_name, user_name, email, password } =
       req.verified.body;
     //check email was registered
     const existEmail = await User.findOne({ email });
-    if (existEmail) {
-      return res
-        .status(401)
-        .json({ success: false, message: "email is already registered" });
-    }
+    existChecker(existEmail, "email is already registered", res);
+
     //check user_name was registered
     const existUserName = await User.findOne({ user_name });
-    if (existUserName) {
-      return res
-        .status(401)
-        .json({ success: false, message: "user name already exists" });
-    }
+    existChecker(existUserName, "user name already exists", res);
 
     //create user & save user to db
     const newUser = new User({
@@ -63,11 +72,9 @@ module.exports = {
   getInfo: async (req, res, next) => {
     const { user_name } = req.verified.params;
     const user = await User.findOne({ user_name }, { __v: 0, password: 0 });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
+
+    nonExistChecker(user, "User not found", res);
+
     res.status(200).json({ success: true, user });
   },
 
@@ -76,9 +83,11 @@ module.exports = {
     if (!refreshToken) {
       throw createError.BadRequest();
     }
+
     const { sub } = await verifyRefreshToken(refreshToken);
     const refreshTokenOdd = await RefreshToken.findOne({ userId: sub });
     await refreshTokenOdd.remove();
+
     res.status(200).json({
       success: true,
     });
@@ -135,10 +144,12 @@ module.exports = {
     const { id } = req.verified.body;
     const user = await User.findById(sub);
     let { bookmark_posts } = user;
+
     if (bookmark_posts.includes(id.toString())) {
       bookmark_posts = bookmark_posts.filter((post) => post.toString() !== id);
       await user.updateOne({ bookmark_posts });
     }
+
     return res.status(200).json({ success: true });
   },
 
@@ -146,11 +157,13 @@ module.exports = {
     const { sub } = req.payload;
     const { user_name } = req.params;
     const user = await User.findById(sub).populate("like_list", { __v: 0 });
+
     if (user_name !== user.user_name) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
+
     return res.status(200).json({ success: true, like_list: user.like_list });
   },
 
@@ -160,6 +173,7 @@ module.exports = {
     const post = await Post.findById(id);
     const user = await User.findById(sub);
     let { like_list } = user;
+
     if (!like_list.includes(id)) {
       like_list.push(id);
       await user.updateOne({ like_list });
@@ -186,6 +200,7 @@ module.exports = {
     const post = await Post.findById(id);
     const user = await User.findById(sub);
     let { like_list } = user;
+
     if (like_list.includes(id)) {
       like_list = like_list.filter((post) => post.toString() !== id);
       await user.updateOne({ like_list });
@@ -209,6 +224,7 @@ module.exports = {
   createMyLove: async (req, res, next) => {
     const { sub } = req.payload;
     const { title, type, description, image, tags } = req.body;
+
     const myLove = new MyLove({
       title,
       type,
@@ -217,6 +233,7 @@ module.exports = {
       image: image || "",
       tags: tags || [],
     });
+
     const owner = await User.findById(sub);
     const { myLove_list } = owner;
 
@@ -232,14 +249,11 @@ module.exports = {
     const { type } = req.query;
     const ownerMyLove = await User.findOne({ user_name });
 
-    if (!ownerMyLove) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-    const { _id } = ownerMyLove;
+    nonExistChecker(ownerMyLove, "User not found", res);
 
+    const { _id } = ownerMyLove;
     const conditions = { author: _id };
+
     if (type) conditions.type = type;
     const myLoves = await MyLove.find(conditions, { __v: 0 });
 
@@ -252,12 +266,9 @@ module.exports = {
 
     const myLove = await MyLove.findById(id);
     const owner = await User.findById(sub);
-    if (!myLove) {
-      return res
-        .staus(404)
-        .json({ success: false, message: "my love not found" });
-    }
-    
+
+    nonExistChecker(myLove, "my love not found", res);
+
     if (owner._id.toString() !== myLove.author.toString()) {
       return res.status(403).json({ success: false, message: "Unauthorized" });
     }
