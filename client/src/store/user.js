@@ -5,7 +5,6 @@ import {
   AUTH_LOGOUT,
 } from "@/constants";
 import RepositoryFactory from "@/api/repositoryFactory";
-import axiosClient from "@/api/axiosClient";
 
 const userRepository = RepositoryFactory.get("users");
 

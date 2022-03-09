@@ -29,11 +29,13 @@
               <span>Email: </span>
             </label>
             <input
+              @keyup="resetStyles"
               type="text"
               ref="emailRef"
               required
               class="h-8 p-2 rounded-md border-[1px] border-gray-700 focus:ring focus:border-blue-500"
               placeholder="Nhập email của bạn..."
+              v-model="formValues.email"
             />
           </div>
           <div class="row">
@@ -41,11 +43,16 @@
               <span>Mật khẩu: </span>
             </label>
             <input
+              @keyup="resetStyles"
               type="password"
               required
               class="h-8 p-2 rounded-md border-[1px] border-gray-700 focus:ring focus:border-blue-500"
               placeholder="Nhập mật khẩu..."
+              v-model="formValues.password"
             />
+            <p class="message text-red-500 text-sm" v-if="!loginState">
+              Email hoặc mật khẩu không chính xác
+            </p>
           </div>
           <div class="row">
             <div class="w-full flex items-center mt-1">
@@ -72,8 +79,13 @@
 </template>
 
 <script>
+import { ref, onMounted, reactive } from "vue";
+import { useToast } from "vue-toastification";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+import { AUTH_REQUEST } from "@/constants";
 import OptionalButton from "@/components/VueButton.vue";
-import { ref, onMounted } from "vue";
 
 export default {
   components: {
@@ -81,9 +93,45 @@ export default {
   },
   setup() {
     const emailRef = ref();
+    const formValues = reactive({
+      email: "",
+      password: "",
+    });
+    const loginState = ref(true);
+    const store = useStore();
+    const toast = useToast();
+    const router = useRouter();
 
-    function onSubmit() {
-      console.log("submit");
+    async function onSubmit() {
+      formValues.requestType = "signIn";
+      await store.dispatch(`auth/${AUTH_REQUEST}`, formValues);
+
+      const { status } = store.state.auth;
+      if (status !== "success") {
+        loginState.value = false;
+      } else {
+        toast.success("Đăng nhập thành công", {
+          position: "top-center",
+          timeout: 2500,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+        setTimeout(() => {
+          router.push({ name: "home" });
+        }, 2500);
+      }
+    }
+
+    function resetStyles() {
+      loginState.value = true;
     }
 
     onMounted(() => {
@@ -92,7 +140,7 @@ export default {
       }
     });
 
-    return { onSubmit, emailRef };
+    return { onSubmit, emailRef, formValues, loginState, resetStyles };
   },
 };
 </script>

@@ -215,6 +215,7 @@ export default {
       }
 
       //call api register
+      formValues.requestType = "signUp";
       await store.dispatch(`auth/${AUTH_REQUEST}`, formValues);
       const { status } = store.state.auth;
 
@@ -232,7 +233,7 @@ export default {
           return;
         }
       } else {
-        toast.success("Đăng ký thành công", {
+        toast.success("Đăng ký thành công, arigato gozaimas!", {
           position: "top-center",
           timeout: 2500,
           closeOnClick: true,

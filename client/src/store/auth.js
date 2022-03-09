@@ -41,7 +41,23 @@ export default {
     [AUTH_REQUEST]: async ({ commit }, user) => {
       try {
         commit(AUTH_REQUEST);
-        const response = await userRepository.signUp(user);
+        let response;
+
+        if (user.requestType === "signUp") {
+          delete user.requestType;
+          response = await userRepository.signUp(user);
+        }
+
+        if (user.requestType === "signIn") {
+          delete user.requestType;
+          response = await userRepository.signIn(user);
+        }
+
+        if (!response) {
+          commit(AUTH_ERROR);
+          return;
+        }
+
         const { authorization } = response.headers;
         const { refreshtoken } = response.headers;
 
