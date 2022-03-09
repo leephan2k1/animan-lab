@@ -166,18 +166,19 @@
 </template>
 
 <script>
-import OptionalButton from "@/components/VueButton.vue";
 import { ref, reactive, onMounted } from "vue";
-import RepositoryFactory from "@/api/repositoryFactory";
-import useSignUp from "@/hooks/useSignUp";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+import OptionalButton from "@/components/VueButton.vue";
+import { useToast } from "vue-toastification";
+import { AUTH_REQUEST } from "@/constants";
 
 export default {
   components: {
     OptionalButton,
   },
   setup() {
-    const { signUp, err, isPending } = useSignUp();
-
     const formRef = ref();
     const validateForm = reactive({
       validEmail: true,
@@ -193,7 +194,9 @@ export default {
       email: "",
       password: "",
     });
-    const userRepository = RepositoryFactory.get("users");
+    const store = useStore();
+    const toast = useToast();
+    const router = useRouter();
     let debounceInput = ref(null);
 
     async function onSubmit() {
@@ -211,37 +214,42 @@ export default {
         return;
       }
 
-      //check email exist
-      try {
-        const res = await userRepository.search({ email: formValues.email });
-        if (res.success) {
+      //call api register
+      await store.dispatch(`auth/${AUTH_REQUEST}`, formValues);
+      const { status } = store.state.auth;
+
+      if (status !== "success") {
+        //check email exist
+        if (status === "email is already registered") {
           validateForm.existEmail = true;
           formRef.value["email"].classList.add("error");
           return;
-        } else {
-          validateForm.existEmail = false;
-          formRef.value["email"].classList.remove("error");
         }
-      } catch (err) {}
-
-      //check user name exist
-      try {
-        const res = await userRepository.search({
-          user_name: formValues.user_name,
-        });
-        console.log(res);
-        if (res.success) {
+        //check user name exist
+        if (status === "user name already exists") {
           validateForm.existUserName = true;
           formRef.value["userName"].classList.add("error");
           return;
-        } else {
-          validateForm.existUserName = false;
-          formRef.value["userName"].classList.remove("error");
         }
-      } catch (err) {}
-
-      //call api register
-      console.log("form values: ", formValues);
+      } else {
+        toast.success("Đăng ký thành công", {
+          position: "top-center",
+          timeout: 2500,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false,
+        });
+        setTimeout(() => {
+          router.push({ name: "home" });
+        }, 2500);
+      }
     }
 
     function onChangeUserName(event) {

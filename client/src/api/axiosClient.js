@@ -18,7 +18,8 @@ axiosClient.interceptors.request.use(async (config) => {
 axiosClient.interceptors.response.use(
   (response) => {
     if (response && response.data) {
-      return response.data;
+      console.log("truoc khi respons data:::", response.data);
+      console.log("truoc khi respons:::", response);
     }
     return response;
   },

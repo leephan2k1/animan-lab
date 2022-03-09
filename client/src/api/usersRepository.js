@@ -6,7 +6,7 @@ const usersAPI = {
   search: (params) => {
     return axiosClient.get(`${resource}/search`, { params });
   },
-  register: (payload) => {
+  signUp: (payload) => {
     return axiosClient.post(`${resource}/sign-up`, payload);
   },
 };
