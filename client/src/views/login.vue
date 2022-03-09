@@ -26,7 +26,7 @@
         <form @submit.prevent="onSubmit" class="">
           <div class="row">
             <label for="email" class="my-1">
-              <span>Email: <span class="text-red-500">*</span> </span>
+              <span>Email: </span>
             </label>
             <input
               type="text"
@@ -38,7 +38,7 @@
           </div>
           <div class="row">
             <label for="password" class="my-1">
-              <span>Mật khẩu: <span class="text-red-500">*</span> </span>
+              <span>Mật khẩu: </span>
             </label>
             <input
               type="password"

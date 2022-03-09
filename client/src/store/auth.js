@@ -32,6 +32,10 @@ export default {
     [AUTH_ERROR]: (state, message) => {
       state.status = message || "error";
     },
+    [AUTH_LOGOUT]: (state) => {
+      state.token = "";
+      state.refeshToken = "";
+    },
   },
   actions: {
     [AUTH_REQUEST]: async ({ commit }, user) => {

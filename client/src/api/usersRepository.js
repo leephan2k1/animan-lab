@@ -9,6 +9,9 @@ const usersAPI = {
   signUp: (payload) => {
     return axiosClient.post(`${resource}/sign-up`, payload);
   },
+  getUser: (params) => {
+    return axiosClient.get(`${resource}/${params}`);
+  },
 };
 
 export default usersAPI;
