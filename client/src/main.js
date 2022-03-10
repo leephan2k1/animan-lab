@@ -9,6 +9,8 @@ import assignGlobalComponents from "@/utils/import";
 
 import "@/assets/styles/tailwind.scss";
 import "@/assets/styles/global.scss";
+import "@/assets/styles/grid.scss";
+import "animate.css";
 
 const app = createApp(App);
 
