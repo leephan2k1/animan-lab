@@ -11,6 +11,7 @@ import "@/assets/styles/tailwind.scss";
 import "@/assets/styles/global.scss";
 import "@/assets/styles/grid.scss";
 import "animate.css";
+import "swiper/css";
 
 const app = createApp(App);
 

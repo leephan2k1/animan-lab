@@ -1,5 +1,5 @@
 <template>
-  <div class="home w-full h-[1500px]">
+  <div class="home w-full h-screen">
     <h1>Home page</h1>
     <h1>Home page</h1>
     <h1>Home page</h1>
@@ -22,5 +22,6 @@
 export default {
   name: "HomeView",
   components: {},
+  setup() {},
 };
 </script>

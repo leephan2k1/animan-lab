@@ -11,6 +11,30 @@ const routes = [
     component: HomeView,
   },
   {
+    path: "/anime",
+    name: "anime",
+    meta: {
+      layout: "default",
+    },
+    component: () => import("@/views/category.vue"),
+  },
+  {
+    path: "/manga",
+    name: "manga",
+    meta: {
+      layout: "default",
+    },
+    component: () => import("@/views/category.vue"),
+  },
+  {
+    path: "/short",
+    name: "short",
+    meta: {
+      layout: "default",
+    },
+    component: () => import("@/views/shortPost.vue"),
+  },
+  {
     path: "/register",
     name: "register",
     meta: {

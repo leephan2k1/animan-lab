@@ -13,10 +13,34 @@
         class="basis-2/5 font-black text-gray-400 md:text-sm lg:text-lg whitespace-nowrap antialiased w-[500px] lg:block hidden"
       >
         <ul class="flex items-center justify-around cursor-pointer">
-          <li class="active min-w-1/4 px-2">Trang chủ</li>
-          <li class="min-w-1/4 px-2">Anime docs</li>
-          <li class="min-w-1/4 px-2">Manga docs</li>
-          <li class="min-w-1/4 px-2">Animan sorts</li>
+          <router-link
+            class="nav-element min-w-1/4 px-2 transition-all duration-300"
+            :class="{ active: currentPath === 'home' }"
+            :to="{ name: 'home' }"
+          >
+            Trang chủ
+          </router-link>
+          <router-link
+            class="nav-element min-w-1/4 px-2 transition-all duration-300"
+            :class="{ active: currentPath === 'anime' }"
+            :to="{ name: 'anime' }"
+          >
+            Anime docs
+          </router-link>
+          <router-link
+            class="nav-element min-w-1/4 px-2 transition-all duration-300"
+            :class="{ active: currentPath === 'manga' }"
+            :to="{ name: 'manga' }"
+          >
+            Manga docs
+          </router-link>
+          <router-link
+            class="nav-element min-w-1/4 px-2 transition-all duration-300"
+            :class="{ active: currentPath === 'short' }"
+            :to="{ name: 'short' }"
+          >
+            Animan shorts
+          </router-link>
         </ul>
       </nav>
       <div class="basis-2/5 flex justify-end pr-4 relative">
@@ -40,10 +64,12 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import { useRoute } from "vue-router";
 
 import VueButton from "@/components/VueButton.vue";
 import NavbarProfile from "@/components/NavbarProfile.vue";
+import { NAVBAR_CONTENTS } from "@/constants";
 
 export default {
   components: {
@@ -57,19 +83,20 @@ export default {
     const searchBtn = ref(null);
     const app = document.querySelector("#app");
     const toggleSearch = ref(false);
+    const route = useRoute();
+    let currentPath = computed(() => route.name);
+
 
     const handleClickOpenSearch = () => {
       searchBtn.value.classList.remove("w-10", "justify-end");
       searchBtn.value.classList.add("w-48", "justify-center");
       toggleSearch.value = true;
-      console.log(toggleSearch.value);
     };
 
     const handleClickCloseSearch = () => {
       searchBtn.value.classList.add("w-10", "justify-end");
       searchBtn.value.classList.remove("w-48", "justify-center");
       toggleSearch.value = false;
-      console.log(toggleSearch.value);
     };
 
     onMounted(() => {
@@ -80,7 +107,14 @@ export default {
       app.removeEventListener("click", handleClickCloseSearch);
     });
 
-    return { handleClick, handleClickOpenSearch, searchBtn, toggleSearch };
+    return {
+      handleClick,
+      handleClickOpenSearch,
+      searchBtn,
+      toggleSearch,
+      NAVBAR_CONTENTS,
+      currentPath,
+    };
   },
 };
 </script>

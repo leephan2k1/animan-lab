@@ -24,10 +24,38 @@
       </div>
       <div class="w-full h-fit absolute-center mt-5">
         <ul class="w-full text-gray-400">
-          <li class="w-full absolute-center pt-4 md:pt-8 active">Trang chủ</li>
-          <li class="w-full absolute-center pt-4 md:pt-8">Anime news</li>
-          <li class="w-full absolute-center pt-4 md:pt-8">Manga news</li>
-          <li class="w-full absolute-center pt-4 md:pt-8">Quick view</li>
+          <router-link
+            class="w-full absolute-center pt-4 md:pt-8 transition-all duration-300"
+            :class="{ active: currentPath === 'home' }"
+            @click.self="handleClick"
+            :to="{ name: 'home' }"
+          >
+            Trang chủ
+          </router-link>
+          <router-link
+            class="w-full absolute-center pt-4 md:pt-8 transition-all duration-300"
+            :class="{ active: currentPath === 'anime' }"
+            @click.self="handleClick"
+            :to="{ name: 'anime' }"
+          >
+            Anime docs
+          </router-link>
+          <router-link
+            class="w-full absolute-center pt-4 md:pt-8 transition-all duration-300"
+            :class="{ active: currentPath === 'manga' }"
+            @click.self="handleClick"
+            :to="{ name: 'manga' }"
+          >
+            Manga docs
+          </router-link>
+          <router-link
+            class="w-full absolute-center pt-4 md:pt-8 transition-all duration-300"
+            :class="{ active: currentPath === 'short' }"
+            @click.self="handleClick"
+            :to="{ name: 'short' }"
+          >
+            Animan shorts
+          </router-link>
         </ul>
       </div>
     </div>
@@ -36,14 +64,13 @@
     ref="overlay"
     @click.stop="handleClick"
     class="w-full h-full absolute top-0 left-0 bg-overlay z-20 hidden"
-  >
-    hihi
-  </div>
+  ></div>
 </template>
 
 <script>
-// animate__animated animate__fadeOutLeft
-import { ref, computed, onUpdated } from "vue";
+import { ref, computed, watch } from "vue";
+import { useRoute } from "vue-router";
+
 import VueButton from "@/components/VueButton.vue";
 
 export default {
@@ -58,26 +85,30 @@ export default {
   setup(props) {
     const sidebar = ref(null);
     const overlay = ref(null);
-    const toggleSidebar = ref(false);
-    let isActiveSidebar = computed(() => props.showSidebar);
+    const route = useRoute();
+    const currentPath = computed(() => route.name);
 
+    //hidden sidebar
     const handleClick = () => {
-      toggleSidebar.value = true;
-      if (toggleSidebar.value) {
-        sidebar.value.classList.add("animate__fadeOutLeft");
-        sidebar.value.classList.remove("animate__fadeInLeft");
-        overlay.value.classList.add("hidden");
-      }
+      sidebar.value.classList.add("animate__fadeOutLeft");
+      sidebar.value.classList.remove("animate__fadeInLeft");
+      overlay.value.classList.add("hidden");
     };
 
-    onUpdated(() => {
+    //active sidebar from navbar
+    watch(props, () => {
       sidebar.value.classList.add("animate__fadeInLeft");
-      sidebar.value.classList.remove("animate__fadeOutLeft");
-      sidebar.value.classList.remove("hidden");
+      sidebar.value.classList.remove("animate__fadeOutLeft", "hidden");
       overlay.value.classList.remove("hidden");
     });
 
-    return { handleClick, sidebar, toggleSidebar, overlay };
+
+    return {
+      handleClick,
+      sidebar,
+      overlay,
+      currentPath,
+    };
   },
 };
 </script>
