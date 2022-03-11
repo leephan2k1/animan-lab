@@ -12,7 +12,7 @@ const userRepository = RepositoryFactory.get("users");
 export default {
   namespaced: true,
   state: {
-    token: window.sessionStorage.getItem("access-token") || "",
+    token: window.localStorage.getItem("access-token") || "",
     refeshToken: window.localStorage.getItem("refresh-token") || "",
     status: "",
   },
@@ -64,7 +64,7 @@ export default {
         if (response.data.success) {
           //set tokens to storage:
           localStorage.setItem("refresh-token", refreshtoken);
-          sessionStorage.setItem("access-token", authorization);
+          localStorage.setItem("access-token", authorization);
 
           //set access token to axios:
           axiosClient.defaults.headers.common[
@@ -79,7 +79,7 @@ export default {
       } catch (err) {
         console.log(err);
         commit(AUTH_ERROR, "error");
-        sessionStorage.removeItem("access-token");
+        localStorage.removeItem("access-token");
         localStorage.removeItem("refresh-token");
       }
     },
@@ -87,7 +87,7 @@ export default {
       return new Promise((resolve) => {
         commit(AUTH_LOGOUT);
 
-        sessionStorage.removeItem("access-token");
+        localStorage.removeItem("access-token");
         localStorage.removeItem("refresh-token");
 
         delete axiosClient.defaults.headers.common["Authorization"];

@@ -48,7 +48,7 @@
         <router-link
           class="basis-2/3 py-2 hover:text-button"
           :to="{ name: 'register' }"
-          >Bài viết của tôi</router-link
+          >Đăng bài</router-link
         >
       </div>
       <div class="flex w-full items-center justify-center">
