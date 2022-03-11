@@ -124,12 +124,10 @@ export default {
 
     const handleClickProfile = () => {
       toggleDropDown.value = !toggleDropDown.value;
-      console.log(toggleDropDown.value);
     };
 
     const handleClickApp = () => {
       toggleDropDown.value = false;
-      console.log(toggleDropDown.value);
     };
 
     onMounted(() => {

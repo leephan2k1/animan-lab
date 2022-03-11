@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto h-20">
     <div class="w-full h-full flex items-center justify-around">
-      <div class="md:pl-0 pl-4 basis-1/5 lg:hidden">
+      <div @click.stop="handleClick" class="md:pl-0 pl-4 basis-1/5 lg:hidden">
         <VueButton buttonType="menu" styles="text-gray-500" />
       </div>
       <div
@@ -39,6 +39,13 @@ export default {
   components: {
     VueButton,
     NavbarProfile,
+  },
+  setup(_, { emit }) {
+    const handleClick = () => {
+      emit("activeSidebar");
+    };
+
+    return { handleClick };
   },
 };
 </script>

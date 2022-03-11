@@ -5,6 +5,7 @@ module.exports = {
       colors: {
         main: "#f0edf4",
         button: "#6366f1",
+        overlay: "rgb(0, 0, 0, 0.35)",
       },
     },
     fontFamily: {
