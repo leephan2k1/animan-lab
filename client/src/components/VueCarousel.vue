@@ -52,7 +52,7 @@
             ></div>
           </div>
           <p
-            class="rounded-b-xl w-full p-2 text-white bg-white/30 backdrop-blur-md"
+            class="rounded-b-xl whitespace-nowrap text-ellipsis w-full max-h-[40px] overflow-hidden p-2 text-white bg-white/30 backdrop-blur-md"
           >
             User name
           </p>
@@ -63,7 +63,6 @@
 </template>
 
 <script>
-//@/assets/images/anime-girl-sky.png
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { ref } from "vue";
 
