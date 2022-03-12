@@ -23,7 +23,7 @@
     <VueButton buttonType="chervon-down" styles="md:block hidden" />
   </div>
   <div
-    class="absolute top-[50px] w-[150%] md:w-full lg:w-[49%] h-fit bg-white rounded-2xl shadow-xl animate__animated animate__fadeInDown animate__faster"
+    class="absolute top-[50px] w-[150%] md:w-full lg:w-[49%] h-fit bg-white rounded-2xl shadow-xl animate__animated animate__fadeInDown animate__faster z-20"
     v-if="toggleDropDown"
   >
     <div v-if="!isLogged" class="flex flex-col justify-center items-center">

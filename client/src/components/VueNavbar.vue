@@ -4,11 +4,12 @@
       <div @click.stop="handleClick" class="md:pl-0 pl-4 basis-1/5 lg:hidden">
         <VueButton buttonType="menu" styles="text-gray-500" />
       </div>
-      <div
+      <router-link
+        :to="{ name: 'home' }"
         class="lg:basis-1/5 basis-2/5 lg:pl-0 pl-6 font-logo text-4xl select-none whitespace-nowrap"
       >
         <span class="px-2">Animan Lab</span>
-      </div>
+      </router-link>
       <nav
         class="basis-2/5 font-black text-gray-400 md:text-sm lg:text-lg whitespace-nowrap antialiased w-[500px] lg:block hidden"
       >
@@ -69,7 +70,6 @@ import { useRoute } from "vue-router";
 
 import VueButton from "@/components/VueButton.vue";
 import NavbarProfile from "@/components/NavbarProfile.vue";
-import { NAVBAR_CONTENTS } from "@/constants";
 
 export default {
   components: {
@@ -85,7 +85,6 @@ export default {
     const toggleSearch = ref(false);
     const route = useRoute();
     let currentPath = computed(() => route.name);
-
 
     const handleClickOpenSearch = () => {
       searchBtn.value.classList.remove("w-10", "justify-end");
@@ -112,7 +111,6 @@ export default {
       handleClickOpenSearch,
       searchBtn,
       toggleSearch,
-      NAVBAR_CONTENTS,
       currentPath,
     };
   },
