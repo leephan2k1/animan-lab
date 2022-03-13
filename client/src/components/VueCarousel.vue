@@ -29,7 +29,6 @@
       :slidesPerGroup="2"
       :space-between="0"
       @swiper="onSwiper"
-      @slideChange="onSlideChange"
       :breakpoints="breakpoints"
     >
       <swiper-slide
@@ -102,12 +101,8 @@ export default {
       },
     };
 
-    const onSlideChange = () => {
-      console.log("slide change");
-    };
     return {
       onSwiper,
-      onSlideChange,
       swp,
       breakpoints,
       testItems,
