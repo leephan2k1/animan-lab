@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen">
+  <div class="w-full h-fit z-10">
     <h1 class="mt-2 uppercase text-lg">
       Trung tâm nghiên cứu về {{ currentPath }}
     </h1>
