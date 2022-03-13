@@ -3,6 +3,7 @@
     <VueCarousel title="Animan shorts" />
     <HighlightsPost title="Học liệu nổi bật" />
     <PostSuggestions title="Hôm nay đọc gì?" />
+    <VuePost title="Nghiên cứu mới nhất"/>
     <h1>Home page</h1>
   </div>
 </template>
@@ -11,6 +12,7 @@
 import VueCarousel from "@/components/VueCarousel.vue";
 import HighlightsPost from "@/components/HighlightsPost.vue";
 import PostSuggestions from "@/components/PostSuggestions.vue";
+import VuePost from "@/components/VuePost.vue";
 
 export default {
   name: "HomeView",
@@ -18,6 +20,7 @@ export default {
     VueCarousel,
     HighlightsPost,
     PostSuggestions,
+    VuePost,
   },
   setup() {},
 };

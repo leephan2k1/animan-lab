@@ -25,9 +25,14 @@
   @apply bg-gray-400 rounded-2xl;
 }
 
-.post-title {
+.post-title,
+.post-desc {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   white-space: normal;
+}
+
+.post-desc {
+  -webkit-line-clamp: 4;
 }
