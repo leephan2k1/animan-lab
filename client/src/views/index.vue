@@ -4,7 +4,6 @@
     <HighlightsPost title="Học liệu nổi bật" />
     <PostSuggestions title="Hôm nay đọc gì?" />
     <VuePost title="Nghiên cứu mới nhất"/>
-    <h1>Home page</h1>
   </div>
 </template>
 

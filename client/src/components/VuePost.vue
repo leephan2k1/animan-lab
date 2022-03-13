@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-[600px] mt-11">
+  <div class="w-full h-fit mt-11">
     <!-- title  -->
     <div
       class="select-none border-l-4 border-button px-2 flex items-center hover:text-button"
