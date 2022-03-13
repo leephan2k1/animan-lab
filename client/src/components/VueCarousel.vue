@@ -52,7 +52,7 @@
             ></div>
           </div>
           <p
-            class="rounded-b-xl whitespace-nowrap text-ellipsis w-full max-h-[40px] overflow-hidden p-2 text-white bg-white/30 backdrop-blur-md"
+            class="text-sm rounded-b-xl whitespace-nowrap text-ellipsis w-full max-h-[40px] overflow-hidden p-2 text-white bg-black/40 backdrop-blur-md"
           >
             User name
           </p>
