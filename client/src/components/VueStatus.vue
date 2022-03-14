@@ -82,7 +82,6 @@ export default {
 
     const handleLikeButton = () => {
       isActiveLike.value = !isActiveLike.value;
-      console.log(isActiveLike.value);
     };
 
     return { isActiveLike, handleLikeButton, likeButton };

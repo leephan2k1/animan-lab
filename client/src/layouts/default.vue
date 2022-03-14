@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-1200 wide h-fit overflow-x-hidden">
+  <div class="grid-1200 wide h-full overflow-x-hidden">
     <VueNavbar @activeSidebar="activeSidebar" />
     <VueSidebar :showSidebar="showSidebar" />
     <slot />

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-[600px] mt-11">
+  <div class="w-full h-[600px] mt-11 mb-4">
     <!-- title  -->
     <router-link
       class="border-l-4 border-button px-2 flex items-center cursor-pointer hover:text-button"

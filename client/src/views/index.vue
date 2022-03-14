@@ -1,5 +1,5 @@
 <template>
-  <div class="home w-full h-fit z-10">
+  <div class="home w-full h-fit z-10 overflow-hidden">
     <VueCarousel title="Animan shorts" />
     <HighlightsPost title="Học liệu nổi bật" />
     <PostSuggestions title="Hôm nay đọc gì?" />

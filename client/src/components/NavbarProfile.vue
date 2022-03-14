@@ -39,7 +39,7 @@
         <VueButton buttonType="user-circle" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
+          :to="{ name: 'profile', params: { username: 'lee' } }"
           >Trang cá nhân</router-link
         >
       </div>

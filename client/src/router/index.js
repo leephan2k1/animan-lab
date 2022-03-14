@@ -35,6 +35,14 @@ const routes = [
     component: () => import("@/views/shortPost.vue"),
   },
   {
+    path: "/profile/:username",
+    name: "profile",
+    meta: {
+      layout: "default",
+    },
+    component: () => import("@/views/profile.vue"),
+  },
+  {
     path: "/register",
     name: "register",
     meta: {
