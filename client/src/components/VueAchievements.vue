@@ -38,7 +38,7 @@
           class="w-3/4 md:w-full h-[150px] flex flex-col justify-center text-lg my-4 bg-white rounded-xl shadow-lg"
         >
           <p class="ml-4 hover:text-button cursor-pointer">
-            Căn cước user name công dân wibu: <span class="font-bold">Wibu_top_1_VN</span>
+            Căn cước công dân wibu: <span class="font-bold">Wibu_top_1_VN</span>
           </p>
           <p class="ml-4 hover:text-button cursor-pointer">
             Trở thành học giả wibu: <span class="font-bold">15/3/2022</span>
@@ -95,6 +95,17 @@
             <li class="my-2 ml-4">
               1000 points:
               <span class="font-bold">Đấng cứu thế wibu được Isekai</span>
+            </li>
+          </ul>
+          <h2 class="text-center font-bold py-4">Animan rules</h2>
+           <ul class="w-full list-circle list-inside">
+            <li class="my-2 ml-4">
+              Vi phạm điều khoản lần đầu:
+              <span class="font-bold">Cấm bình luận và đăng bài</span>
+            </li>
+             <li class="my-2 ml-4">
+              Vi phạm điều khoản lần hai:
+              <span class="font-bold">Xoá tài khoản</span>
             </li>
           </ul>
         </div>
