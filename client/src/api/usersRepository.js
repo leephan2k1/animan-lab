@@ -12,6 +12,9 @@ const usersAPI = {
   signIn: (payload) => {
     return axiosClient.post(`${resource}/sign-in`, payload);
   },
+  signOut: (payload) => {
+    return axiosClient.delete(`${resource}/sign-out`, { data: payload });
+  },
   getUser: (params) => {
     return axiosClient.get(`${resource}/${params}`);
   },

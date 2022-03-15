@@ -42,7 +42,7 @@
       >
     </div>
     <div v-else class="flex flex-col justify-center items-center">
-      <div class="flex w-full items-center justify-center">
+      <div class="absolute-center w-full cursor-pointer hover:text-button">
         <VueButton buttonType="user-circle" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
@@ -50,7 +50,7 @@
           >Trang cá nhân</router-link
         >
       </div>
-      <div class="flex w-full items-center justify-center">
+      <div class="absolute-center w-full cursor-pointer hover:text-button">
         <VueButton buttonType="pencil-alt" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
@@ -58,7 +58,7 @@
           >Đăng bài</router-link
         >
       </div>
-      <div class="flex w-full items-center justify-center">
+      <div class="absolute-center w-full cursor-pointer hover:text-button">
         <VueButton buttonType="pencil" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
@@ -66,7 +66,7 @@
           >Bài viết của tôi</router-link
         >
       </div>
-      <div class="flex w-full items-center justify-center">
+      <div class="absolute-center w-full cursor-pointer hover:text-button">
         <VueButton buttonType="sparkles" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
@@ -74,7 +74,7 @@
           >Waifu của tôi</router-link
         >
       </div>
-      <div class="flex w-full items-center justify-center">
+      <div class="absolute-center w-full cursor-pointer hover:text-button">
         <VueButton buttonType="heart" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
@@ -82,7 +82,7 @@
           >Bài viết yêu thích</router-link
         >
       </div>
-      <div class="flex w-full items-center justify-center">
+      <div class="absolute-center w-full cursor-pointer hover:text-button">
         <VueButton buttonType="bookmark" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
@@ -90,7 +90,7 @@
           >Bài viết bookmark</router-link
         >
       </div>
-      <div class="flex w-full items-center justify-center">
+      <div class="absolute-center w-full cursor-pointer hover:text-button">
         <VueButton buttonType="cog" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
@@ -98,13 +98,12 @@
           >Cài đặt</router-link
         >
       </div>
-      <div class="flex w-full items-center justify-center">
+      <div
+        @click="handleSignOut"
+        class="absolute-center w-full cursor-pointer hover:text-button"
+      >
         <VueButton buttonType="logout" styles="basis-1/3" />
-        <router-link
-          class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
-          >Đăng xuất</router-link
-        >
+        <p class="basis-2/3 py-2">Đăng xuất</p>
       </div>
     </div>
   </div>
@@ -113,7 +112,9 @@
 <script>
 import { reactive, ref, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
+import { AUTH_LOGOUT } from "@/constants";
 import VueButton from "./VueButton.vue";
 
 export default {
@@ -126,6 +127,7 @@ export default {
     const toggleDropDown = ref(false);
     const store = useStore();
     const app = document.querySelector("#app");
+    const route = useRouter();
 
     const getUserProfile = () => {
       const { user_name, avatar } = store.state.user;
@@ -135,6 +137,14 @@ export default {
 
     const checkUserLogin = () => {
       isLogged.value = store.getters["auth/isAuthenticated"];
+    };
+
+    const handleSignOut = async () => {
+      await store.dispatch(`auth/${AUTH_LOGOUT}`);
+      //toggle component
+      checkUserLogin();
+      //redirect to home
+      route.push({ name: "home" });
     };
 
     const handleClickProfile = () => {
@@ -155,11 +165,13 @@ export default {
 
     checkUserLogin();
     getUserProfile();
+
     return {
       userProfile,
       isLogged,
       toggleDropDown,
       handleClickProfile,
+      handleSignOut,
     };
   },
 };

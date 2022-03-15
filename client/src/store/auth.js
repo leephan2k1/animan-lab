@@ -13,7 +13,7 @@ export default {
   namespaced: true,
   state: {
     token: window.localStorage.getItem("access-token") || "",
-    refeshToken: window.localStorage.getItem("refresh-token") || "",
+    refreshToken: window.localStorage.getItem("refresh-token") || "",
     status: "",
   },
   getters: {
@@ -27,14 +27,15 @@ export default {
     [AUTH_SUCCESS]: (state, payload) => {
       state.status = "success";
       state.token = payload.authorization;
-      state.refeshToken = payload.refreshtoken;
+      state.refreshToken = payload.refreshtoken;
     },
     [AUTH_ERROR]: (state, message) => {
       state.status = message || "error";
     },
     [AUTH_LOGOUT]: (state) => {
+      state.status = "success";
       state.token = "";
-      state.refeshToken = "";
+      state.refreshToken = "";
     },
   },
   actions: {
@@ -83,14 +84,23 @@ export default {
         localStorage.removeItem("refresh-token");
       }
     },
-    [AUTH_LOGOUT]: ({ commit }) => {
-      return new Promise((resolve) => {
-        commit(AUTH_LOGOUT);
+    [AUTH_LOGOUT]: ({ commit, state }) => {
+      return new Promise(async (resolve, reject) => {
+        const { refreshToken } = state;
 
-        localStorage.removeItem("access-token");
-        localStorage.removeItem("refresh-token");
+        const res = await userRepository.signOut({ refreshToken });
 
-        delete axiosClient.defaults.headers.common["Authorization"];
+        if (res?.data?.success) {
+          commit(AUTH_LOGOUT);
+
+          localStorage.removeItem("access-token");
+          localStorage.removeItem("refresh-token");
+
+          delete axiosClient.defaults.headers.common["Authorization"];
+        } else {
+          commit(AUTH_ERROR);
+          reject();
+        }
 
         resolve();
       });
