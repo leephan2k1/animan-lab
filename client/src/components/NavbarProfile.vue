@@ -20,7 +20,14 @@
     >
       {{ userProfile.user_name }}
     </p>
-    <VueButton buttonType="chervon-down" styles="md:block hidden" />
+    <VueButton
+      :buttonType="!toggleDropDown ? 'chervon-down' : 'up'"
+      :styles="
+        !toggleDropDown
+          ? 'animate__rotateIn md:block hidden animate__animated animate__faster'
+          : 'animate__rotateIn md:block hidden animate__animated animate__faster'
+      "
+    />
   </div>
   <div
     class="absolute top-[50px] w-[150%] md:w-full lg:w-[49%] h-fit bg-white rounded-2xl shadow-xl animate__animated animate__fadeInDown animate__faster z-20"
@@ -81,6 +88,14 @@
           class="basis-2/3 py-2 hover:text-button"
           :to="{ name: 'register' }"
           >Bài viết bookmark</router-link
+        >
+      </div>
+      <div class="flex w-full items-center justify-center">
+        <VueButton buttonType="cog" styles="basis-1/3" />
+        <router-link
+          class="basis-2/3 py-2 hover:text-button"
+          :to="{ name: 'register' }"
+          >Cài đặt</router-link
         >
       </div>
       <div class="flex w-full items-center justify-center">
