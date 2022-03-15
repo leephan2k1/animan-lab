@@ -51,11 +51,10 @@ export default {
   setup() {
     const currentComponent = ref("myResearch");
 
-    const fakeData = [1];
+    const fakeData = [];
 
     const activeComponent = (message) => {
       currentComponent.value = message;
-      console.log("hihi", message);
     };
 
     return { fakeData, activeComponent, currentComponent };

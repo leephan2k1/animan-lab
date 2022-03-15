@@ -7,6 +7,9 @@ module.exports = {
         button: "#6366f1",
         overlay: "rgb(0, 0, 0, 0.35)",
       },
+      listStyleType: {
+        circle: "circle",
+      },
     },
     fontFamily: {
       body: "Nunito, sans-serif",

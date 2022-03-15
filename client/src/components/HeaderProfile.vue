@@ -15,7 +15,7 @@
       </div>
       <!-- usr name  -->
       <div class="w-full h-fit">
-        <p class="text-center text-gray-600 text-xl font-bold">User name</p>
+        <p class="text-center text-gray-600 text-xl font-bold">Admin</p>
       </div>
       <!-- level  -->
       <div class="w-full h-fit">
@@ -24,7 +24,7 @@
       <!-- achievements  -->
       <div class="w-full h-fit">
         <p class="text-center text-gray-600 text-lg">
-          Bài viết đã đăng: 50 | Lượt like: 100
+         Nghiên cứu đã viết: 50 | Lượt like: 100
         </p>
       </div>
     </div>
