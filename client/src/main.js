@@ -13,6 +13,8 @@ import "@/assets/styles/grid.scss";
 import "animate.css";
 import "swiper/css";
 
+NProgress.configure({ easing: "ease", speed: 1000, showSpinner: false });
+
 const app = createApp(App);
 
 assignGlobalComponents(app);
