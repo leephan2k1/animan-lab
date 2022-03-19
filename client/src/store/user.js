@@ -3,6 +3,8 @@ import {
   USER_ERROR,
   USER_SUCCESS,
   AUTH_LOGOUT,
+  USER_SETTER,
+  USER_LOGOUT,
 } from "@/constants";
 import RepositoryFactory from "@/api/repositoryFactory";
 
@@ -12,7 +14,7 @@ export default {
   namespaced: true,
   state: {
     status: "",
-    profile: {},
+    profile: JSON.parse(localStorage.getItem("user")) || {},
   },
   getters: {
     getProfile: (state) => state.profile,
@@ -51,6 +53,13 @@ export default {
         commit(USER_ERROR, "error");
         dispatch(`auth/${AUTH_LOGOUT}`);
       }
+    },
+    [USER_SETTER]: ({ commit }, userPayload) => {
+      commit(USER_SUCCESS, userPayload);
+      localStorage.setItem("user", JSON.stringify(userPayload));
+    },
+    [USER_LOGOUT]: ({ commit }) => {
+      commit(AUTH_LOGOUT);
     },
   },
 };

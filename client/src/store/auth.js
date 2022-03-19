@@ -3,6 +3,8 @@ import {
   AUTH_ERROR,
   AUTH_SUCCESS,
   AUTH_LOGOUT,
+  USER_SETTER,
+  USER_LOGOUT,
 } from "@/constants";
 import RepositoryFactory from "@/api/repositoryFactory";
 import axiosClient from "@/api/axiosClient";
@@ -39,7 +41,7 @@ export default {
     },
   },
   actions: {
-    [AUTH_REQUEST]: async ({ commit }, user) => {
+    [AUTH_REQUEST]: async ({ commit, dispatch }, user) => {
       try {
         commit(AUTH_REQUEST);
         let response;
@@ -74,6 +76,10 @@ export default {
 
           //set data to vuex:
           commit(AUTH_SUCCESS, { authorization, refreshtoken });
+
+          //store user info to vuex:
+          const { user } = response.data;
+          dispatch(`user/${USER_SETTER}`, user, { root: true });
         } else {
           commit(AUTH_ERROR, response.data.message);
         }
@@ -84,7 +90,7 @@ export default {
         localStorage.removeItem("refresh-token");
       }
     },
-    [AUTH_LOGOUT]: ({ commit, state }) => {
+    [AUTH_LOGOUT]: ({ commit, dispatch, state }) => {
       return new Promise(async (resolve, reject) => {
         const { refreshToken } = state;
 
@@ -92,11 +98,14 @@ export default {
 
         if (res?.data?.success) {
           commit(AUTH_LOGOUT);
-
+          //remove in localStorage
           localStorage.removeItem("access-token");
+          localStorage.removeItem("user");
           localStorage.removeItem("refresh-token");
-
+          //remove in axios
           delete axiosClient.defaults.headers.common["Authorization"];
+          //remove in vuex
+          dispatch(`user/${USER_LOGOUT}`, "", { root: true });
         } else {
           commit(AUTH_ERROR);
           reject();

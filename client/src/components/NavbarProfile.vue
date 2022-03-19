@@ -130,7 +130,9 @@ export default {
     const route = useRouter();
 
     const getUserProfile = () => {
-      const { user_name, avatar } = store.state.user;
+      const { profile } = store.state.user;
+      const { user_name, avatar } = profile;
+
       userProfile.user_name = user_name || "Hi there!";
       userProfile.avatar = avatar || "default";
     };
@@ -141,8 +143,11 @@ export default {
 
     const handleSignOut = async () => {
       await store.dispatch(`auth/${AUTH_LOGOUT}`);
+      //reset view
+      getUserProfile();
       //toggle component
       checkUserLogin();
+
       //redirect to home
       route.push({ name: "home" });
     };

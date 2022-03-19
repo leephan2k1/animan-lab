@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/index.vue";
+import { isAuthenticated, isNotAuthenticated } from "./routerAuth";
 
 const routes = [
   {
@@ -41,6 +42,7 @@ const routes = [
       layout: "default",
     },
     component: () => import("@/views/profile.vue"),
+    beforeEnter: isAuthenticated,
   },
   {
     path: "/register",
@@ -49,6 +51,7 @@ const routes = [
       layout: "auth",
     },
     component: () => import("@/views/register.vue"),
+    beforeEnter: isNotAuthenticated,
   },
   {
     path: "/login",
@@ -57,6 +60,7 @@ const routes = [
       layout: "auth",
     },
     component: () => import("@/views/login.vue"),
+    beforeEnter: isNotAuthenticated,
   },
 ];
 
