@@ -65,7 +65,10 @@
         <VueButton buttonType="pencil" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
+          :to="{
+            name: 'profilePosts',
+            params: { username: userProfile.user_name },
+          }"
           >Bài viết của tôi</router-link
         >
       </div>
@@ -73,7 +76,10 @@
         <VueButton buttonType="sparkles" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
+          :to="{
+            name: 'profileWaifu',
+            params: { username: userProfile.user_name },
+          }"
           >Waifu của tôi</router-link
         >
       </div>
@@ -81,7 +87,10 @@
         <VueButton buttonType="heart" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
+          :to="{
+            name: 'postsLiked',
+            params: { username: userProfile.user_name },
+          }"
           >Bài viết yêu thích</router-link
         >
       </div>
@@ -89,7 +98,10 @@
         <VueButton buttonType="bookmark" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
+          :to="{
+            name: 'postsBookmarked',
+            params: { username: userProfile.user_name },
+          }"
           >Bài viết bookmark</router-link
         >
       </div>

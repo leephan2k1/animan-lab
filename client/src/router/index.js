@@ -46,25 +46,37 @@ const routes = [
     children: [
       {
         path: "posts",
-        name: 'profilePosts',
+        name: "profilePosts",
+        props: true,
+        component: () => import("@/components/VuePost.vue"),
+      },
+      {
+        path: "posts-liked",
+        name: "postsLiked",
+        props: true,
+        component: () => import("@/components/VuePost.vue"),
+      },
+      {
+        path: "posts-bookmarked",
+        name: "postsBookmarked",
         props: true,
         component: () => import("@/components/VuePost.vue"),
       },
       {
         path: "pending",
-        name: 'profilePending',
+        name: "profilePending",
         props: true,
         component: () => import("@/components/VuePost.vue"),
       },
       {
         path: "achievements",
-        name: 'profileAchievements',
+        name: "profileAchievements",
         props: true,
         component: () => import("@/components/VueAchievements.vue"),
       },
       {
         path: "waifu",
-        name: 'profileWaifu',
+        name: "profileWaifu",
         props: true,
         component: () => import("@/components/VueWaifu.vue"),
       },

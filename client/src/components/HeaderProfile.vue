@@ -33,33 +33,29 @@
     <nav class="grid-1200 wide h-fit">
       <ul class="w-[85%] lg:w-3/4 mx-auto h-full grid grid-cols-4 lg:mt-0 mt-6">
         <router-link
-          @click="handleClickNav('myResearch')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
-          :class="{ active: navStatus === 'myResearch' }"
+          :class="{ active: currentPath === 'profilePosts' }"
           :to="{ name: 'profilePosts' }"
         >
           Nghiên cứu đã viết
         </router-link>
         <router-link
-          @click="handleClickNav('myAchievements')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
-          :class="{ active: navStatus === 'myAchievements' }"
+          :class="{ active: currentPath === 'profileAchievements' }"
           :to="{ name: 'profileAchievements' }"
         >
           Thành tích
         </router-link>
         <router-link
-          @click="handleClickNav('myPostPending')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
-          :class="{ active: navStatus === 'myPostPending' }"
+          :class="{ active: currentPath === 'profilePending' }"
           :to="{ name: 'profilePending' }"
         >
           Chờ kiểm định
         </router-link>
         <router-link
-          @click="handleClickNav('myWaifu')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
-          :class="{ active: navStatus === 'myWaifu' }"
+          :class="{ active: currentPath === 'profileWaifu' }"
           :to="{ name: 'profileWaifu' }"
         >
           Danh sách waifu
@@ -70,17 +66,15 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
   setup() {
-    const navStatus = ref("myResearch");
+    const route = useRoute();
+    const currentPath = computed(() => route.name);
 
-    const handleClickNav = (message) => {
-      navStatus.value = message;
-    };
-
-    return { handleClickNav, navStatus };
+    return { currentPath };
   },
 };
 </script>
