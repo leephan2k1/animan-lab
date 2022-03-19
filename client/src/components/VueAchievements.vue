@@ -98,12 +98,12 @@
             </li>
           </ul>
           <h2 class="text-center font-bold py-4">Animan rules</h2>
-           <ul class="w-full list-circle list-inside">
+          <ul class="w-full list-circle list-inside">
             <li class="my-2 ml-4">
               Vi phạm điều khoản lần đầu:
               <span class="font-bold">Cấm bình luận và đăng bài</span>
             </li>
-             <li class="my-2 ml-4">
+            <li class="my-2 ml-4">
               Vi phạm điều khoản lần hai:
               <span class="font-bold">Xoá tài khoản</span>
             </li>
@@ -120,7 +120,13 @@ export default {
   components: {
     "k-progress": KProgress,
   },
-  setup() {
+  props: {
+    achievementsData: {
+      type: String,
+    },
+  },
+  setup(props) {
+
     const format = (percent) => {
       if (percent > 100) {
         return " -Infinity- ";

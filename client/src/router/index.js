@@ -43,6 +43,32 @@ const routes = [
     },
     component: () => import("@/views/profile.vue"),
     beforeEnter: isAuthenticated,
+    children: [
+      {
+        path: "posts",
+        name: 'profilePosts',
+        props: true,
+        component: () => import("@/components/VuePost.vue"),
+      },
+      {
+        path: "pending",
+        name: 'profilePending',
+        props: true,
+        component: () => import("@/components/VuePost.vue"),
+      },
+      {
+        path: "achievements",
+        name: 'profileAchievements',
+        props: true,
+        component: () => import("@/components/VueAchievements.vue"),
+      },
+      {
+        path: "waifu",
+        name: 'profileWaifu',
+        props: true,
+        component: () => import("@/components/VueWaifu.vue"),
+      },
+    ],
   },
   {
     path: "/register",

@@ -24,7 +24,7 @@
       <!-- achievements  -->
       <div class="w-full h-fit">
         <p class="text-center text-gray-600 text-lg">
-         Nghiên cứu đã viết: 50 | Lượt like: 100
+          Nghiên cứu đã viết: 50 | Lượt like: 100
         </p>
       </div>
     </div>
@@ -32,34 +32,38 @@
     <!-- profile navigation  -->
     <nav class="grid-1200 wide h-fit">
       <ul class="w-[85%] lg:w-3/4 mx-auto h-full grid grid-cols-4 lg:mt-0 mt-6">
-        <li
+        <router-link
           @click="handleClickNav('myResearch')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
           :class="{ active: navStatus === 'myResearch' }"
+          :to="{ name: 'profilePosts' }"
         >
           Nghiên cứu đã viết
-        </li>
-        <li
+        </router-link>
+        <router-link
           @click="handleClickNav('myAchievements')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
           :class="{ active: navStatus === 'myAchievements' }"
+          :to="{ name: 'profileAchievements' }"
         >
           Thành tích
-        </li>
-        <li
+        </router-link>
+        <router-link
           @click="handleClickNav('myPostPending')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
           :class="{ active: navStatus === 'myPostPending' }"
+          :to="{ name: 'profilePending' }"
         >
           Chờ kiểm định
-        </li>
-        <li
+        </router-link>
+        <router-link
           @click="handleClickNav('myWaifu')"
           class="cursor-pointer md:my-0 my-2 text-gray-500 col-span-2 md:col-span-1 text-center absolute-center"
           :class="{ active: navStatus === 'myWaifu' }"
+          :to="{ name: 'profileWaifu' }"
         >
           Danh sách waifu
-        </li>
+        </router-link>
       </ul>
     </nav>
   </div>
@@ -69,12 +73,11 @@
 import { ref } from "vue";
 
 export default {
-  setup(_, { emit }) {
+  setup() {
     const navStatus = ref("myResearch");
 
     const handleClickNav = (message) => {
       navStatus.value = message;
-      emit("handleContentProfile", message);
     };
 
     return { handleClickNav, navStatus };

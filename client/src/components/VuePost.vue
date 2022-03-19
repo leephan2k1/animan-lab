@@ -89,9 +89,12 @@ export default {
     title: {
       type: String,
     },
+    postsData: {
+      type: Array,
+    },
   },
-  setup() {
-    const fakeData = [...Array(10).keys()];
+  setup(props) {
+    const fakeData = props.postsData;
 
     return { fakeData };
   },
