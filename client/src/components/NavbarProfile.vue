@@ -109,7 +109,7 @@
         <VueButton buttonType="cog" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
+          :to="{ name: 'settings' }"
           >Cài đặt</router-link
         >
       </div>

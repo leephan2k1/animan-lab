@@ -1,7 +1,7 @@
 <template>
   <div
     ref="sidebar"
-    class="bg-white hidden h-screen w-1/2 absolute left-0 top-0 animate__animated animate__faster z-30"
+    class="bg-white hidden h-screen w-1/2 fixed left-0 top-0 animate__animated animate__faster z-[60]"
   >
     <div class="flex flex-col">
       <div class="w-full h-fit absolute-center justify-end pr-5 mt-5">

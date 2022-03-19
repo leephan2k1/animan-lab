@@ -83,6 +83,15 @@ const routes = [
     ],
   },
   {
+    path: "/settings",
+    name: "settings",
+    meta: {
+      layout: "default",
+    },
+    component: () => import("@/views/settings.vue"),
+    beforeEnter: isAuthenticated,
+  },
+  {
     path: "/register",
     name: "register",
     meta: {
