@@ -21,7 +21,7 @@
       </div>
       <!-- input zone  -->
       <div class="w-[70%] h-fit mx-auto cursor-pointer">
-        <AvatarUpload />
+        <AvatarUpload v-if="isUploadingAvatar" />
       </div>
     </div>
 
@@ -226,6 +226,7 @@ export default {
       isUploadingAvatar.value = false;
       uploadAvatarDOM.value.classList.add("animate__zoomOut");
       uploadAvatarDOM.value.classList.remove("animate__zoomIn");
+      uploadAvatarDOM.value.classList.add("hidden");
     };
 
     return {

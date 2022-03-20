@@ -11,3 +11,128 @@ export const USER_SETTER = "USER_SETTER";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const USER_SUCCESS = "USER_SUCCESS";
 export const USER_ERROR = "USER_ERROR";
+
+export const contentsToS = {
+  title: '<h1 class="m-4 text-xl font-bold">Điều khoản dịch vụ</h1>',
+  contents: [
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">1. Điều khoản</h2>',
+      desc: "Bằng cách truy cập trang web tại 'Animanlab', bạn đồng ý bị ràng buộc bởi các điều khoản dịch vụ này, tất cả các luật và quy định hiện hành, đồng thời đồng ý rằng bạn chịu trách nhiệm tuân thủ mọi luật hiện hành của địa phương. Nếu bạn không đồng ý với bất kỳ điều khoản nào trong số này, bạn sẽ bị cấm sử dụng hoặc truy cập trang web này.",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">2. Sửa đổi điều khoản sử dụng trang web</h2>',
+      desc: "Animanlab có thể sửa đổi các Điều khoản sử dụng này cho trang web của mình bất cứ lúc nào mà không cần thông báo trước. Bằng cách sử dụng trang web này, bạn đồng ý bị ràng buộc bởi phiên bản hiện tại của các Điều khoản và Điều kiện sử dụng này.",
+    },
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">3. Luật quản lý</h2>',
+      desc: "Bất kỳ khiếu nại nào liên quan đến Animanlab sẽ được điều chỉnh bởi luật của BQ mà không liên quan đến xung đột của các quy định pháp luật.",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">4. Quyền riêng tư của bạn</h2>',
+      desc: "Vui lòng đọc chính sách bảo mật của chúng tôi.",
+    },
+  ],
+};
+export const contentsDCMA = {
+  title:
+    '<h1 class="m-4 text-xl font-bold">DMCA - Digital Millennium Copyright Act</h1>',
+  contents: [
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Yêu cầu gỡ xuống theo DMCA</h2>',
+      desc: "Chúng tôi tôn trọng quyền sở hữu trí tuệ của người khác và yêu cầu. Người dùng của chúng tôi cũng làm như vậy. Đạo luật Bản quyền Thiên niên kỷ Kỹ thuật số (DMCA) đã thiết lập một quy trình để giải quyết các khiếu nại về vi phạm bản quyền. Nếu bạn sở hữu bản quyền hoặc có quyền thay mặt chủ sở hữu bản quyền và muốn báo cáo khiếu nại rằng bên thứ ba đang vi phạm tài liệu đó, vui lòng gửi báo cáo DMCA trên trang Liên hệ của chúng tôi và chúng tôi sẽ xử lý hành động thích hợp",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Yêu cầu đối với Báo cáo DMCA</h2>',
+      desc: `<ul class="w-full list-circle list-inside">
+      <li class="ml-4 w-3/4">
+      Mô tả về tác phẩm có bản quyền mà bạn cho rằng đang bị vi phạm;
+      </li>
+      <li class="ml-4 w-3/4">
+      Mô tả về tài liệu bạn cho là vi phạm và bạn muốn xóa hoặc quyền truy cập mà bạn muốn vô hiệu hóa và URL hoặc vị trí khác của tài liệu đó;
+      </li>
+      <li class="ml-4 w-3/4">
+      Tên, chức danh (nếu là đại lý), địa chỉ, số điện thoại và địa chỉ email của bạn;
+      </li>
+      <li class="ml-4 w-3/4">
+      Một tuyên bố rằng bạn đồng ý với thẩm quyền: "Tôi thực sự tin tưởng rằng việc sử dụng tài liệu có bản quyền mà tôi đang khiếu nại không được chủ sở hữu bản quyền, người đại diện của chủ sở hữu bản quyền hoặc luật pháp cho phép (ví dụ: sử dụng hợp pháp)";
+      </li>
+      <li class="ml-4 w-3/4">
+      Một tuyên bố rằng bạn không khai man: "Thông tin trong thông báo này là chính xác và, dưới hình phạt khai man, tôi là chủ sở hữu, hoặc được ủy quyền hành động thay mặt cho chủ sở hữu, bản quyền hoặc quyền độc quyền bị cáo buộc vi phạm";
+      </li>
+      <li class="ml-4 w-3/4">
+      Chữ ký điện tử hoặc vật lý của chủ sở hữu bản quyền hoặc người được ủy quyền hành động thay mặt chủ sở hữu.
+      </li>
+      </ul>
+      
+      <p clas="ml-4 w-3/4">Yêu cầu gỡ xuống DMCA của bạn phải được gửi tới email: animanlab.contact@gmail.com </p>
+      <p clas="ml-4 w-3/4">Sau đó, chúng tôi sẽ xem xét yêu cầu DMCA của bạn và thực hiện các hành động thích hợp, bao gồm cả việc xóa nội dung khỏi trang web.</p>
+      `,
+    },
+  ],
+};
+export const contentsPurpose = {
+  title: '<h1 class="m-4 text-xl font-bold">Mục đích ra đời của website</h1>',
+  contents: [
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">1. Demo công nghệ</h2>',
+      desc: "Website sửa dụng bộ công nghệ mã nguồn mở (MongoDB, ExpressJS, VueJS, NodeJS) - Mục đích website ra đời để học tập và triển khai các công cụ trong bộ công nghệ này.",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">2. Đánh giá Anime và Manga</h2>',
+      desc: "Website phục vụ viết bài và xem các bài đánh giá - cảm nhận về các bộ phim hoạt hình Nhật Bản (Anime) và truyện tranh Nhật Bản (Manga). Nội dung tập trung duy nhất về Anime và Manga và khu vực chia sẻ cảm nhận nhanh Animan shorts. Các nội dung ngoài các mục đích này sẽ không được phê duyệt hoặc xoá vĩnh viễn khỏi webiste.",
+    },
+  ],
+};
+export const contentsContact = {
+  title: '<h1 class="m-4 text-xl font-bold">Thông tin liên hệ</h1>',
+  contents: [
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">Email: </h2>',
+      desc: '<a class="m-4 text-button" href="mailto: animanlab.contact@gmail.com"> animanlab.contact@gmail.com</a>',
+    },
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">Discord: </h2>',
+      desc: '<a class="m-4 text-button" target="_blank" href="https://discordapp.com/users/lee2001#9563">lee2001#9563</a>',
+    },
+  ],
+};
+export const contentsPP = {
+  title: '<h1 class="m-4 text-xl font-bold">Chính sách riêng tư</h1>',
+  contents: [
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Quyền riêng tư của bạn rất quan trọng với chúng tôi.</h2>',
+      desc: "Chính sách của AnimanLab là tôn trọng quyền riêng tư của bạn liên quan đến bất kỳ thông tin nào mà chúng tôi có thể thu thập khi vận hành trang web của mình. Theo đó, chúng tôi đã phát triển chính sách bảo mật này để bạn hiểu cách chúng tôi thu thập, sử dụng, giao tiếp, tiết lộ và nói cách khác là sử dụng thông tin cá nhân. Chúng tôi đã phác thảo chính sách bảo mật của chúng tôi bên dưới.",
+    },
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">Chính sách: </h2>',
+      desc: `
+      <ul class="w-full list-circle list-inside">
+        <li class="ml-4 w-full md:w-3/4">
+        Chúng tôi sẽ thu thập thông tin cá nhân bằng các phương tiện hợp pháp và công bằng và khi thích hợp, với sự hiểu biết hoặc sự đồng ý của cá nhân có liên quan.
+        </li>
+        <li class="ml-4 w-full md:w-3/4">
+        Trước hoặc tại thời điểm thu thập thông tin cá nhân, chúng tôi sẽ xác định các mục đích mà thông tin đang được thu thập.
+        </li>
+        <li class="ml-4 w-full md:w-3/4">
+        Chúng tôi sẽ thu thập và sử dụng thông tin cá nhân chỉ để thực hiện những mục đích do chúng tôi chỉ định và cho các mục đích phụ trợ khác, trừ khi chúng tôi được sự đồng ý của cá nhân có liên quan hoặc theo yêu cầu của pháp luật.
+        </li>
+        <li class="ml-4 w-full md:w-3/4">
+        Dữ liệu cá nhân phải phù hợp với các mục đích được sử dụng và trong phạm vi cần thiết cho các mục đích đó, phải chính xác, đầy đủ và cập nhật.
+        </li>
+        <li class="ml-4 w-full md:w-3/4">
+        Chúng tôi sẽ bảo vệ thông tin cá nhân bằng cách sử dụng các biện pháp bảo mật hợp lý chống mất mát hoặc trộm cắp, cũng như truy cập trái phép, tiết lộ, sao chép, sử dụng hoặc sửa đổi.
+        </li>
+        <li class="ml-4 w-full md:w-3/4">
+        Chúng tôi sẽ cung cấp cho khách hàng thông tin về các chính sách và thông lệ của chúng tôi liên quan đến việc quản lý thông tin cá nhân.
+        </li>
+      </ul>
+      `,
+    },
+  ],
+};

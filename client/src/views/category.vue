@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full h-fit z-10">
+  <div
+    :class="{ 'h-screen': fakeData.length < 2, 'h-fit': fakeData.length > 3 }"
+    class="w-full z-10"
+  >
     <h1 class="mt-2 uppercase text-lg">
       Trung tâm nghiên cứu về {{ currentPath }}
     </h1>
@@ -22,7 +25,9 @@ export default {
     const route = useRoute();
     const currentPath = computed(() => route.name);
 
-    return { currentPath };
+    const fakeData = [];
+
+    return { currentPath, fakeData };
   },
 };
 </script>

@@ -36,6 +36,14 @@ const routes = [
     component: () => import("@/views/shortPost.vue"),
   },
   {
+    path: "/docs/:doctype",
+    name: "docs",
+    meta: {
+      layout: "default",
+    },
+    component: () => import("@/views/documentation.vue"),
+  },
+  {
     path: "/profile/:username",
     name: "profile",
     meta: {

@@ -6,10 +6,11 @@
     <div
       @click="handleGoToTop"
       ref="goTopButton"
-      class="hidden animate__animated animate__faster cursor-pointer fixed right-7 bottom-4 w-10 h-10 absolute-center rounded-full border-2 border-gray-400 bg-white"
+      class="z-10 hidden animate__animated animate__faster cursor-pointer fixed right-7 bottom-4 w-10 h-10 absolute-center rounded-full border-2 border-gray-400 bg-white"
     >
       <VueButton buttonType="up" />
     </div>
+    <VueFooter />
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 
 import VueNavbar from "@/components/VueNavbar.vue";
 import VueSidebar from "@/components/VueSidebar.vue";
+import VueFooter from "@/components/VueFooter.vue";
 import VueButton from "@/components/VueButton.vue";
 
 export default {
@@ -25,6 +27,7 @@ export default {
     VueNavbar,
     VueSidebar,
     VueButton,
+    VueFooter,
   },
   setup() {
     const showSidebar = ref(false);
