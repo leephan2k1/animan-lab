@@ -56,14 +56,16 @@
 </template>
 
 <script>
+import RepositoryFactory from "@/api/repositoryFactory";
+const postsRepository = RepositoryFactory.get("posts");
+
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
 import { QuillEditor, Quill } from "@vueup/vue-quill";
 import QuillImageUploader from "quill-image-uploader";
-Quill.register("modules/image-uploader", QuillImageUploader);
-
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
+Quill.register("modules/image-uploader", QuillImageUploader);
 
 export default {
   components: {
@@ -160,13 +162,14 @@ export default {
     const validateContents = () => {
       if (title.value.length < 3) {
         titleInvalid.value = true;
-        return;
+        return false;
       }
       const contents = quillContent.value.getText();
       if (contents.length < 10) {
         contentInvalid.value = true;
-        return;
+        return false;
       }
+      return true;
     };
 
     const resetTitleStyles = () => {
@@ -177,12 +180,21 @@ export default {
       contentInvalid.value = false;
     };
 
-    const handleContentPublish = () => {
+    const handleContentPublish = async () => {
       //validate:
-      validateContents();
+      if (!validateContents()) {
+        return;
+      }
       //POST to Server
-      console.log(quillContent.value.getHTML());
-      console.log(title.value);
+      const postPayload = {
+        title: title.value,
+        content: quillContent.value.getHTML(),
+      };
+
+      console.log(postsRepository);
+
+      const res = await postsRepository.createPost(postPayload); 
+      console.log("dang bai thanh cong!");
     };
 
     onMounted(() => {

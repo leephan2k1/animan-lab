@@ -61,8 +61,7 @@ export default {
           return;
         }
 
-        const { authorization } = response.headers;
-        const { refreshtoken } = response.headers;
+        const { authorization, refreshtoken } = response.headers;
 
         if (response.data.success) {
           //set tokens to storage:
