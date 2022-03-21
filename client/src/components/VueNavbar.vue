@@ -40,7 +40,7 @@
             :class="{ active: currentPath === 'short' }"
             :to="{ name: 'short' }"
           >
-            Animan shorts
+            Short Animans
           </router-link>
         </ul>
       </nav>

@@ -44,6 +44,15 @@ const routes = [
     component: () => import("@/views/documentation.vue"),
   },
   {
+    path: "/new-post",
+    name: "newPost",
+    meta: {
+      layout: "default",
+    },
+    component: () => import("@/views/post.vue"),
+    beforeEnter: isAuthenticated,
+  },
+  {
     path: "/profile/:username",
     name: "profile",
     meta: {

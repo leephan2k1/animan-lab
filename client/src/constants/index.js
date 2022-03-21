@@ -88,6 +88,40 @@ export const contentsPurpose = {
     },
   ],
 };
+export const contentsRulesOfPost = {
+  title:
+    '<h1 class="m-4 text-xl font-bold">Quy tắc đăng bài (Cập nhật 21/3/2022)</h1>',
+  contents: [
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">1. Chỉ tập trung vào nội dung Anime - Manga</h2>',
+      desc: "Bất kể hình thức tổ lái nào sang nội dung khác sẽ không được phê duyệt, nội dung khác là gì vui lòng xem điều 2.",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">2. Không được đăng các nội dung sau đây</h2>',
+      desc: "Chính trị, tôn giáo, xã hội (lịch sử, địa lý,...), tự nhiên (toán học, vật lý,...), nội dung vi phạm thuần phong mỹ tục Việt Nam (xem điều 4). Các loại hình giải trí khác ngoài Anime-Manga (Nếu có liên quan đến Anime-Manga có thể xem xét lại ví dụ cosplay, figure, poster,...).",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">3. Đảm bảo luật An ninh mạng và không vi phạm DCMA</h2>',
+      desc: "Nội dung trong các bài viết không được vi phạm <a target='_blank' href='https://thuvienphapluat.vn/van-ban/Cong-nghe-thong-tin/Luat-an-ninh-mang-2018-351416.aspx' class='text-button'>Luật an ninh mạng</a> hoặc DCMA.",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">4. Đảm bảo thuần phong mỹ tục Việt Nam</h2>',
+      desc: "Nội dung trong các bài viết không được vi phạm thuần phong mỹ tục Việt Nam (Ví dụ đăng h*ntai, s*x, xúc phạm văn hoá, nghệ thuật, vùng miền, truyền thống, quốc phục, quốc kỳ Việt Nam,...).",
+    },
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">5. Cảnh báo</h2>',
+      desc: "Nếu vi phạm điều 3 và điều 4 sẽ không cần phải chờ phê duyệt và khoá tài khoản vĩnh viễn mà không cần báo trước.",
+    },
+    {
+      title: '<h2 class="m-4 text-lg font-semibold">6. Bài viết cố ý spam</h2>',
+      desc: "Để được duyệt bài nhanh bài viết nên có ý nghĩa, nên đầy đủ mở - thân - kết, ghi thêm nguồn nếu có (nếu muốn viết phong cách tự do nên đăng bài vào short Animans nhưng bị hạn chế về độ dài nội dung),... Nếu bài viết cố tình spam nội dung sẽ không được phê duyệt, cố tình spam nhiều lần sẽ khoá tài khoản.",
+    },
+  ],
+};
 export const contentsContact = {
   title: '<h1 class="m-4 text-xl font-bold">Thông tin liên hệ</h1>',
   contents: [

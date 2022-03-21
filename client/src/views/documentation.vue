@@ -17,6 +17,7 @@ import {
   contentsPurpose,
   contentsContact,
   contentsPP,
+  contentsRulesOfPost,
 } from "@/constants";
 
 export default {
@@ -34,6 +35,8 @@ export default {
           return contentsContact;
         case "privacy-policy":
           return contentsPP;
+        case "post-rules":
+          return contentsRulesOfPost;
       }
     });
 

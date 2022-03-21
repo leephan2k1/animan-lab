@@ -57,7 +57,7 @@
         <VueButton buttonType="pencil-alt" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'register' }"
+          :to="{ name: 'newPost' }"
           >Đăng bài</router-link
         >
       </div>
