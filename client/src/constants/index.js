@@ -35,7 +35,7 @@ export const contentsToS = {
     },
   ],
 };
-export const contentsDCMA = {
+export const contentsDMCA = {
   title:
     '<h1 class="m-4 text-xl font-bold">DMCA - Digital Millennium Copyright Act</h1>',
   contents: [
@@ -104,8 +104,8 @@ export const contentsRulesOfPost = {
     },
     {
       title:
-        '<h2 class="m-4 text-lg font-semibold">3. Đảm bảo luật An ninh mạng và không vi phạm DCMA</h2>',
-      desc: "Nội dung trong các bài viết không được vi phạm <a target='_blank' href='https://thuvienphapluat.vn/van-ban/Cong-nghe-thong-tin/Luat-an-ninh-mang-2018-351416.aspx' class='text-button'>Luật an ninh mạng</a> hoặc DCMA.",
+        '<h2 class="m-4 text-lg font-semibold">3. Đảm bảo luật An ninh mạng và không vi phạm DMCA</h2>',
+      desc: "Nội dung trong các bài viết không được vi phạm <a target='_blank' href='https://thuvienphapluat.vn/van-ban/Cong-nghe-thong-tin/Luat-an-ninh-mang-2018-351416.aspx' class='text-button'>Luật an ninh mạng</a> hoặc DMCA.",
     },
     {
       title:

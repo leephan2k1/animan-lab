@@ -27,10 +27,10 @@
         </router-link>
         <router-link
           @click="handleClickToDocs"
-          :to="{ name: 'docs', params: { doctype: 'dcma' } }"
+          :to="{ name: 'docs', params: { doctype: 'dmca' } }"
           class="hover:text-button cursor-pointer border-r-2 border-button mt-2 mr-4 w-full px-4 block"
         >
-          DCMA
+          DMCA
         </router-link>
         <router-link
           @click="handleClickToDocs"
@@ -64,9 +64,9 @@
         </router-link>
         <router-link
           @click="handleClickToDocs"
-          :to="{ name: 'docs', params: { doctype: 'dcma' } }"
+          :to="{ name: 'docs', params: { doctype: 'dmca' } }"
           class="hover:text-button cursor-pointer mt-2 w-full px-4 block"
-          >DCMA</router-link
+          >DMCA</router-link
         >
         <router-link
           @click="handleClickToDocs"

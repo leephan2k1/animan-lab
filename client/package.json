@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@sipec/vue3-tags-input": "^3.0.4",
     "@vueup/vue-quill": "^1.0.0-beta.8",
     "animate.css": "^4.1.1",
     "axios": "^0.26.0",

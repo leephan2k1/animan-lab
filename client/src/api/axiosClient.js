@@ -12,7 +12,6 @@ const axiosClient = axios.create({
 
 const refreshToken = () => {
   const refreshToken = window.localStorage.getItem("refresh-token");
-  console.log("refreshToken", refreshToken);
   return axiosClient.post(`users/refresh-token`, { refreshToken });
 };
 
@@ -24,10 +23,8 @@ axiosClient.interceptors.request.use(async (config) => {
 
 axiosClient.interceptors.response.use(
   (response) => {
-    console.log("interceptors res::: ", response);
     if (response && response.data) {
-      console.log("truoc khi respons data:::", response.data);
-      console.log("truoc khi respons:::", response);
+      // console.log("truoc khi respons:::", response);
     }
     return response;
   },
@@ -38,7 +35,6 @@ axiosClient.interceptors.response.use(
       if (error.response.data.message === "jwt expired") {
         //get new access token
         const res = await refreshToken();
-        console.log("refresh token res:::: ", res);
         const { authorization, refreshtoken } = res.headers;
 
         if (res.data.success) {
