@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/index.vue";
-import { isAuthenticated, isNotAuthenticated } from "./routerAuth";
+import { isAuthenticated, isNotAuthenticated } from "./routeAuth";
 
 const routes = [
   {
@@ -44,13 +44,12 @@ const routes = [
     component: () => import("@/views/documentation.vue"),
   },
   {
-    path: "/new-post",
-    name: "newPost",
+    path: "/post/:postTypes",
+    name: "post",
     meta: {
       layout: "default",
     },
     component: () => import("@/views/post.vue"),
-    beforeEnter: isAuthenticated,
   },
   {
     path: "/profile/:username",

@@ -84,7 +84,7 @@ export const contentsPurpose = {
     {
       title:
         '<h2 class="m-4 text-lg font-semibold">2. Đánh giá Anime và Manga</h2>',
-      desc: "Website phục vụ viết bài và xem các bài đánh giá - cảm nhận về các bộ phim hoạt hình Nhật Bản (Anime) và truyện tranh Nhật Bản (Manga). Nội dung tập trung duy nhất về Anime và Manga và khu vực chia sẻ cảm nhận nhanh Animan shorts. Các nội dung ngoài các mục đích này sẽ không được phê duyệt hoặc xoá vĩnh viễn khỏi webiste.",
+      desc: "Website phục vụ viết bài và xem các bài đánh giá - cảm nhận về các bộ phim hoạt hình Nhật Bản (Anime) và truyện tranh Nhật Bản (Manga). Nội dung tập trung duy nhất về Anime và Manga và khu vực chia sẻ cảm nhận nhanh Short Animans. Các nội dung ngoài các mục đích này sẽ không được phê duyệt hoặc xoá vĩnh viễn khỏi webiste.",
     },
   ],
 };

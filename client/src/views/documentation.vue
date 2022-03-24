@@ -13,7 +13,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import {
   contentsToS,
-  contentsDCMA,
+  contentsDMCA,
   contentsPurpose,
   contentsContact,
   contentsPP,
@@ -29,8 +29,8 @@ export default {
           return contentsToS;
         case "purposes-of-the-website":
           return contentsPurpose;
-        case "dcma":
-          return contentsDCMA;
+        case "dmca":
+          return contentsDMCA;
         case "contact":
           return contentsContact;
         case "privacy-policy":

@@ -277,23 +277,23 @@ export default {
         return;
       }
       //POST to Server
-
       const pureTags = tags.value.map((e) => e.text);
 
-      console.log(pureTags);
       const postPayload = {
         title: title.value,
         content: quillContent.value.getHTML(),
         tags: pureTags,
       };
 
-      console.log(postPayload);
-
-      const res = await postsRepository.createPost(postPayload);
-      if (res?.data.message === "Duplicated title") {
-        titleInvalid.status = true;
-        titleInvalid.message = "Tiêu đề đã bị trùng!";
-        return;
+      try {
+        const res = await postsRepository.createPost(postPayload);
+        if (res?.data.message === "Duplicated title") {
+          titleInvalid.status = true;
+          titleInvalid.message = "Tiêu đề đã bị trùng!";
+          return;
+        }
+      } catch (err) {
+        console.log(err);
       }
 
       if (res?.data.success) {

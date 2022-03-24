@@ -18,6 +18,14 @@ const usersAPI = {
   getUser: (params) => {
     return axiosClient.get(`${resource}/${params}`);
   },
+  addBookmarkPost: (userName, postIdPayload) => {
+    return axiosClient.post(`${resource}/${userName}/bookmark`, postIdPayload);
+  },
+  removeBookmarkPost: (userName, postIdPayload) => {
+    return axiosClient.delete(`${resource}/${userName}/bookmark`, {
+      data: postIdPayload,
+    });
+  },
 };
 
 export default usersAPI;

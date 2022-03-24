@@ -18,6 +18,9 @@ const refreshToken = () => {
 axiosClient.interceptors.request.use(async (config) => {
   // Handle token here ...
   // console.log(">>>CONFIG:   ", config);
+  config.headers.Authorization = `Bearer ${localStorage.getItem(
+    "access-token"
+  )}`;
   return config;
 });
 

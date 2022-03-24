@@ -7,8 +7,16 @@
     />
     <p class="pt-4 text-center text-2xl font-logo">Animan Lab</p>
     <p class="pt-2 text-center text-lg">
-      Viện nghiên cứu cao cấp made by quý bửu | For wibu, By wibu.
+      Viện nghiên cứu cao cấp
+      <VueWriter
+        class="inline-block"
+        :eraseSpeed="150"
+        :delay="1500"
+        :array="arr"
+        :typeSpeed="100"
+      />Wibu.
     </p>
+
     <div class="w-full h-[45%] flex flex-cols md:text-base text-sm">
       <div class="basis-1/2 h-full text-right">
         <router-link
@@ -107,17 +115,21 @@
 
 <script>
 import VueButton from "@/components/VueButton.vue";
+import VueWriter from "vue-writer";
 
 export default {
   components: {
     VueButton,
+    VueWriter,
   },
   setup() {
     const handleClickToDocs = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    return { handleClickToDocs };
+    const arr = ["for", "by"];
+
+    return { handleClickToDocs, arr };
   },
 };
 </script>
