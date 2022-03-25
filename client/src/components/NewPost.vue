@@ -282,6 +282,7 @@ export default {
       const postPayload = {
         title: title.value,
         content: quillContent.value.getHTML(),
+        plainText: quillContent.value.getText(),
         tags: pureTags,
       };
 
@@ -292,12 +293,12 @@ export default {
           titleInvalid.message = "Tiêu đề đã bị trùng!";
           return;
         }
+
+        if (res?.data.success) {
+          postSuccessfully.value = true;
+        }
       } catch (err) {
         console.log(err);
-      }
-
-      if (res?.data.success) {
-        postSuccessfully.value = true;
       }
     };
 

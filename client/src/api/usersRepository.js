@@ -21,8 +21,19 @@ const usersAPI = {
   addBookmarkPost: (userName, postIdPayload) => {
     return axiosClient.post(`${resource}/${userName}/bookmark`, postIdPayload);
   },
+  getBookmarkList: (userName) => {
+    return axiosClient.get(`${resource}/${userName}/bookmark`);
+  },
   removeBookmarkPost: (userName, postIdPayload) => {
     return axiosClient.delete(`${resource}/${userName}/bookmark`, {
+      data: postIdPayload,
+    });
+  },
+  addLikePost: (userName, postIdPayload) => {
+    return axiosClient.post(`${resource}/${userName}/like`, postIdPayload);
+  },
+  removeLikePost: (userName, postIdPayload) => {
+    return axiosClient.delete(`${resource}/${userName}/like`, {
       data: postIdPayload,
     });
   },

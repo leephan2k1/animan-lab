@@ -76,13 +76,31 @@
       class="md:w-[60%] w-[80%] my-6 mx-auto h-fit"
       v-html="postData?.content"
     ></div>
+
+    <div class="w-full h-14 flex items-center mx-4 mb-2 cursor-pointer">
+      <div
+        @click.stop="activeLike"
+        class="w-[150px] h-[50px] bg-main flex absolute-center rounded-lg select-none"
+      >
+        <div
+          class="animate__animated"
+          :class="{ animate__heartBeat: isLiked, active: isLiked }"
+        >
+          <VueButton
+            :buttonType="isLiked ? 'heart-active' : 'heart'"
+            :styles="isLiked ? 'active' : ''"
+          />
+        </div>
+        <span class="mx-2">Thích</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import VueButton from "@/components/VueButton.vue";
 
@@ -96,6 +114,7 @@ export default {
   },
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const store = useStore();
     const postData = ref(null);
 
@@ -107,6 +126,7 @@ export default {
 
     const isDropdown = ref(false);
     const wasBookmarked = ref(false);
+    const isLiked = ref(false);
     const params = computed(() => route.params.postTypes);
     const app = document.querySelector("#app");
 
@@ -126,6 +146,7 @@ export default {
         } else {
           //handle 404 page
           console.log("not found post");
+          router.push({ name: "notFound" });
         }
       } catch (err) {
         console.error(err);
@@ -164,11 +185,43 @@ export default {
       }
     };
 
-    //active bookmarked
+    const activeLike = async () => {
+      isLiked.value = !isLiked.value;
+      const { _id } = postData.value;
+      try {
+        //add like post
+        if (isLiked.value) {
+          const res = await userRepository.addLikePost(user_name, { id: _id });
+          console.log(res?.data);
+          //if like api failed => reverse state
+          if (!res?.data.success) {
+            isLiked.value = false;
+          }
+        }
+        //remove like post
+        else {
+          const res = await userRepository.removeLikePost(user_name, {
+            id: _id,
+          });
+          console.log(res?.data);
+          //if remove faild
+          if (!res?.data.success) {
+            isLiked.value = !isLiked.value;
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    //active bookmarked & like button
     watch(postData, () => {
-      const { bookmark_posts } = profile;
-      if (bookmark_posts.find((postId) => postId === postData.value._id)) {
+      const { bookmark_posts, like_list } = profile;
+      if (bookmark_posts?.find((postId) => postId === postData.value._id)) {
         wasBookmarked.value = true;
+      }
+      if (like_list?.find((postId) => postId === postData.value._id)) {
+        isLiked.value = true;
       }
     });
 
@@ -210,6 +263,8 @@ export default {
       dropDown,
       isPostOwner,
       isAdmin,
+      activeLike,
+      isLiked,
     };
   },
 };
@@ -233,5 +288,8 @@ export default {
       @apply rounded-md overflow-hidden shadow-lg w-3/4 mx-auto;
     }
   }
+}
+.active {
+  @apply text-red-500;
 }
 </style>

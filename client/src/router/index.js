@@ -125,6 +125,11 @@ const routes = [
     component: () => import("@/views/login.vue"),
     beforeEnter: isNotAuthenticated,
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "notFound",
+    component: () => import("@/views/notFound.vue"),
+  },
 ];
 
 const router = createRouter({
