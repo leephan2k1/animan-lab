@@ -57,9 +57,10 @@ export default {
       const { user_name } = profile;
 
       try {
+        let res;
         switch (route.name) {
           case "postsBookmarked":
-            const res = await userRepository.getBookmarkList(user_name);
+            res = await userRepository.getBookmarkList(user_name);
             if (res?.data.success) {
               OptionalData.value = res?.data.bookmark_posts;
             } else {
@@ -67,7 +68,12 @@ export default {
             }
             break;
           case "postsLiked":
-            OptionalData.value = [];
+            res = await userRepository.getLikeList(user_name);
+            if (res?.data.success) {
+              OptionalData.value = res?.data.like_list;
+            } else {
+              OptionalData.value = [];
+            }
             break;
           default:
             OptionalData.value = [];

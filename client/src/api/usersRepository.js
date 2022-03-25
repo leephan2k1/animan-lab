@@ -32,6 +32,9 @@ const usersAPI = {
   addLikePost: (userName, postIdPayload) => {
     return axiosClient.post(`${resource}/${userName}/like`, postIdPayload);
   },
+  getLikeList: (userName) => {
+    return axiosClient.get(`${resource}/${userName}/like`);
+  },
   removeLikePost: (userName, postIdPayload) => {
     return axiosClient.delete(`${resource}/${userName}/like`, {
       data: postIdPayload,

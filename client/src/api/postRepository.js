@@ -9,6 +9,11 @@ const postsAPI = {
   getPost: (params) => {
     return axiosClient.get(`${resource}/${params}`);
   },
+  deletePost: (slugPostPayload) => {
+    return axiosClient.delete(`${resource}/delete-post`, {
+      data: slugPostPayload,
+    });
+  },
 };
 
 export default postsAPI;

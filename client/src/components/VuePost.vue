@@ -51,7 +51,7 @@ export default {
     const postData = computed(() => props.postsData);
 
     watch(postData, () => {
-      console.log(postData.value.length);
+      // console.log(postData.value);
     });
 
     return { postData };

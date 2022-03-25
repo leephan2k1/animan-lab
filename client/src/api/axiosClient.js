@@ -34,7 +34,6 @@ axiosClient.interceptors.response.use(
   async (error) => {
     if (error.response.status === 401) {
       const { config } = error.response;
-      console.log(error.response);
       if (error.response.data.message === "jwt expired") {
         //get new access token
         const res = await refreshToken();

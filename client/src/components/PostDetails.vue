@@ -50,6 +50,7 @@
             class="hidden animate__animated animate__faster absolute top-[25px] -left-[85px] w-28 h-fit bg-white border-[1px] border-gray-400 rounded-lg shadow-lg flex flex-col items-center justify-around"
           >
             <p
+              @click.stop="handleDeletePost"
               v-if="isPostOwner || isAdmin"
               class="absolute-center h-10 mb-2 select-none hover:text-button cursor-pointer"
             >
@@ -242,6 +243,30 @@ export default {
       dropDown.value.classList.remove("animate__fadeIn");
     };
 
+    const handleDeletePost = async () => {
+      if (window.confirm("Chắc chứ bạn?")) {
+        if (window.confirm("Vẫn là chắc chứ? nhưng nó là lần 2 🤡")) {
+          if (
+            window.confirm(
+              "Tôi nghĩ bạn không chắc lắm, lần cuối nào, chắc không 🐧?"
+            )
+          ) {
+            try {
+              const res = await postRepository.deletePost({
+                slug: postData?.value.slug,
+              });
+              if (res?.data.success) {
+                window.alert("Xoá thành công!");
+                router.push({ name: "home" });
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }
+      }
+    };
+
     onMounted(() => {
       //add events
       app.addEventListener("click", handleClickToApp);
@@ -265,6 +290,7 @@ export default {
       isAdmin,
       activeLike,
       isLiked,
+      handleDeletePost,
     };
   },
 };
