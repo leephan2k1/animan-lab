@@ -8,13 +8,20 @@ import {
 } from "@/constants";
 import RepositoryFactory from "@/api/repositoryFactory";
 
+import SecureLS from "secure-ls";
+const ls = new SecureLS({
+  encodingType: 'rabbit',
+  isCompression: false,
+  encryptionSecret: process.env.VUE_APP_SECRET_LS,
+});
+
 const userRepository = RepositoryFactory.get("users");
 
 export default {
   namespaced: true,
   state: {
     status: "",
-    profile: JSON.parse(localStorage.getItem("user")) || {},
+    profile: ls.get("usr") || {},
   },
   getters: {
     getProfile: (state) => state.profile,
@@ -56,7 +63,7 @@ export default {
     },
     [USER_SETTER]: ({ commit }, userPayload) => {
       commit(USER_SUCCESS, userPayload);
-      localStorage.setItem("user", JSON.stringify(userPayload));
+      ls.set("usr", userPayload);
     },
     [USER_LOGOUT]: ({ commit }) => {
       commit(AUTH_LOGOUT);

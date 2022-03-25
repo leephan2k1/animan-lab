@@ -12,6 +12,13 @@ import axiosClient from "@/api/axiosClient";
 
 const userRepository = RepositoryFactory.get("users");
 
+import SecureLS from "secure-ls";
+const ls = new SecureLS({
+  encodingType: "rabbit",
+  isCompression: false,
+  encryptionSecret: process.env.VUE_APP_SECRET_LS,
+});
+
 export default {
   namespaced: true,
   state: {
@@ -101,7 +108,8 @@ export default {
           commit(AUTH_LOGOUT);
           //remove in localStorage
           localStorage.removeItem("access-token");
-          localStorage.removeItem("user");
+          ls.remove("usr");
+          ls.remove("_secure__ls__metadata");
           localStorage.removeItem("refresh-token");
           //remove in axios
           delete axiosClient.defaults.headers.common["Authorization"];
