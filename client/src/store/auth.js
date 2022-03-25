@@ -5,6 +5,7 @@ import {
   AUTH_LOGOUT,
   USER_SETTER,
   USER_LOGOUT,
+  USER_REQUEST,
 } from "@/constants";
 import RepositoryFactory from "@/api/repositoryFactory";
 import axiosClient from "@/api/axiosClient";
@@ -79,6 +80,7 @@ export default {
           //store user info to vuex:
           const { user } = response.data;
           dispatch(`user/${USER_SETTER}`, user, { root: true });
+          dispatch(`user/${USER_REQUEST}`, user.user_name, { root: true });
         } else {
           commit(AUTH_ERROR, response.data.message);
         }
