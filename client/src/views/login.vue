@@ -125,7 +125,7 @@ export default {
           rtl: false,
         });
         setTimeout(() => {
-          router.push({ name: "home" });
+          router.go(-1);
         }, 2500);
       }
     }
