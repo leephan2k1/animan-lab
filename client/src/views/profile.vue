@@ -44,6 +44,7 @@ export default {
 
     //tracking navigation & user name
     watch([params, public_user_name], () => {
+      OptionalData.value = [];
       fetchPostData();
     });
 

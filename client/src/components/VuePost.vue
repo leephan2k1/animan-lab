@@ -1,44 +1,81 @@
 <template>
   <div class="w-full h-fit mt-7">
-    <div
-      v-for="item in postData"
-      :key="item?._id"
-      class="w-full my-4 h-fit overflow-hidden grid grid-cols-3"
-    >
-      <div class="w-full h-full cursor-pointer col-span-1 absolute-center">
-        <img
-          class="w-[80%] max-h-[70%] md:max-h-[90%] rounded-xl"
-          :src="item?.images_url[0]"
-          alt="thumbnail"
-        />
-      </div>
-      <div class="col-span-2 h-fit py-2 cursor-pointer">
-        <!-- title  -->
-        <h2
-          class="pr-2 md:text-2xl text-lg lg:w-[80%] post-title overflow-hidden hover:text-button"
-        >
-          {{ item?.title }}
-        </h2>
-        <div class="pr-2 lg:w-[80%]">
-          <div class="overflow-hidden post-desc">
-            <p class="md:block hidden" v-html="item.plainText"></p>
-          </div>
-          <div class="w-full overflow-hidden whitespace-nowrap">
-            <span class="text-[15px] text-gray-400 hover:text-button">{{
-              item?.author_name
-            }}</span>
-            <span class="text-[15px] text-gray-400">
-              | {{ convertISODate(item?.createdAt) }}
-            </span>
+    <template v-if="postData?.length > 0 && postData">
+      <div
+        v-for="item in postData"
+        :key="item?._id"
+        class="w-full my-4 h-fit overflow-hidden grid grid-cols-3"
+      >
+        <div class="w-full h-full cursor-pointer col-span-1 absolute-center">
+          <img
+            class="w-[80%] max-h-[70%] md:max-h-[90%] rounded-xl"
+            :src="item?.images_url[0]"
+            alt="thumbnail"
+          />
+        </div>
+        <div class="col-span-2 h-fit py-2 cursor-pointer">
+          <!-- title  -->
+          <h2
+            class="pr-2 md:text-2xl text-lg lg:w-[80%] post-title overflow-hidden hover:text-button"
+          >
+            {{ item?.title }}
+          </h2>
+          <div class="pr-2 lg:w-[80%]">
+            <div class="overflow-hidden post-desc">
+              <p class="md:block hidden" v-html="item.plainText"></p>
+            </div>
+            <div class="w-full overflow-hidden whitespace-nowrap">
+              <span class="text-[15px] text-gray-400 hover:text-button">{{
+                item?.author_name
+              }}</span>
+              <span class="text-[15px] text-gray-400">
+                | {{ convertISODate(item?.createdAt) }}
+              </span>
+            </div>
           </div>
         </div>
+      </div>
+    </template>
+    <div v-else>
+      <div v-for="item in fakeData" :key="item">
+        <ContentLoader viewBox="0 0 400 200" title="Loading news...">
+          <rect
+            x="42.84"
+            y="9.93"
+            rx="5"
+            ry="5"
+            width="143.55"
+            height="86.59"
+          />
+          <rect
+            x="192.84"
+            y="9.67"
+            rx="0"
+            ry="0"
+            width="148.72"
+            height="12.12"
+          />
+          <rect x="192.84" y="25.67" rx="0" ry="0" width="89" height="9" />
+
+          <rect x="42.84" y="107" rx="5" ry="5" width="143.55" height="86.59" />
+          <rect
+            x="192.84"
+            y="107"
+            rx="0"
+            ry="0"
+            width="148.72"
+            height="12.12"
+          />
+          <rect x="192.84" y="123" rx="0" ry="0" width="89" height="9" />
+        </ContentLoader>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, watch } from "vue";
+import { ContentLoader } from "vue-content-loader";
+import { computed } from "vue";
 
 export default {
   props: {
@@ -49,18 +86,18 @@ export default {
       type: Array,
     },
   },
+  components: {
+    ContentLoader,
+  },
   setup(props) {
     const postData = computed(() => props.postsData);
-
-    watch(postData, () => {
-      // console.log(postData.value);
-    });
+    const fakeData = [...Array(1).keys()];
 
     const convertISODate = (ISODate) => {
       return new Date(ISODate).toISOString().substring(0, 10);
     };
 
-    return { postData, convertISODate };
+    return { postData, convertISODate, fakeData };
   },
 };
 </script>
