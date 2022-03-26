@@ -18,6 +18,9 @@ const usersAPI = {
   getUser: (params) => {
     return axiosClient.get(`${resource}/${params}`);
   },
+  getMyPosts: (userName) => {
+    return axiosClient.get(`${resource}/${userName}/posts`);
+  },
   addBookmarkPost: (userName, postIdPayload) => {
     return axiosClient.post(`${resource}/${userName}/bookmark`, postIdPayload);
   },

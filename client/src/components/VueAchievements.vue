@@ -1,33 +1,36 @@
 <template>
-  <div class="w-full lg:h-[700px] h-[700px] md:h-[800px]">
-    <div class="w-full h-full grid grid-cols-2">
+  <div class="w-full min-h-[700px] h-fit md:h-[800px]">
+    <div class="w-full h-fit grid grid-cols-2">
       <div class="col-span-2 md:col-span-1 flex flex-col items-center">
         <div
           class="w-3/4 md:w-full h-[150px] flex flex-col justify-center text-lg my-4 bg-white rounded-xl shadow-lg"
         >
           <p class="ml-4 hover:text-button cursor-pointer">
-            Nghiên cứu đã viết: <span class="font-bold">50</span>
+            Nghiên cứu đã viết:
+            <span class="font-bold">{{ profile?.posts?.length }}</span>
           </p>
           <p class="ml-4 hover:text-button cursor-pointer">
-            Nghiên cứu đã thích: <span class="font-bold">100</span>
+            Nghiên cứu đã thích:
+            <span class="font-bold">{{ profile?.like_list?.length }}</span>
           </p>
           <p class="ml-4 hover:text-button cursor-pointer">
-            Nghiên cứu đang theo dõi: <span class="font-bold">11</span>
+            Nghiên cứu đang theo dõi:
+            <span class="font-bold">{{ profile?.bookmark_posts?.length }}</span>
           </p>
         </div>
         <div
           class="w-3/4 md:w-full h-[150px] flex flex-col justify-center text-lg my-4 bg-white rounded-xl shadow-lg"
         >
           <p class="ml-4 hover:text-button cursor-pointer">
-            Danh hiệu: <span class="font-bold">Wibu thuỷ tổ</span>
+            Danh hiệu: <span class="font-bold">{{ profile.roleName }}</span>
           </p>
           <p class="ml-4 hover:text-button cursor-pointer">
-            Điểm: <span class="font-bold">Infinity</span>
+            Điểm: <span class="font-bold">{{ profile.points }}</span>
           </p>
           <div class="ml-4 my-2">
             <k-progress
               class="whitespace-nowrap"
-              :percent="101"
+              :percent="profile.points"
               :format="format"
               active
               :color="['#f5af19', '#f12711', '#9254de', '#40a9ff', '#5cdbd3']"
@@ -38,14 +41,20 @@
           class="w-3/4 md:w-full h-[150px] flex flex-col justify-center text-lg my-4 bg-white rounded-xl shadow-lg"
         >
           <p class="ml-4 hover:text-button cursor-pointer">
-            Căn cước công dân wibu: <span class="font-bold">Wibu_top_1_VN</span>
+            Căn cước công dân wibu:
+            <span class="font-bold">{{
+              profile.last_name + " " + profile.first_name
+            }}</span>
           </p>
           <p class="ml-4 hover:text-button cursor-pointer">
-            Trở thành học giả wibu: <span class="font-bold">15/3/2022</span>
+            Trở thành học giả wibu:
+            <span class="font-bold">{{ profile.createdAt }}</span>
           </p>
         </div>
       </div>
-      <div class="col-span-2 md:col-span-1 flex flex-col items-center">
+      <div
+        class="col-span-2 md:col-span-1 flex flex-col items-center md:items-end"
+      >
         <div
           class="md:mb-0 mb-12 mt-4 w-[90%] h-fit bg-white rounded-xl shadow-xl flex flex-col"
         >
@@ -115,26 +124,81 @@
 </template>
 
 <script>
+import { ref, computed, watch } from "vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+
 import KProgress from "k-progress-v3";
+import computeLevelName from "@/utils/computeLevelName";
+
+import repositoryFactory from "@/api/repositoryFactory";
+const userRepository = repositoryFactory.get("users");
+
 export default {
   components: {
     "k-progress": KProgress,
   },
-  props: {
-    achievementsData: {
-      type: String,
-    },
-  },
-  setup(props) {
+  setup() {
+    const store = useStore();
+    const route = useRoute();
 
-    const format = (percent) => {
-      if (percent > 100) {
-        return " -Infinity- ";
+    const public_user_name = computed(() => route.params.username);
+    const profile = ref({});
+
+    //tracking user name change:
+    watch(public_user_name, () => {
+      synchronizeFunction();
+    });
+
+    const getProfile = async () => {
+      const localProfile = store.getters["user/getProfile"];
+      const { user_name } = localProfile;
+      //public profile
+      if (user_name !== public_user_name.value) {
+        try {
+          const res = await userRepository.getUser(public_user_name.value);
+          if (res?.data.success) {
+            profile.value = res.data.user;
+          }
+        } catch (err) {
+          console.error(err);
+        }
       }
-      return `${percent * 10} points`;
+      //local profile
+      else {
+        profile.value = localProfile;
+      }
     };
 
-    return { format };
+    const configProfileData = () => {
+      //handle achievement:
+      if (!profile?.value.roleName) {
+        profile.value.roleName = computeLevelName(profile.value.points);
+      }
+      //handle ISO date
+      if (profile?.value.createdAt) {
+        profile.value.createdAt = new Date(profile.value.createdAt)
+          .toISOString()
+          .substring(0, 10);
+      }
+    };
+
+    const format = (percent) => {
+      if (percent > 1000) {
+        percent = 1000;
+        return " -Infinity- ";
+      }
+      return `${Math.ceil(percent / 10)} %`;
+    };
+
+    const synchronizeFunction = async () => {
+      await getProfile();
+      configProfileData();
+    };
+
+    synchronizeFunction();
+
+    return { format, profile };
   },
 };
 </script>

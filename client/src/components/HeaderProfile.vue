@@ -9,22 +9,27 @@
         <div
           class="w-full h-full bg-center bg-cover bg-no-repeat"
           :style="{
-            backgroundImage: `url(${require('@/assets/images/defaultAvatar.jpg')})`,
+            backgroundImage: `url(${profile.avatar})`,
           }"
         ></div>
       </div>
       <!-- usr name  -->
       <div class="w-full h-fit">
-        <p class="text-center text-gray-600 text-xl font-bold">Admin</p>
+        <p class="text-center text-gray-600 text-xl font-bold">
+          {{ profile.user_name }}
+        </p>
       </div>
       <!-- level  -->
       <div class="w-full h-fit">
-        <p class="text-center text-gray-600 text-lg">Cấp bậc: Wibu thuỷ tổ</p>
+        <p class="text-center text-gray-600 text-lg">
+          Cấp bậc: {{ profile.roleName }}
+        </p>
       </div>
       <!-- achievements  -->
       <div class="w-full h-fit">
         <p class="text-center text-gray-600 text-lg">
-          Nghiên cứu đã viết: 50 | Lượt like: 100
+          Nghiên cứu đã viết: {{ profile?.posts?.length }} | Lượt like:
+          {{ profile?.like_list?.length }}
         </p>
       </div>
     </div>
@@ -66,15 +71,68 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+
+import computeLevelName from "@/utils/computeLevelName";
+
+import repositoryFactory from "@/api/repositoryFactory";
+const userRepository = repositoryFactory.get("users");
 
 export default {
   setup() {
     const route = useRoute();
     const currentPath = computed(() => route.name);
+    const store = useStore();
+    const public_user_name = computed(() => route.params.username);
 
-    return { currentPath };
+    const profile = ref({});
+
+    const getProfile = async () => {
+      const localProfile = store.getters["user/getProfile"];
+      const { user_name } = localProfile;
+      //public profile
+      if (user_name !== public_user_name.value) {
+        try {
+          const res = await userRepository.getUser(public_user_name.value); 
+          if (res?.data.success) {
+            profile.value = res.data.user;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      //local profile
+      else {
+        profile.value = localProfile;
+      }
+    };
+
+    //tracking user name change:
+    watch(public_user_name, () => {
+      synchronizeFunction();
+    });
+
+    const configProfileData = () => {
+      //avatar non exist:
+      if (!profile?.value?.avatar) {
+        profile.value.avatar = `${require("@/assets/images/defaultAvatar.jpg")}`;
+      }
+      //handle achievement:
+      if (!profile?.value?.roleName) {
+        profile.value.roleName = computeLevelName(profile.value.points);
+      }
+    };
+
+    const synchronizeFunction = async () => {
+      await getProfile();
+      configProfileData();
+    };
+
+    synchronizeFunction();
+
+    return { currentPath, profile };
   },
 };
 </script>
