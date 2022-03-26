@@ -17,17 +17,19 @@
         <h2
           class="pr-2 md:text-2xl text-lg lg:w-[80%] post-title overflow-hidden hover:text-button"
         >
-          {{ item.title }}
+          {{ item?.title }}
         </h2>
         <div class="pr-2 lg:w-[80%]">
           <div class="overflow-hidden post-desc">
             <p class="md:block hidden" v-html="item.plainText"></p>
           </div>
           <div class="w-full overflow-hidden whitespace-nowrap">
-            <span class="text-[15px] text-gray-400 hover:text-button"
-              >User</span
-            >
-            <span class="text-[15px] text-gray-400"> | March 10, 2022</span>
+            <span class="text-[15px] text-gray-400 hover:text-button">{{
+              item?.author_name
+            }}</span>
+            <span class="text-[15px] text-gray-400">
+              | {{ convertISODate(item?.createdAt) }}
+            </span>
           </div>
         </div>
       </div>
@@ -54,7 +56,11 @@ export default {
       // console.log(postData.value);
     });
 
-    return { postData };
+    const convertISODate = (ISODate) => {
+      return new Date(ISODate).toISOString().substring(0, 10);
+    };
+
+    return { postData, convertISODate };
   },
 };
 </script>
