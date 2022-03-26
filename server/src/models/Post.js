@@ -7,6 +7,7 @@ const Post = new Schema(
     is_flag: { type: Boolean, default: false },
     report_list: [{ type: Schema.Types.ObjectId, ref: "Report" }],
     title: { type: String, required: true, min: 3, unique: true },
+    plainText: { type: String, required: true, min: 10 },
     slug: { type: String, unique: true },
     content: { type: String, required: true, min: 10 },
     author_id: { type: Schema.Types.ObjectId, ref: "User", required: true },

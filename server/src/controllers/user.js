@@ -38,11 +38,21 @@ module.exports = {
       req.verified.body;
     //check email was registered
     const existEmail = await User.findOne({ email });
-    existChecker(existEmail, "email is already registered", res);
+    if (existEmail) {
+      return res.status(200).json({
+        success: false,
+        message: "email is already registered",
+      });
+    }
 
     //check user_name was registered
     const existUserName = await User.findOne({ user_name });
-    existChecker(existUserName, "user name already exists", res);
+    if (existUserName) {
+      return res.status(200).json({
+        success: false,
+        message: "user name already exists",
+      });
+    }
 
     //create user & save user to db
     const newUser = new User({
@@ -113,6 +123,21 @@ module.exports = {
     res.setHeader("RefreshToken", newRefreshToken);
 
     res.status(201).json({ success: true });
+  },
+
+  getMyPosts: async (req, res, next) => {
+    const { user_name } = req.params;
+    const user = await User.findOne(
+      { user_name },
+      { __v: 0, password: 0 }
+    ).populate("posts", { __v: 0 });
+
+    nonExistChecker(user, "User not found", res);
+
+    return res.status(200).json({
+      success: true,
+      posts: user.posts,
+    });
   },
 
   addBookmark: async (req, res, next) => {

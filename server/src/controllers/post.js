@@ -33,7 +33,7 @@ module.exports = {
     const { sub } = req.payload; // -> userId (access token return)
     const owner = await User.findById(sub);
     const postPayload = req.verified.body;
-    const { title, content } = postPayload;
+    const { title, content, plainText } = postPayload;
 
     //check exist post title
     const duplicatedTitle = await Post.findOne({ title });
@@ -58,6 +58,7 @@ module.exports = {
       approve: isAdmin,
       title,
       content,
+      plainText,
       author_id: sub,
       author_name: user_name,
       images_url: postPayload?.images_url || [],

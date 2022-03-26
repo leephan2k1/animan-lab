@@ -14,6 +14,10 @@ const createError = require("http-errors");
 const corsOptions = {
   exposedHeaders: ["Authorization", "RefreshToken"],
 };
+
+//enable all CORS requests
+app.use(cors(corsOptions));
+
 //connect mongodb
 db.connect();
 
@@ -24,9 +28,6 @@ app.use(
   })
 );
 app.use(express.json());
-
-//enable all CORS requests
-app.use(cors(corsOptions));
 
 //security middleware
 app.use(helmet());

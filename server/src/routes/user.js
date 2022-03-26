@@ -44,6 +44,13 @@ router
     UserController.removeBookmark
   );
 /*
+/v1/users/:user_name/bookmark
+*/
+router
+  .route("/:user_name/posts")
+  .get(UserController.getMyPosts)
+
+/*
 /v1/users/:user_name/mylove
 */
 router
