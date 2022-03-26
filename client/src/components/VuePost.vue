@@ -1,6 +1,14 @@
 <template>
-  <div class="w-full h-fit mt-7">
-    <template v-if="postData?.length > 0 && postData">
+  <div class="w-full min-h-[150px] h-fit mt-7">
+    <div v-if="isString(postData)">
+      <h1 class="text-center" v-if="postData === 'bookmark empty'">
+        Chưa có bài viết nào được bạn bookmark.
+      </h1>
+      <h1 class="text-center" v-if="postData === 'like list empty'">
+        Chưa có bài viết nào được bạn like.
+      </h1>
+    </div>
+    <template v-if="postData?.length > 0 && postData && !isString(postData)">
       <div
         v-for="item in postData"
         :key="item?._id"
@@ -36,7 +44,7 @@
         </div>
       </div>
     </template>
-    <div v-else>
+    <div v-if="(postData?.length === 0 || !postData) && !isString(postData)">
       <div v-for="item in fakeData" :key="item">
         <ContentLoader viewBox="0 0 400 200" title="Loading news...">
           <rect
@@ -83,7 +91,7 @@ export default {
       type: String,
     },
     postsData: {
-      type: Array,
+      type: [Array, String],
     },
   },
   components: {
@@ -97,7 +105,11 @@ export default {
       return new Date(ISODate).toISOString().substring(0, 10);
     };
 
-    return { postData, convertISODate, fakeData };
+    const isString = (value) => {
+      return typeof value === "string" ? true : false;
+    };
+
+    return { postData, convertISODate, fakeData, isString };
   },
 };
 </script>

@@ -111,6 +111,8 @@ import repositoryFactory from "@/api/repositoryFactory";
 const postRepository = repositoryFactory.get("posts");
 const userRepository = repositoryFactory.get("users");
 
+import { USER_UPDATE } from "@/constants";
+
 export default {
   components: {
     VueButton,
@@ -168,6 +170,10 @@ export default {
           //bookmark fail => assign wasBookmarked state is false
           if (!res?.data.success) {
             wasBookmarked.value = false;
+          } else {
+            //update vue store
+            profile.bookmark_posts.push(_id);
+            await store.dispatch(`user/${USER_UPDATE}`, profile);
           }
         } catch (err) {
           console.error(err);
@@ -181,6 +187,12 @@ export default {
           //remove bookmark fail => reverse wasBookmarked state
           if (!res?.data.success) {
             wasBookmarked.value = !wasBookmarked.value;
+          } else {
+            //update vue store
+            profile.bookmark_posts = profile.bookmark_posts.filter(
+              (postId) => postId !== _id
+            );
+            await store.dispatch(`user/${USER_UPDATE}`, profile);
           }
         } catch (err) {
           console.error(err);
@@ -195,10 +207,13 @@ export default {
         //add like post
         if (isLiked.value) {
           const res = await userRepository.addLikePost(user_name, { id: _id });
-          console.log(res?.data);
           //if like api failed => reverse state
           if (!res?.data.success) {
             isLiked.value = false;
+          } else {
+            //update vue store
+            profile.like_list.push(_id);
+            await store.dispatch(`user/${USER_UPDATE}`, profile);
           }
         }
         //remove like post
@@ -206,10 +221,15 @@ export default {
           const res = await userRepository.removeLikePost(user_name, {
             id: _id,
           });
-          console.log(res?.data);
-          //if remove faild
+          //if remove fail
           if (!res?.data.success) {
             isLiked.value = !isLiked.value;
+          } else {
+            //update vue store
+            profile.like_list = profile.like_list.filter(
+              (postId) => postId !== _id
+            );
+            await store.dispatch(`user/${USER_UPDATE}`, profile);
           }
         }
       } catch (err) {
@@ -217,15 +237,19 @@ export default {
       }
     };
 
-    //active bookmarked & like button
-    watch(postData, () => {
+    const activeBookmarkAndLike = () => {
       const { bookmark_posts, like_list } = profile;
-      if (bookmark_posts?.find((postId) => postId === postData.value._id)) {
+      if (bookmark_posts?.find((postId) => postId === postData.value?._id)) {
         wasBookmarked.value = true;
       }
-      if (like_list?.find((postId) => postId === postData.value._id)) {
+      if (like_list?.find((postId) => postId === postData.value?._id)) {
         isLiked.value = true;
       }
+    };
+
+    //active bookmarked & like button
+    watch(postData, () => {
+      activeBookmarkAndLike();
     });
 
     const handleDropdown = () => {
@@ -288,6 +312,8 @@ export default {
 
     // fetch post to get data:
     fetchPost();
+    //active bookmark & like button:
+    activeBookmarkAndLike();
 
     return {
       postData,

@@ -5,12 +5,13 @@ import {
   AUTH_LOGOUT,
   USER_SETTER,
   USER_LOGOUT,
+  USER_UPDATE,
 } from "@/constants";
 import RepositoryFactory from "@/api/repositoryFactory";
 
 import SecureLS from "secure-ls";
 const ls = new SecureLS({
-  encodingType: 'rabbit',
+  encodingType: "rabbit",
   isCompression: false,
   encryptionSecret: process.env.VUE_APP_SECRET_LS,
 });
@@ -64,6 +65,9 @@ export default {
     [USER_SETTER]: ({ commit }, userPayload) => {
       commit(USER_SUCCESS, userPayload);
       ls.set("usr", userPayload);
+    },
+    [USER_UPDATE]: ({ commit }, userPayload) => {
+      commit(USER_SUCCESS, userPayload);
     },
     [USER_LOGOUT]: ({ commit }) => {
       commit(AUTH_LOGOUT);
