@@ -9,9 +9,10 @@
       </h1>
     </div>
     <template v-if="postData?.length > 0 && postData && !isString(postData)">
-      <div
+      <router-link
         v-for="item in postData"
         :key="item?._id"
+        :to="{ name: 'post', params: { postTypes: item.slug } }"
         class="w-full my-4 h-fit overflow-hidden grid grid-cols-3"
       >
         <div class="w-full h-full cursor-pointer col-span-1 absolute-center">
@@ -42,7 +43,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </router-link>
     </template>
     <div v-if="(postData?.length === 0 || !postData) && !isString(postData)">
       <div v-for="item in fakeData" :key="item">
