@@ -63,6 +63,8 @@
               Chỉnh sửa
             </p>
             <p
+              v-if="!isPostOwner"
+              @click.stop="handleToggleReportForm"
               class="absolute-center h-10 select-none hover:text-button cursor-pointer"
             >
               Báo cáo
@@ -113,7 +115,7 @@ export default {
   components: {
     VueButton,
   },
-  setup() {
+  setup(_, { emit }) {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
@@ -267,6 +269,14 @@ export default {
       }
     };
 
+    const handleToggleReportForm = () => {
+      emit("handleReport", {
+        toggle: true,
+        post_id: postData.value._id,
+        post_slug: postData.value.slug,
+      });
+    };
+
     onMounted(() => {
       //add events
       app.addEventListener("click", handleClickToApp);
@@ -291,6 +301,7 @@ export default {
       activeLike,
       isLiked,
       handleDeletePost,
+      handleToggleReportForm,
     };
   },
 };

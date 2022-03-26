@@ -9,6 +9,9 @@ const postsAPI = {
   getPost: (params) => {
     return axiosClient.get(`${resource}/${params}`);
   },
+  reportPost: (slugPostPayload, reportPayload) => {
+    return axiosClient.post(`${resource}/${slugPostPayload}`, reportPayload);
+  },
   deletePost: (slugPostPayload) => {
     return axiosClient.delete(`${resource}/delete-post`, {
       data: slugPostPayload,
