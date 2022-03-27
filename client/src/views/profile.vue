@@ -51,6 +51,14 @@ export default {
           return "Bài viết yêu thích";
         case "postsBookmarked":
           return "Bài viết được đánh dấu";
+        case "profilePending":
+          //private data (user_name local + access token)
+          const { user_name } = profile;
+          //public data (username in params)
+          const { username } = route.params;
+          if (user_name !== username) {
+            return "Chỉ có người sở hữu bài viết mới có thể xem";
+          }
       }
     });
     const OptionalData = ref(null);
@@ -139,13 +147,18 @@ export default {
             }
             break;
           case "profilePending":
-            res = await userRepository.getMyPosts(username);
-            if (res?.data.success) {
-              OptionalData.value = res.data.posts.filter(
-                (post) => post.approve === false
-              );
-            } else {
+            //private data:
+            if (user_name !== username) {
               OptionalData.value = [];
+            } else {
+              res = await userRepository.getMyPosts(user_name);
+              if (res?.data.success) {
+                OptionalData.value = res.data.posts.filter(
+                  (post) => post.approve === false
+                );
+              } else {
+                OptionalData.value = [];
+              }
             }
             break;
           default:

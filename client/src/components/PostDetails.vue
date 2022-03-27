@@ -2,103 +2,122 @@
   <div
     class="w-full min-h-[400px] h-fit bg-white rounded-lg shadow-md flex flex-col z-0"
   >
-    <h1 class="lg:pl-7 p-4 text-2xl font-bold">
-      {{ postData?.title }}
-    </h1>
-    <!-- author  -->
-    <div class="w-full h-16 md:h-20 flex justify-between">
-      <div class="lg:w-[35%] w-[80%] h-full flex">
-        <div class="md:ml-0 ml-2 w-1/3 h-full absolute-center">
-          <div
-            :style="{
-              backgroundImage: `url(${require('@/assets/images/defaultAvatar.jpg')})`,
-            }"
-            class="w-11 h-11 rounded-full bg-center bg-cover bg-no-repeat overflow-hidden"
-          ></div>
-        </div>
+    <template v-if="postData && !isEmptyObject(postData)">
+      <h1 class="lg:pl-7 p-4 text-2xl font-bold">
+        {{ postData?.title }}
+      </h1>
+      <!-- author  -->
+      <div class="w-full h-16 md:h-20 flex justify-between">
+        <div class="lg:w-[35%] w-[80%] h-full flex">
+          <div class="md:ml-0 ml-2 w-1/3 h-full absolute-center cursor-pointer">
+            <router-link
+              :to="{
+                name: 'profileAchievements',
+                params: { username: postData?.author_name },
+              }"
+              target="_blank"
+              :style="{
+                backgroundImage: `url(${require('@/assets/images/defaultAvatar.jpg')})`,
+              }"
+              class="w-11 h-11 rounded-full bg-center bg-cover bg-no-repeat overflow-hidden"
+            ></router-link>
+          </div>
 
-        <div class="w-2/3 h-full flex flex-col justify-center">
-          <p class="md:text-base text-sm">Admin</p>
-          <p
-            class="md:text-[15px] text-[10px] border-[1px] border-button w-fit p-[3px] rounded-lg"
-          >
-            Wibu thuỷ tổ
-          </p>
-          <p class="md:text-base text-[10px]">
-            Thích: {{ postData?.like }} | Bình luận:
-            {{ postData?.comments.length }} | Lượt xem: {{ postData?.view }}
-          </p>
-        </div>
-      </div>
-
-      <div class="md:w-1/4 w-1/3 h-full flex items-center justify-evenly">
-        <div
-          ref="bookmarkButton"
-          @click="handleBookmark"
-          class="select-none cursor-pointer animate__animated animate__faster"
-          :class="{
-            'text-button': wasBookmarked,
-            animate__zoomIn: wasBookmarked,
-          }"
-        >
-          <VueButton buttonType="bookmark" />
-        </div>
-        <div
-          @click.stop="handleDropdown"
-          class="select-none cursor-pointer animate__animated relative"
-        >
-          <VueButton buttonType="dots-horizontal" />
-          <div
-            ref="dropDown"
-            class="hidden animate__animated animate__faster absolute top-[25px] -left-[85px] w-28 h-fit bg-white border-[1px] border-gray-400 rounded-lg shadow-lg flex flex-col items-center justify-around"
-          >
-            <p
-              @click.stop="handleDeletePost"
-              v-if="isPostOwner || isAdmin"
-              class="absolute-center h-10 mb-2 select-none hover:text-button cursor-pointer"
+          <div class="w-2/3 h-full flex flex-col justify-center">
+            <router-link
+              :to="{
+                name: 'profileAchievements',
+                params: { username: postData?.author_name },
+              }"
+              target="_blank"
+              class="md:text-[15px] text-[10px] border-[1px] border-button w-fit p-[3px] rounded-lg cursor-pointer"
             >
-              Xoá
-            </p>
-            <p
-              v-if="isPostOwner"
-              class="absolute-center h-10 mb-2 select-none hover:text-button cursor-pointer"
-            >
-              Chỉnh sửa
-            </p>
-            <p
-              v-if="!isPostOwner"
-              @click.stop="handleToggleReportForm"
-              class="absolute-center h-10 select-none hover:text-button cursor-pointer"
-            >
-              Báo cáo
+              {{ postData?.author_name }}
+            </router-link>
+            <p class="md:text-base text-[10px]">
+              Thích: {{ postData?.like }} | Bình luận:
+              {{ postData?.comments.length }} | Lượt xem: {{ postData?.view }}
             </p>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- content  -->
-    <div
-      id="content"
-      class="md:w-[60%] w-[80%] my-6 mx-auto h-fit"
-      v-html="postData?.content"
-    ></div>
 
-    <div class="w-full h-14 flex items-center mx-4 mb-2 cursor-pointer">
-      <div
-        @click.stop="activeLike"
-        class="w-[150px] h-[50px] bg-main flex absolute-center rounded-lg select-none"
-      >
-        <div
-          class="animate__animated"
-          :class="{ animate__heartBeat: isLiked, active: isLiked }"
-        >
-          <VueButton
-            :buttonType="isLiked ? 'heart-active' : 'heart'"
-            :styles="isLiked ? 'active' : ''"
-          />
+        <div class="md:w-1/4 w-1/3 h-full flex items-center justify-evenly">
+          <div
+            ref="bookmarkButton"
+            @click="handleBookmark"
+            class="select-none cursor-pointer animate__animated animate__faster"
+            :class="{
+              'text-button': wasBookmarked,
+              animate__zoomIn: wasBookmarked,
+            }"
+          >
+            <VueButton buttonType="bookmark" />
+          </div>
+          <div
+            @click.stop="handleDropdown"
+            class="select-none cursor-pointer animate__animated relative"
+          >
+            <VueButton buttonType="dots-horizontal" />
+            <div
+              ref="dropDown"
+              class="hidden animate__animated animate__faster absolute top-[25px] -left-[85px] w-28 h-fit bg-white border-[1px] border-gray-400 rounded-lg shadow-lg flex flex-col items-center justify-around"
+            >
+              <p
+                @click.stop="handleDeletePost"
+                v-if="isPostOwner || isAdmin"
+                class="absolute-center h-10 mb-2 select-none hover:text-button cursor-pointer"
+              >
+                Xoá
+              </p>
+              <p
+                v-if="isPostOwner"
+                class="absolute-center h-10 mb-2 select-none hover:text-button cursor-pointer"
+              >
+                Chỉnh sửa
+              </p>
+              <p
+                v-if="!isPostOwner"
+                @click.stop="handleToggleReportForm"
+                class="absolute-center h-10 select-none hover:text-button cursor-pointer"
+              >
+                Báo cáo
+              </p>
+            </div>
+          </div>
         </div>
-        <span class="mx-2">Thích</span>
       </div>
+      <!-- content  -->
+      <div
+        id="content"
+        class="md:w-[60%] w-[80%] my-6 mx-auto h-fit"
+        v-html="postData?.content"
+      ></div>
+
+      <div class="w-full h-14 flex items-center mx-4 mb-2 cursor-pointer">
+        <div
+          @click.stop="activeLike"
+          class="w-[150px] h-[50px] bg-main flex absolute-center rounded-lg select-none"
+        >
+          <div
+            class="animate__animated"
+            :class="{ animate__heartBeat: isLiked, active: isLiked }"
+          >
+            <VueButton
+              :buttonType="isLiked ? 'heart-active' : 'heart'"
+              :styles="isLiked ? 'active' : ''"
+            />
+          </div>
+          <span class="mx-2">Thích</span>
+        </div>
+      </div>
+    </template>
+    <div v-else>
+      <ContentLoader viewBox="0 0 400 460">
+        <circle cx="31" cy="31" r="15" />
+        <rect x="58" y="18" rx="2" ry="2" width="140" height="10" />
+        <rect x="58" y="34" rx="2" ry="2" width="140" height="10" />
+        <rect x="0" y="60" rx="2" ry="2" width="400" height="400" />
+      </ContentLoader>
     </div>
   </div>
 </template>
@@ -109,16 +128,19 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 
 import VueButton from "@/components/VueButton.vue";
+import { ContentLoader } from "vue-content-loader";
 
 import repositoryFactory from "@/api/repositoryFactory";
 const postRepository = repositoryFactory.get("posts");
 const userRepository = repositoryFactory.get("users");
 
 import { USER_UPDATE } from "@/constants";
+import { isEmptyObject } from "@/utils/checkType";
 
 export default {
   components: {
     VueButton,
+    ContentLoader,
   },
   setup(_, { emit }) {
     const route = useRoute();
@@ -144,6 +166,7 @@ export default {
     const fetchPost = async () => {
       try {
         const res = await postRepository.getPost(params.value);
+
         if (res?.data.success) {
           postData.value = res.data.post;
 
@@ -252,6 +275,8 @@ export default {
     //active bookmarked & like button
     watch(postData, () => {
       activeBookmarkAndLike();
+      //set window title:
+      document.title = postData.value?.title;
     });
 
     const handleDropdown = () => {
@@ -308,10 +333,14 @@ export default {
       app.addEventListener("click", handleClickToApp);
       //scroll to top:
       window.scrollTo({ top: 0, behavior: "smooth" });
+      //set window title:
+      document.title = postData.value?.title;
     });
 
     onUnmounted(() => {
       app.removeEventListener("click", handleClickToApp);
+      //reset title:
+      document.title = "Animan Lab";
     });
 
     // fetch post to get data:
@@ -332,6 +361,7 @@ export default {
       isLiked,
       handleDeletePost,
       handleToggleReportForm,
+      isEmptyObject,
     };
   },
 };
