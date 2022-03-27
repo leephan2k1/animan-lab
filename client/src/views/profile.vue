@@ -1,10 +1,20 @@
 <template>
-  <div class="w-full h-fit">
+  <div class="w-full h-fit relative">
     <HeaderProfile />
     <h1 class="font-semibold md:text-lg pt-4 text-center">
       {{ OptionalTittle }}
     </h1>
-    <router-view :postsData="OptionalData" />
+    <router-view
+      @toggleWaifuForm="handleOpenWaifuForm"
+      :postsData="OptionalData"
+      :isWaifuOwner="waifuOwner"
+      :isFetchingWaifu="isFetchingWaifu"
+    />
+    <WaifuForm
+      ref="waifuFormComp"
+      class="hidden animate__animated animate__faster"
+      @toggleWaifuForm="handleOpenWaifuForm"
+    />
   </div>
 </template>
 
@@ -14,6 +24,7 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
 import HeaderProfile from "@/components/HeaderProfile.vue";
+import WaifuForm from "@/components/WaifuForm.vue";
 import VueButton from "@/components/VueButton.vue";
 
 import repositoryFactory from "@/api/repositoryFactory";
@@ -23,11 +34,13 @@ export default {
   components: {
     HeaderProfile,
     VueButton,
+    WaifuForm,
   },
   setup() {
     const currentComponent = ref("myResearch");
     const route = useRoute();
     const store = useStore();
+
     const profile = store.getters["user/getProfile"];
     const params = computed(() => route.name);
     const public_user_name = computed(() => route.params.username);
@@ -42,11 +55,47 @@ export default {
     });
     const OptionalData = ref(null);
 
+    //config VueWaifu Component:
+    const waifuOwner = ref(true);
+    const waifuFormComp = ref(null);
+    const isFetchingWaifu = ref(false);
+
     //tracking navigation & user name
     watch([params, public_user_name], () => {
       OptionalData.value = [];
       fetchPostData();
+      checkWaifuOwner();
     });
+
+    const checkWaifuOwner = () => {
+      const { user_name } = profile;
+      if (public_user_name.value !== user_name) {
+        waifuOwner.value = false;
+      } else {
+        waifuOwner.value = true;
+      }
+    };
+
+    const handleOpenWaifuForm = (value) => {
+      const { waifuForm } = waifuFormComp.value;
+      const { inputForm } = waifuFormComp.value;
+      if (value) {
+        waifuForm.classList.remove("hidden", "animate__fadeOut");
+        waifuForm.classList.add("animate__fadeIn");
+        //scroll to top:
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        inputForm.focus();
+      } else {
+        waifuForm.classList.remove("animate__fadeIn");
+        waifuForm.classList.add("animate__fadeOut");
+        setTimeout(() => {
+          waifuForm.classList.add("hidden");
+        }, 500);
+        //fetch waifu again if waifu was added
+        isFetchingWaifu.value = !isFetchingWaifu.value;
+        inputForm.value = "";
+      }
+    };
 
     const fetchPostData = async () => {
       //private data (user_name local + access token)
@@ -110,7 +159,17 @@ export default {
 
     fetchPostData();
 
-    return { currentComponent, OptionalTittle, OptionalData };
+    checkWaifuOwner();
+
+    return {
+      currentComponent,
+      OptionalTittle,
+      OptionalData,
+      waifuOwner,
+      handleOpenWaifuForm,
+      waifuFormComp,
+      isFetchingWaifu,
+    };
   },
 };
 </script>

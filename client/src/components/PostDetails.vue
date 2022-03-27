@@ -304,6 +304,8 @@ export default {
     onMounted(() => {
       //add events
       app.addEventListener("click", handleClickToApp);
+      //scroll to top:
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     onUnmounted(() => {

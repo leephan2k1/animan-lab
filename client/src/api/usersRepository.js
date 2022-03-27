@@ -43,6 +43,17 @@ const usersAPI = {
       data: postIdPayload,
     });
   },
+  addWaifu: (userName, waifuPayload) => {
+    return axiosClient.post(`${resource}/${userName}/mylove`, waifuPayload);
+  },
+  getWaifu: (userName) => {
+    return axiosClient.get(`${resource}/${userName}/mylove`);
+  },
+  removeWaifu: (userName, waifuId) => {
+    return axiosClient.delete(`${resource}/${userName}/mylove`, {
+      data: waifuId,
+    });
+  },
 };
 
 export default usersAPI;

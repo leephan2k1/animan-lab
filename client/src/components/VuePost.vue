@@ -86,6 +86,8 @@
 import { ContentLoader } from "vue-content-loader";
 import { computed } from "vue";
 
+import { isString } from "@/utils/checkType";
+
 export default {
   props: {
     title: {
@@ -104,10 +106,6 @@ export default {
 
     const convertISODate = (ISODate) => {
       return new Date(ISODate).toISOString().substring(0, 10);
-    };
-
-    const isString = (value) => {
-      return typeof value === "string" ? true : false;
     };
 
     return { postData, convertISODate, fakeData, isString };
