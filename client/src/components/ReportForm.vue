@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-3/4 min-h-1/2 h-fit bg-main absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg overflow-hidden"
+    class="w-3/4 lg:w-1/2 min-h-1/2 h-fit bg-main absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[40%] rounded-lg overflow-hidden border-2 border-gray-400"
   >
     <div class="w-full h-12 flex items-center justify-end">
       <div

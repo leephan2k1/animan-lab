@@ -7,7 +7,7 @@
     </h1>
     <!-- author  -->
     <div class="w-full h-16 md:h-20 flex justify-between">
-      <div class="lg:w-1/4 w-[80%] h-full flex">
+      <div class="lg:w-[35%] w-[80%] h-full flex">
         <div class="md:ml-0 ml-2 w-1/3 h-full absolute-center">
           <div
             :style="{
@@ -24,7 +24,10 @@
           >
             Wibu thuỷ tổ
           </p>
-          <p class="md:text-base text-[10px]">Thích: 0 | Bình luận: 0</p>
+          <p class="md:text-base text-[10px]">
+            Thích: {{ postData?.like }} | Bình luận:
+            {{ postData?.comments.length }} | Lượt xem: {{ postData?.view }}
+          </p>
         </div>
       </div>
 
@@ -141,7 +144,6 @@ export default {
     const fetchPost = async () => {
       try {
         const res = await postRepository.getPost(params.value);
-
         if (res?.data.success) {
           postData.value = res.data.post;
 

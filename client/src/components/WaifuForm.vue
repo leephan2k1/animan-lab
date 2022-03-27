@@ -137,8 +137,7 @@ export default {
       debounceTime.value = setTimeout(async () => {
         isTyping.value = false;
         try {
-          const res = await jikanjs.search("character", e.target.value, 1);
-          console.log(res?.results);
+          const res = await jikanjs.search("character", e.target.value, 1); 
           if (res?.results) {
             dataResult.value = res?.results;
           } else {

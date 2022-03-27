@@ -44,15 +44,15 @@ div
         required
         placeholder="Nhập tiêu đề"
       />
-      <span v-if="contentInvalid" class="text-red-500"
-        >Nội dung tối thiểu 10 ký tự</span
-      >
+      <span v-if="contentInvalid.status" class="text-red-500">{{
+        contentInvalid.message
+      }}</span>
       <div
-        :class="{ 'border-red-500 border-[2px]': contentInvalid }"
+        :class="{ 'border-red-500 border-[2px]': contentInvalid.status }"
         class="w-full h-fit"
       >
         <QuillEditor
-          @textChange="contentInvalid = false"
+          @textChange="contentInvalid.status = false"
           ref="quillContent"
           theme="snow"
           :options="options"
@@ -194,7 +194,10 @@ export default {
       status: false,
       message: "",
     });
-    const contentInvalid = ref(false);
+    const contentInvalid = reactive({
+      status: false,
+      message: "",
+    });
     const postSuccessfully = ref(false);
     const userProfile = reactive(store.state.user.profile);
 
@@ -234,7 +237,6 @@ export default {
         // RESPONSE DATA WILL THEN BE USED TO EMBED THE IMAGE
         let res;
         try {
-          console.log("formData:::: ", formData);
           res = await axios({
             method: "POST",
             url: process.env.VUE_APP_CLOUDINARY,
@@ -264,7 +266,18 @@ export default {
       }
       const contents = quillContent.value.getText();
       if (contents.length < 10) {
-        contentInvalid.value = true;
+        contentInvalid.status = true;
+        contentInvalid.message = "Nội dung tối thiểu 10 ký tự";
+        return false;
+      }
+      const existImage = /<img [^>]*src="[^"]*"[^>]*>/gm.test(
+        quillContent.value.getHTML()
+      );
+
+      if (!existImage) {
+        contentInvalid.status = true;
+        contentInvalid.message =
+          "Cần có ít nhất 1 ảnh trong nội dung (Hình ảnh đầu tiên sẽ được lấy làm thumbnail cho bài viết), đọc thêm FAQs để biết cách chèn ảnh.";
         return false;
       }
       return true;
@@ -276,16 +289,27 @@ export default {
       if (!validateContents()) {
         return;
       }
-      //POST to Server
+
       const pureTags = tags.value.map((e) => e.text);
+
+      // get image for thumbnail
+      const images_url = [];
+      const divContainer = document.createElement("div");
+      divContainer.innerHTML = quillContent.value.getHTML();
+      const imgTags = divContainer.querySelectorAll("img");
+      imgTags.forEach((imgTag) => {
+        images_url.push(imgTag.getAttribute("src"));
+      });
 
       const postPayload = {
         title: title.value,
         content: quillContent.value.getHTML(),
         plainText: quillContent.value.getText(),
         tags: pureTags,
+        images_url,
       };
 
+      //POST to Server
       try {
         const res = await postsRepository.createPost(postPayload);
         if (res?.data.message === "Duplicated title") {
