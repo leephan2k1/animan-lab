@@ -71,6 +71,7 @@
               </p>
               <p
                 v-if="isPostOwner"
+                @click.stop="handleEditPost"
                 class="absolute-center h-10 mb-2 select-none hover:text-button cursor-pointer"
               >
                 Chỉnh sửa
@@ -137,6 +138,8 @@ const userRepository = repositoryFactory.get("users");
 import { USER_UPDATE } from "@/constants";
 import { isEmptyObject } from "@/utils/checkType";
 
+import usePost from "@/hooks/post";
+
 export default {
   components: {
     VueButton,
@@ -146,6 +149,8 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
+    const post = usePost();
+
     const postData = ref(null);
 
     const isPostOwner = ref(false);
@@ -183,82 +188,52 @@ export default {
       }
     };
 
+    const handleEditPost = () => {
+      emit("editPost", postData.value);
+    };
+
     const handleBookmark = async () => {
       wasBookmarked.value = !wasBookmarked.value;
       const { _id } = postData.value;
       if (wasBookmarked.value) {
         //add bookmark
-        try {
-          const res = await userRepository.addBookmarkPost(user_name, {
-            id: _id,
-          });
-          //bookmark fail => assign wasBookmarked state is false
-          if (!res?.data.success) {
-            wasBookmarked.value = false;
-          } else {
-            //update vue store
-            profile.bookmark_posts.push(_id);
-            await store.dispatch(`user/${USER_UPDATE}`, profile);
-          }
-        } catch (err) {
-          console.error(err);
-        }
+        wasBookmarked.value = await post.bookmarkPost(
+          wasBookmarked.value,
+          profile,
+          user_name,
+          _id
+        );
       } else {
         //remove bookmark
-        try {
-          const res = await userRepository.removeBookmarkPost(user_name, {
-            id: _id,
-          });
-          //remove bookmark fail => reverse wasBookmarked state
-          if (!res?.data.success) {
-            wasBookmarked.value = !wasBookmarked.value;
-          } else {
-            //update vue store
-            profile.bookmark_posts = profile.bookmark_posts.filter(
-              (postId) => postId !== _id
-            );
-            await store.dispatch(`user/${USER_UPDATE}`, profile);
-          }
-        } catch (err) {
-          console.error(err);
-        }
+        wasBookmarked.value = await post.removeBookmarkPost(
+          wasBookmarked.value,
+          profile,
+          user_name,
+          _id
+        );
       }
     };
 
     const activeLike = async () => {
       isLiked.value = !isLiked.value;
       const { _id } = postData.value;
-      try {
-        //add like post
-        if (isLiked.value) {
-          const res = await userRepository.addLikePost(user_name, { id: _id });
-          //if like api failed => reverse state
-          if (!res?.data.success) {
-            isLiked.value = false;
-          } else {
-            //update vue store
-            profile.like_list.push(_id);
-            await store.dispatch(`user/${USER_UPDATE}`, profile);
-          }
-        }
-        //remove like post
-        else {
-          const res = await userRepository.removeLikePost(user_name, {
-            id: _id,
-          });
-          //if remove fail
-          if (!res?.data.success) {
-            isLiked.value = !isLiked.value;
-          } else {
-            //update vue store
-            profile.like_list = profile.like_list.filter(
-              (postId) => postId !== _id
-            );
-            await store.dispatch(`user/${USER_UPDATE}`, profile);
-          }
-        }
-      } catch (err) {
-        console.error(err);
+      //add like post
+      if (isLiked.value) {
+        isLiked.value = await post.likePost(
+          isLiked.value,
+          profile,
+          user_name,
+          _id
+        );
+      }
+      //remove like post
+      else {
+        isLiked.value = await post.removeLikePost(
+          isLiked.value,
+          profile,
+          user_name,
+          _id
+        );
       }
     };
 
@@ -290,34 +265,14 @@ export default {
       isDropdown.value = !isDropdown.value;
     };
 
+    const handleDeletePost = async () => {
+      await post.deletePost(postData.value?.slug);
+    };
+
     const handleClickToApp = () => {
       isDropdown.value = false;
       dropDown.value.classList.add("animate__fadeOut", "hidden");
       dropDown.value.classList.remove("animate__fadeIn");
-    };
-
-    const handleDeletePost = async () => {
-      if (window.confirm("Chắc chứ bạn?")) {
-        if (window.confirm("Vẫn là chắc chứ? nhưng nó là lần 2 🤡")) {
-          if (
-            window.confirm(
-              "Tôi nghĩ bạn không chắc lắm, lần cuối nào, chắc không 🐧?"
-            )
-          ) {
-            try {
-              const res = await postRepository.deletePost({
-                slug: postData?.value.slug,
-              });
-              if (res?.data.success) {
-                window.alert("Xoá thành công!");
-                router.push({ name: "home" });
-              }
-            } catch (err) {
-              console.error(err);
-            }
-          }
-        }
-      }
     };
 
     const handleToggleReportForm = () => {
@@ -362,6 +317,7 @@ export default {
       handleDeletePost,
       handleToggleReportForm,
       isEmptyObject,
+      handleEditPost,
     };
   },
 };

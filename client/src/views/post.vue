@@ -5,6 +5,7 @@
     <NewPost v-if="posType === 'new-post' && isLogged" />
     <PostDetails
       @handleReport="handleToggleReportForm"
+      @editPost="handleEditPost"
       v-if="posType !== 'new-post'"
     />
     <ReportForm
@@ -100,6 +101,11 @@ export default {
       }
     };
 
+    const handleEditPost = (postValue) => {
+      console.log(postValue); 
+      //handle edit post
+    };
+
     // just accept create post for logged user
     validateParams();
     return {
@@ -108,6 +114,7 @@ export default {
       handleToggleReportForm,
       isReporting,
       handleSubmitForm,
+      handleEditPost,
     };
   },
 };
