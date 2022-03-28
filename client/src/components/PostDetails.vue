@@ -203,8 +203,25 @@ export default {
           }
         } else {
           //handle 404 page
-          console.log("not found post");
-          router.push({ name: "notFound" });
+          const privatePost = await postRepository.getPrivatePost(
+            params?.value
+          );
+          if (privatePost?.data.success) {
+            postData.value = privatePost.data.post;
+            //define post owner:
+            isPostOwner.value = user_name === postData.value?.author_name;
+            isAdmin.value = user_name === "admin";
+            //get detail info owner:
+            const resOwner = await userRepository.getUser(
+              postData.value?.author_name
+            );
+            if (resOwner?.data.success) {
+              postOwner.value = resOwner?.data.user;
+            }
+          } else {
+            console.log("not found post");
+            router.push({ name: "notFound" });
+          }
         }
       } catch (err) {
         console.error(err);
