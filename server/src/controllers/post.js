@@ -7,7 +7,28 @@ const { existChecker, nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
   index: async (req, res, next) => {
-    const posts = await Post.find({ approve: true }, { __v: 0 });
+    const { page, limit } = req.query;
+
+    if (limit && isNaN(limit)) {
+      return res.status(200).json({
+        success: false,
+        message: "Bad request",
+      });
+    }
+
+    if (page && isNaN(page)) {
+      return res.status(200).json({
+        success: false,
+        message: "Bad request",
+      });
+    }
+
+    const options = {
+      sort: { createdAt: -1 },
+      limit: +limit,
+      page: +page,
+    };
+    const posts = await Post.paginate({ approve: true }, options);
     return res.status(200).json({ success: true, posts });
   },
 

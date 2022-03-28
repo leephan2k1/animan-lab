@@ -21,6 +21,7 @@
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.1",
+    "mongoose-paginate-v2": "^1.6.3",
     "nanoid": "^3.2.0",
     "passport": "^0.5.2",
     "passport-local": "^1.0.0",

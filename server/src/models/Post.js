@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 const { Schema } = mongoose;
 
 const Post = new Schema(
@@ -23,5 +24,7 @@ const Post = new Schema(
     timestamps: true,
   }
 );
+
+Post.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Post", Post);
