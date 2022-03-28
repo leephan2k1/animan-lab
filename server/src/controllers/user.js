@@ -73,6 +73,67 @@ module.exports = {
     res.status(200).json({ success: true, user });
   },
 
+  updateInfo: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { user_name } = req.verified.params;
+
+    const {
+      first_name,
+      last_name,
+      avatar,
+      oldPassword,
+      newPassword,
+      gender,
+      birthday,
+    } = req.verified.body;
+
+    const user = await User.findById(sub);
+
+    if (user_name !== user.user_name) {
+      return res.status(200).json({
+        success: false,
+        message: "username doesn't match",
+      });
+    }
+
+    //check field password:
+    if (oldPassword) {
+      if(!newPassword){
+        return res.status(200).json({
+          success: false,
+          message: "required new password"
+        })
+      }
+
+      const isValidPassword = await user.verifyPassword(oldPassword);
+      if (!isValidPassword) {
+        return res.status(200).json({
+          success: false,
+          message: "Incorrect password",
+        });
+      } else {
+        // re-sign new password (password will hash in pre save())
+        user.password = newPassword;
+      }
+    }
+
+    if (first_name) user.first_name = first_name;
+
+    if (last_name) user.last_name = last_name;
+
+    if (avatar) user.avatar = avatar;
+
+    if (gender) user.gender = gender;
+
+    if (birthday) user.birthday = birthday;
+
+    await user.save();
+
+    return res.status(200).json({
+      messsage: "ok",
+    });
+  },
+
   signOut: async (req, res, next) => {
     const { refreshToken } = req.body;
     if (!refreshToken) {

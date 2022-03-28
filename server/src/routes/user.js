@@ -18,6 +18,12 @@ router
   .get(
     validateParams(schemas.userNameSchema, "user_name"),
     UserController.getInfo
+  )
+  .patch(
+    validateParams(schemas.userNameSchema, "user_name"),
+    validateBody(schemas.updateProfileSchema),
+    verifyAccessToken,
+    UserController.updateInfo
   );
 
 /*

@@ -54,6 +54,15 @@ const schemas = {
   userNameSchema: Joi.object().keys({
     user_name: Joi.string().min(1),
   }),
+  updateProfileSchema: Joi.object().keys({
+    first_name: Joi.string().min(1).max(25),
+    last_name: Joi.string().min(1).max(25),
+    avatar: Joi.string().min(4),
+    oldPassword: Joi.string().min(6),
+    newPassword: Joi.string().min(6),
+    gender: Joi.string().min(1),
+    birthday: Joi.date(),
+  }),
   postSchema: Joi.object().keys({
     title: Joi.string().required().min(3).max(100),
     content: Joi.string().required().min(10),
