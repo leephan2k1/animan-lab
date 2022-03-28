@@ -119,11 +119,46 @@ export default function () {
     return await wasBookmarked;
   };
 
+  const publish = async (titleInvalid, postSuccessfully, postPayload) => {
+    try {
+      const res = await postRepository.createPost(postPayload);
+      if (res?.data.message === "Duplicated title") {
+        titleInvalid.status = true;
+        titleInvalid.message = "Tiêu đề đã bị trùng!";
+        return;
+      }
+
+      if (res?.data.success) {
+        postSuccessfully.value = true;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const update = async (titleInvalid, postSuccessfully, content, slug) => {
+    try { 
+      const res = await postRepository.updatePost(slug, content);
+      if (res?.data.message === "Duplicated title") {
+        titleInvalid.status = true;
+        titleInvalid.message = "Tiêu đề đã bị trùng!";
+        return;
+      }
+      if (res?.data.success) {
+        postSuccessfully.value = true;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return {
     deletePost,
     likePost,
     removeLikePost,
     bookmarkPost,
     removeBookmarkPost,
+    publish,
+    update,
   };
 }

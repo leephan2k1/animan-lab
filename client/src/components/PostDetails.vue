@@ -80,13 +80,17 @@
               >
                 Xoá
               </p>
-              <p
+              <router-link
+                :to="{
+                  name: 'editPost',
+                  params: { postTypes: 'editor' },
+                }"
                 v-if="isPostOwner"
                 @click.stop="handleEditPost"
                 class="absolute-center h-10 mb-2 select-none hover:text-button cursor-pointer"
               >
                 Chỉnh sửa
-              </p>
+              </router-link>
               <p
                 v-if="!isPostOwner"
                 @click.stop="handleToggleReportForm"

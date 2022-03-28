@@ -57,7 +57,7 @@
         <VueButton buttonType="pencil-alt" styles="basis-1/3" />
         <router-link
           class="basis-2/3 py-2 hover:text-button"
-          :to="{ name: 'post', params: { postTypes: 'new-post' } }"
+          :to="{ name: 'newPost', params: { postTypes: 'editor' } }"
           >Đăng bài</router-link
         >
       </div>

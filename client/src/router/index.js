@@ -50,6 +50,20 @@ const routes = [
       layout: "default",
     },
     component: () => import("@/views/post.vue"),
+    children: [
+      {
+        path: "new-post",
+        name: "newPost",
+        props: true,
+        component: () => import("@/components/PostEditor.vue"),
+      },
+      {
+        path: "edit-post",
+        name: "editPost",
+        props: true,
+        component: () => import("@/components/PostEditor.vue"),
+      },
+    ],
   },
   {
     path: "/profile/:username",
@@ -58,7 +72,6 @@ const routes = [
       layout: "default",
     },
     component: () => import("@/views/profile.vue"),
-    beforeEnter: isAuthenticated,
     children: [
       {
         path: "posts",
@@ -71,18 +84,21 @@ const routes = [
         name: "postsLiked",
         props: true,
         component: () => import("@/components/VuePost.vue"),
+        beforeEnter: isAuthenticated,
       },
       {
         path: "posts-bookmarked",
         name: "postsBookmarked",
         props: true,
         component: () => import("@/components/VuePost.vue"),
+        beforeEnter: isAuthenticated,
       },
       {
         path: "pending",
         name: "profilePending",
         props: true,
         component: () => import("@/components/VuePost.vue"),
+        beforeEnter: isAuthenticated,
       },
       {
         path: "achievements",

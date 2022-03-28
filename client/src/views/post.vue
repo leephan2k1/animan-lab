@@ -2,11 +2,11 @@
   <div
     class="w-full min-h-[400px] lg:min-h-[300px] md:min-h-[600px] h-fit relative"
   >
-    <NewPost v-if="postType === 'new-post' && isLogged" />
+    <router-view :editPostValue="oldPost" />
     <PostDetails
       @handleReport="handleToggleReportForm"
       @editPost="handleEditPost"
-      v-if="postType !== 'new-post'"
+      v-if="postType !== 'editor'"
     />
     <ReportForm
       v-if="isReporting"
@@ -22,7 +22,7 @@ import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
-import NewPost from "@/components/NewPost.vue";
+import PostEditor from "@/components/PostEditor.vue";
 import PostDetails from "@/components/PostDetails.vue";
 import ReportForm from "@/components/ReportForm.vue";
 
@@ -31,7 +31,7 @@ const postRepository = repositoryFactory.get("posts");
 
 export default {
   components: {
-    NewPost,
+    PostEditor,
     PostDetails,
     ReportForm,
   },
@@ -43,12 +43,15 @@ export default {
 
     const isLogged = ref();
     const isReporting = ref(false);
+    const oldPost = ref({});
 
-    const postType = computed(() => route.params.postTypes);
+    const postType = computed(() => {
+      return route.params.postTypes;
+    });
     const postIdentifier = ref({});
 
     const validateParams = () => {
-      if (postType.value === "new-post") {
+      if (postType.value === "editor") {
         isLogged.value = store.getters["auth/isAuthenticated"];
         if (!isLogged.value) {
           router.push({ name: "login" });
@@ -102,8 +105,9 @@ export default {
     };
 
     const handleEditPost = (postValue) => {
-      console.log(postValue); 
-      //handle edit post
+      //pass value to post editor
+      oldPost.value = postValue;
+      //go to editor:
     };
 
     // just accept create post for logged user
@@ -115,6 +119,8 @@ export default {
       isReporting,
       handleSubmitForm,
       handleEditPost,
+      oldPost,
+      route,
     };
   },
 };

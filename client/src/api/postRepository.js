@@ -17,6 +17,9 @@ const postsAPI = {
       data: slugPostPayload,
     });
   },
+  updatePost: (slugPost, contentPayload) => {
+    return axiosClient.patch(`${resource}/${slugPost}`, contentPayload);
+  },
 };
 
 export default postsAPI;

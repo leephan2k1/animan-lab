@@ -4,7 +4,13 @@
       <div class="w-full h-fit">
         <div class="absolute-center flex-col">
           <VueButton buttonType="smile" styles="w-16 h-16" />
-          <p>Đăng bài thành công!</p>
+          <p>
+            {{
+              typeOfEditor === "editPost"
+                ? "Cập nhật bài viết thành công"
+                : "Đăng bài viết thành công"
+            }}
+          </p>
         </div>
         <p class="tex-center absolute-center md:px-0 px-4">
           Hiền giả đây có thể ngồi ăn miếng bánh, uống ngụm trà, cày vài bộ
@@ -69,19 +75,25 @@
         />
       </div>
 
-      <div class="w-full h-fit flex justify-end">
-        <button
-          class="bg-button text-white absolute-center ml-4 mt-4 rounded-lg w-32 h-4 border-[1px] border-gray-400 p-4"
-          @click="handleContentPublish"
-        >
-          Đăng bài
-        </button>
-        <router-link
-          class="bg-white text-gray-600 absolute-center ml-4 mt-4 rounded-lg w-32 h-4 border-[1px] border-gray-400 p-4"
-          :to="{ name: 'home' }"
-        >
-          Huỷ
-        </router-link>
+      <div class="w-full h-fit flex flex-col justify-end">
+        <div v-if="typeOfEditor === 'editPost'">
+          <span class="text-red-500">Lưu ý:</span>
+          Bài viết sau khi chỉnh sửa sẽ quay về trạng thái chờ phê duyệt!
+        </div>
+        <div class="w-full flex justify-end">
+          <button
+            class="bg-button text-white absolute-center ml-4 mt-4 rounded-lg w-32 h-4 border-[1px] border-gray-400 p-4"
+            @click="handleContentPublish"
+          >
+            {{ typeOfEditor === "editPost" ? "Cập nhật" : "Đăng bài" }}
+          </button>
+          <router-link
+            class="bg-white text-gray-600 absolute-center ml-4 mt-4 rounded-lg w-32 h-4 border-[1px] border-gray-400 p-4"
+            :to="{ name: 'home' }"
+          >
+            Huỷ
+          </router-link>
+        </div>
       </div>
       <div class="w-3/4 mx-auto my-4">
         Vui lòng đọc
@@ -98,15 +110,19 @@
 </template>
 
 <script>
+import usePost from "@/hooks/post";
 import RepositoryFactory from "@/api/repositoryFactory";
 const postsRepository = RepositoryFactory.get("posts");
 
 import VueButton from "@/components/VueButton.vue";
 import VueTagsInput from "@sipec/vue3-tags-input";
 
-import { reactive, ref, onMounted, onUnmounted } from "vue";
+import { reactive, ref, onMounted, onUnmounted, computed } from "vue";
 import axios from "axios";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+
+import { isEmptyObject } from "@/utils/checkType";
 
 import { QuillEditor, Quill } from "@vueup/vue-quill";
 import QuillImageUploader from "quill-image-uploader";
@@ -119,7 +135,13 @@ export default {
     VueButton,
     VueTagsInput,
   },
-  setup() {
+  props: {
+    editPostValue: {
+      type: Object,
+      default: {},
+    },
+  },
+  setup(props) {
     const options = {
       modules: {
         toolbar: {
@@ -146,11 +168,20 @@ export default {
       },
     };
     const store = useStore();
+    const route = useRoute();
+    const post = usePost();
 
     const title = ref("");
     const quillContent = ref(null);
     const tag = ref("");
     const tags = ref([]);
+
+    const oldContentPost = ref({});
+
+    //config create post or edit post
+    const typeOfEditor = computed(() => route.name);
+
+    //quill editor config
     const autocompleteItems = [
       {
         text: "Anime",
@@ -308,20 +339,33 @@ export default {
         images_url,
       };
 
-      //POST to Server
-      try {
-        const res = await postsRepository.createPost(postPayload);
-        if (res?.data.message === "Duplicated title") {
-          titleInvalid.status = true;
-          titleInvalid.message = "Tiêu đề đã bị trùng!";
-          return;
-        }
+      //update post
+      if (typeOfEditor.value === "editPost") {
+        await post.update(
+          titleInvalid,
+          postSuccessfully,
+          postPayload,
+          oldContentPost.value?.slug
+        );
+      }
+      //create new post
+      else {
+        await post.publish(titleInvalid, postSuccessfully, postPayload);
+      }
+    };
 
-        if (res?.data.success) {
-          postSuccessfully.value = true;
+    //load data if edit route
+    const dataLoader = () => {
+      //just load when type = edit
+      if (typeOfEditor.value === "editPost") {
+        //make sure contents exist for edit:
+        if (!isEmptyObject(props.editPostValue)) {
+          oldContentPost.value = props.editPostValue;
+
+          title.value = oldContentPost.value.title;
+          quillContent.value.setHTML(oldContentPost.value.content);
+          tags.value = [...oldContentPost.value.tags];
         }
-      } catch (err) {
-        console.log(err);
       }
     };
 
@@ -345,6 +389,8 @@ export default {
 
     onMounted(() => {
       titleInput.value?.focus();
+      //load data edit post:
+      dataLoader();
     });
 
     return {
@@ -362,6 +408,7 @@ export default {
       tag,
       tagValidation,
       filteredItems,
+      typeOfEditor,
     };
   },
 };
