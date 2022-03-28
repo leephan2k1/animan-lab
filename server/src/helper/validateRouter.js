@@ -67,6 +67,9 @@ const schemas = {
   updatePostSchema: Joi.object().keys({
     title: Joi.string().min(3).max(100),
     content: Joi.string().min(10),
+    plainText: Joi.string().required().min(10),
+    tags: Joi.array().items(Joi.string().min(2)),
+    images_url: Joi.array().items(Joi.string()),
   }),
   commentSchema: Joi.object().keys({
     content: Joi.string().required().min(3),
@@ -94,7 +97,6 @@ const schemas = {
   }),
   myLoveSchema: Joi.object().keys({
     title: Joi.string().required().min(5),
-    type: Joi.string().required().min(2),
     description: Joi.string().min(5),
     image: Joi.string().min(3),
     tags: Joi.array().items(Joi.string().min(2)),
