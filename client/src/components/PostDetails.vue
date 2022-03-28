@@ -2,7 +2,9 @@
   <div
     class="w-full min-h-[400px] h-fit bg-white rounded-lg shadow-md flex flex-col z-0"
   >
-    <template v-if="postData && !isEmptyObject(postData)">
+    <template
+      v-if="postData && !isEmptyObject(postData) && !isEmptyObject(postOwner)"
+    >
       <h1 class="lg:pl-7 p-4 text-2xl font-bold">
         {{ postData?.title }}
       </h1>
@@ -17,7 +19,7 @@
               }"
               target="_blank"
               :style="{
-                backgroundImage: `url(${require('@/assets/images/defaultAvatar.jpg')})`,
+                backgroundImage: `url(${postOwner?.avatar})`,
               }"
               class="w-11 h-11 rounded-full bg-center bg-cover bg-no-repeat overflow-hidden"
             ></router-link>
@@ -29,10 +31,19 @@
                 name: 'profileAchievements',
                 params: { username: postData?.author_name },
               }"
+              class="font-bold md:text-[16px] text-[10px] w-fit p-[3px] rounded-lg cursor-pointer"
+            >
+              {{ postData?.author_name }}
+            </router-link>
+            <router-link
+              :to="{
+                name: 'profileAchievements',
+                params: { username: postData?.author_name },
+              }"
               target="_blank"
               class="md:text-[15px] text-[10px] border-[1px] border-button w-fit p-[3px] rounded-lg cursor-pointer"
             >
-              {{ postData?.author_name }}
+              {{ computeRoleName(postOwner.points) }}
             </router-link>
             <p class="md:text-base text-[10px]">
               Thích: {{ postData?.like }} | Bình luận:
@@ -135,8 +146,8 @@ import repositoryFactory from "@/api/repositoryFactory";
 const postRepository = repositoryFactory.get("posts");
 const userRepository = repositoryFactory.get("users");
 
-import { USER_UPDATE } from "@/constants";
 import { isEmptyObject } from "@/utils/checkType";
+import computeRoleName from "@/utils/computeLevelName";
 
 import usePost from "@/hooks/post";
 
@@ -153,6 +164,7 @@ export default {
 
     const postData = ref(null);
 
+    const postOwner = ref({});
     const isPostOwner = ref(false);
     const isAdmin = ref(false);
 
@@ -170,7 +182,7 @@ export default {
 
     const fetchPost = async () => {
       try {
-        const res = await postRepository.getPost(params.value);
+        const res = await postRepository.getPost(params?.value);
 
         if (res?.data.success) {
           postData.value = res.data.post;
@@ -178,6 +190,13 @@ export default {
           //define post owner:
           isPostOwner.value = user_name === postData.value?.author_name;
           isAdmin.value = user_name === "admin";
+          //get detail info owner:
+          const resOwner = await userRepository.getUser(
+            postData.value?.author_name
+          );
+          if (resOwner?.data.success) {
+            postOwner.value = resOwner?.data.user;
+          }
         } else {
           //handle 404 page
           console.log("not found post");
@@ -271,8 +290,8 @@ export default {
 
     const handleClickToApp = () => {
       isDropdown.value = false;
-      dropDown.value.classList.add("animate__fadeOut", "hidden");
-      dropDown.value.classList.remove("animate__fadeIn");
+      dropDown.value?.classList.add("animate__fadeOut", "hidden");
+      dropDown.value?.classList.remove("animate__fadeIn");
     };
 
     const handleToggleReportForm = () => {
@@ -311,6 +330,7 @@ export default {
       handleDropdown,
       dropDown,
       isPostOwner,
+      postOwner,
       isAdmin,
       activeLike,
       isLiked,
@@ -318,6 +338,7 @@ export default {
       handleToggleReportForm,
       isEmptyObject,
       handleEditPost,
+      computeRoleName,
     };
   },
 };

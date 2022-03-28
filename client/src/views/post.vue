@@ -2,11 +2,11 @@
   <div
     class="w-full min-h-[400px] lg:min-h-[300px] md:min-h-[600px] h-fit relative"
   >
-    <NewPost v-if="posType === 'new-post' && isLogged" />
+    <NewPost v-if="postType === 'new-post' && isLogged" />
     <PostDetails
       @handleReport="handleToggleReportForm"
       @editPost="handleEditPost"
-      v-if="posType !== 'new-post'"
+      v-if="postType !== 'new-post'"
     />
     <ReportForm
       v-if="isReporting"
@@ -44,11 +44,11 @@ export default {
     const isLogged = ref();
     const isReporting = ref(false);
 
-    const posType = computed(() => route.params.postTypes);
+    const postType = computed(() => route.params.postTypes);
     const postIdentifier = ref({});
 
     const validateParams = () => {
-      if (posType.value === "new-post") {
+      if (postType.value === "new-post") {
         isLogged.value = store.getters["auth/isAuthenticated"];
         if (!isLogged.value) {
           router.push({ name: "login" });
@@ -109,7 +109,7 @@ export default {
     // just accept create post for logged user
     validateParams();
     return {
-      posType,
+      postType,
       isLogged,
       handleToggleReportForm,
       isReporting,
