@@ -29,6 +29,27 @@ module.exports = {
     return res.status(200).json({ success: true, post });
   },
 
+  getPrivatePost: async (req, res, next) => {
+    const { sub } = req.payload; // -> userId (access token return)
+    const { slug } = req.params;
+
+    const post = await Post.findOne({ slug }, { __v: 0 });
+
+    if (!post) {
+      return res
+        .status(200)
+        .json({ success: false, message: "Post not found" });
+    }
+
+    const postOwner = await User.findById(sub);
+
+    if (postOwner._id.toString() !== post.author_id.toString()) {
+      return res.status(200).json({ success: false, message: "Unauthorized" });
+    }
+
+    return res.status(200).json({ success: true, post });
+  },
+
   createPost: async (req, res, next) => {
     const { sub } = req.payload; // -> userId (access token return)
     const owner = await User.findById(sub);

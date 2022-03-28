@@ -43,8 +43,9 @@ router
     checkExistPost_UserName,
     UserController.removeBookmark
   );
+  
 /*
-/v1/users/:user_name/bookmark
+/v1/users/:user_name/getMyPosts
 */
 router
   .route("/:user_name/posts")

@@ -30,6 +30,13 @@ router
   );
 
 /*
+/v1/posts/private-post
+*/
+router
+  .route("/private-post/:slug")
+  .get(verifyAccessToken, PostController.getPrivatePost);
+
+/*
 /v1/posts/:slug
 */
 router
