@@ -127,16 +127,11 @@ module.exports = {
 
   getMyPosts: async (req, res, next) => {
     const { user_name } = req.params;
-    const user = await User.findOne(
-      { user_name },
-      { __v: 0, password: 0 }
-    ).populate("posts", { __v: 0 });
-
-    nonExistChecker(user, "User not found", res);
+    const posts = await Post.find({ author_name: user_name }, { __v: 0 });
 
     return res.status(200).json({
       success: true,
-      posts: user.posts,
+      posts,
     });
   },
 
@@ -255,11 +250,19 @@ module.exports = {
 
   createMyLove: async (req, res, next) => {
     const { sub } = req.payload;
-    const { title, type, description, image, tags } = req.body;
+    const { title, description, image, tags } = req.body;
+
+    const existMyLove = await MyLove.findOne({ title });
+
+    if (existMyLove && existMyLove.author.toString() === sub.toString()) {
+      return res.status(200).json({
+        success: false,
+        message: "Waifu already exist",
+      });
+    }
 
     const myLove = new MyLove({
       title,
-      type,
       author: sub,
       description: description || "",
       image: image || "",
