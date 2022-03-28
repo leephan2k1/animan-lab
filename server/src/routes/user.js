@@ -11,11 +11,6 @@ const { verifyAccessToken } = require("../helper/jwtService");
 const { checkExistPost_UserName } = require("../middlewares/validateModel");
 
 /*
-/v1/users/search
-*/
-router.route("/search").get(UserController.filters);
-
-/*
 /v1/users/:user-name
 */
 router
@@ -43,13 +38,11 @@ router
     checkExistPost_UserName,
     UserController.removeBookmark
   );
-  
+
 /*
 /v1/users/:user_name/getMyPosts
 */
-router
-  .route("/:user_name/posts")
-  .get(UserController.getMyPosts)
+router.route("/:user_name/posts").get(UserController.getMyPosts);
 
 /*
 /v1/users/:user_name/mylove

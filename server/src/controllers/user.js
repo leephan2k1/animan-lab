@@ -2,37 +2,15 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const MyLove = require("../models/MyLove");
 const RefreshToken = require("../models/Token");
-const querystring = require("querystring");
 const {
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
 } = require("../helper/jwtService");
 const createError = require("http-errors");
-const { existChecker, nonExistChecker } = require("../helper/existChecker");
+const { nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
-  filters: async (req, res, next) => {
-    const { email, user_name } = req.query;
-    const pureEmail = querystring.unescape(email);
-    const conditions = {};
-    if (email) conditions.email = pureEmail;
-    if (user_name) conditions.user_name = user_name;
-
-    const user = await User.findOne(conditions, { __v: 0 });
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      user,
-    });
-  },
-
   signUp: async (req, res, next) => {
     const { first_name, last_name, user_name, email, password } =
       req.verified.body;
