@@ -11,6 +11,9 @@ module.exports = {
     //exclude field __v
     options.select = "-__v";
 
+    //just accept approved post:
+    conditions.approve = true;
+
     if (title) conditions.title = { $regex: title, $options: "i" };
 
     if (tags) conditions.tags = { $in: [tags] };
