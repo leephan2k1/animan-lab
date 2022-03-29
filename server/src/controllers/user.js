@@ -12,8 +12,6 @@ const createError = require("http-errors");
 const { nonExistChecker } = require("../helper/existChecker");
 
 const sendMail = require("../helper/mailService");
-const logEvents = require("../helper/logEvents");
-const { nanoid } = require("nanoid");
 
 module.exports = {
   signUp: async (req, res, next) => {
@@ -70,7 +68,7 @@ module.exports = {
   },
 
   resetPasswordEmail: async (req, res, next) => {
-    const { email } = req.verified.body; 
+    const { email } = req.verified.body;
 
     const user = await User.findOne({ email });
 
@@ -87,7 +85,7 @@ module.exports = {
     const resultSend = sendMail(email, token);
 
     if (resultSend) {
-      logEvents(`id:${nanoid(5)} --- mail service end success`);
+      console.log(`id:${nanoid(5)} --- mail service end success`);
     }
 
     return res.status(200).json({
