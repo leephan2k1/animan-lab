@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const MyLove = require("../models/MyLove");
 const RefreshToken = require("../models/Token");
+
 const {
   signAccessToken,
   signRefreshToken,
@@ -9,6 +10,10 @@ const {
 } = require("../helper/jwtService");
 const createError = require("http-errors");
 const { nonExistChecker } = require("../helper/existChecker");
+
+const sendMail = require("../helper/mailService");
+const logEvents = require("../helper/logEvents");
+const { nanoid } = require("nanoid");
 
 module.exports = {
   signUp: async (req, res, next) => {
@@ -64,6 +69,33 @@ module.exports = {
     });
   },
 
+  resetPasswordEmail: async (req, res, next) => {
+    const { email } = req.verified.body; 
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(200).json({
+        success: false,
+        message: "The Email is not registered with us",
+      });
+    }
+
+    //generate access token
+    const token = await signAccessToken(user._id);
+
+    const resultSend = sendMail(email, token);
+
+    if (resultSend) {
+      logEvents(`id:${nanoid(5)} --- mail service end success`);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "ok",
+    });
+  },
+
   getInfo: async (req, res, next) => {
     const { user_name } = req.verified.params;
     const user = await User.findOne({ user_name }, { __v: 0, password: 0 });
@@ -98,11 +130,11 @@ module.exports = {
 
     //check field password:
     if (oldPassword) {
-      if(!newPassword){
+      if (!newPassword) {
         return res.status(200).json({
           success: false,
-          message: "required new password"
-        })
+          message: "required new password",
+        });
       }
 
       const isValidPassword = await user.verifyPassword(oldPassword);
@@ -130,6 +162,7 @@ module.exports = {
     await user.save();
 
     return res.status(200).json({
+      success: true,
       messsage: "ok",
     });
   },

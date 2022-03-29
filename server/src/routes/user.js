@@ -105,6 +105,16 @@ router
   );
 
 /*
+/v1/users/reset-password-email
+*/
+router
+  .route("/reset-password-email")
+  .post(
+    validateBody(schemas.resetPassFromEmail),
+    UserController.resetPasswordEmail
+  );
+
+/*
 /v1/users/sign-out
 */
 router.route("/sign-out").delete(UserController.signOut);
