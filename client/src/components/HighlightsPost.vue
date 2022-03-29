@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-[400px]">
+  <div class="w-full md:h-[400px] h-[500px]">
     <div
       class="select-none border-l-4 border-button px-2 flex items-center hover:text-button"
     >
@@ -8,80 +8,153 @@
       </h1>
     </div>
     <div class="my-3 w-full h-[90%] flex md:flex-row flex-col">
-      <div class="basis-3/5 h-full absolute-center md:justify-start">
-        <div
-          :style="{
-            backgroundImage: `url(https://animecorner.me/wp-content/uploads/2022/03/%E3%80%90%E7%89%B9%E5%A0%B1%E3%80%91%E3%80%8C%E3%81%8B%E3%81%90%E3%82%84%E6%A7%98%E3%81%AF%E5%91%8A%E3%82%89%E3%81%9B%E3%81%9F%E3%81%84-%E3%82%A6%E3%83%AB%E3%83%88%E3%83%A9%E3%83%AD%E3%83%9E%E3%83%B3%E3%83%86%E3%82%A3%E3%83%83%E3%82%AF-%E3%80%8D2022%E5%B9%B44%E6%9C%888%E6%97%A5%E6%94%BE%E9%80%81%E9%96%8B%E5%A7%8B%EF%BC%81-0-16-screenshot.png)`,
-          }"
-          class="w-[95%] md:w-[90%] h-full rounded-2xl shadow-2xl bg-white bg-cover bg-center bg-no-repeat flex items-end overflow-hidden cursor-pointer"
-        >
-          <div
-            class="px-4 text-white rounded-b-2xl w-full max-h-[80px] bg-black/40 backdrop-blur-md flex flex-col"
-          >
-            <h2
-              class="post-title max-h-[56px] overflow-hidden lg:text-lg basis-2/3"
-            >
-              Kaguya-sama Phần 3: Ngày công chiếu ngày 8 tháng 4 và Đoạn giới
-              thiệu mới Kaguya-sama
-            </h2>
-            <p class="basis-1/3 text-sm pb-1">User name | March 10, 2022</p>
-          </div>
-        </div>
-      </div>
-      <div
-        class="basis-2/5 md:w-[30%] h-full flex justify-center md:flex-col md:items-center md:mt-0 mt-2"
+      <!-- big frame  -->
+      <template
+        v-if="postsData && postsData?.length && !isEmptyObject(postsData[0])"
       >
-        <div
-          class="md:w-full w-[45%] lg:w-full md:basis-1/2 rounded-2xl shadow-2xl mr-2 lg:mr-6 bg-cover bg-center bg-no-repeat flex justify-center items-end cursor-pointer"
-          :style="{
-            backgroundImage: `url(https://animecorner.me/wp-content/uploads/2022/03/mushoku-s2.png)`,
-          }"
-        >
+        <div class="basis-3/5 h-full absolute-center md:justify-start">
           <div
-            class="px-4 text-white rounded-b-2xl w-full max-h-[50px] bg-black/40 backdrop-blur-md flex flex-col"
+            :style="{
+              backgroundImage: `url(${postsData[0].images_url[0]})`,
+            }"
+            class="w-[95%] md:w-[90%] h-full lg:ml-6 rounded-2xl shadow-2xl bg-white bg-cover bg-center bg-no-repeat flex items-end overflow-hidden cursor-pointer"
           >
-            <h2
-              class="h-[50%] max-w-full overflow-hidden whitespace-nowrap text-ellipsis lg:text-lg md:text-base text-[15px]"
+            <div
+              class="px-4 text-white rounded-b-2xl w-full max-h-[80px] bg-black/40 backdrop-blur-md flex flex-col"
             >
-              Mushoku Tensei: Jobless Reincarnation Season 2 Officially
-              Announced
-            </h2>
-            <p class="text-[10px] md:text-sm h-[50%] pb-1">
-              User name | March 10, 2022
-            </p>
+              <h2
+                class="post-title max-h-[56px] overflow-hidden lg:text-lg basis-2/3"
+              >
+                {{ postsData[0].title }}
+              </h2>
+              <p class="basis-1/3 text-sm pb-1">
+                {{ postsData[0].author_name }} |
+                {{ convertISODate(postsData[0].createdAt) }}
+              </p>
+            </div>
           </div>
         </div>
+      </template>
+      <template v-else>
+        <div class="basis-3/5 h-full absolute-center md:justify-start">
+          <ContentLoader
+            class="w-full h-full absolute-center"
+            viewBox="0 0 550 400"
+            backgroundColor="#f0f0f0"
+            foregroundColor="#dedede"
+          >
+            <rect x="43" y="304" rx="4" ry="4" width="271" height="9" />
+            <rect x="44" y="323" rx="3" ry="3" width="119" height="6" />
+            <rect x="42" y="77" rx="10" ry="10" width="550" height="217" />
+          </ContentLoader>
+        </div>
+      </template>
 
-        <div
-          class="md:w-full w-[45%] lg:w-full md:basis-1/2 rounded-2xl shadow-2xl md:mt-2 lg:mr-6 bg-cover bg-center bg-no-repeat flex justify-center items-end cursor-pointer"
-          :style="{
-            backgroundImage: `url(https://animecorner.me/wp-content/uploads/2022/03/magia-record.png)`,
-          }"
+      <div
+        class="basis-2/5 md:w-[30%] h-full flex justify-center md:flex-col md:items-center md:mt-0 md:justify-around mt-2 gap-4"
+      >
+        <template
+          v-if="
+            postsData &&
+            postsData?.length &&
+            !isEmptyObject(postsData[1]) &&
+            !isEmptyObject(postsData[2])
+          "
         >
           <div
-            class="px-4 text-white rounded-b-2xl w-full max-h-[50px] bg-black/40 backdrop-blur-md flex flex-col"
+            v-for="(item, index) in skipFirstElem(postsData)"
+            :key="item?.id || index"
+            class="md:w-full w-[45%] lg:w-[80%] md:basis-1/2 rounded-2xl shadow-2xl lg:mr-6 bg-cover bg-center bg-no-repeat flex justify-center items-end cursor-pointer"
+            :style="{
+              backgroundImage: `url(${item.images_url[0]})`,
+            }"
           >
-            <h2
-              class="h-[50%] max-w-full overflow-hidden whitespace-nowrap text-ellipsis lg:text-lg md:text-base text-[15px]"
+            <div
+              class="px-4 text-white rounded-b-2xl w-full max-h-[50px] bg-black/40 backdrop-blur-md flex flex-col"
             >
-              Magia Record Finale to Air All 4 Episodes on April 3
-            </h2>
-            <p class="text-[10px] md:text-sm h-[50%] pb-1">
-              User name | March 10, 2022
-            </p>
+              <h2
+                class="h-[50%] max-w-full overflow-hidden whitespace-nowrap text-ellipsis lg:text-lg md:text-base text-[15px]"
+              >
+                {{ item?.title }}
+              </h2>
+              <p class="text-[10px] md:text-sm h-[50%] pb-1">
+                {{ item.author_name }} | {{ convertISODate(item.createdAt) }}
+              </p>
+            </div>
           </div>
-        </div>
+        </template>
+        <template v-else>
+          <div
+            v-for="item in fakeData"
+            :key="item"
+            class="md:w-full w-[45%] lg:w-[80%] h-[50%] md:basis-1/2 rounded-2xl lg:mr-6 absolute-center overflow-hidden"
+          >
+            <ContentLoader
+              viewBox="0 0 450 400"
+              backgroundColor="#f0f0f0"
+              foregroundColor="#dedede"
+            >
+              <rect x="43" y="304" rx="4" ry="4" width="271" height="9" />
+              <rect x="44" y="323" rx="3" ry="3" width="119" height="6" />
+              <rect x="42" y="77" rx="10" ry="10" width="388" height="217" />
+            </ContentLoader>
+          </div>
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from "vue";
+import { ContentLoader } from "vue-content-loader";
+
+import repositoryFactory from "@/api/repositoryFactory";
+const postRepository = repositoryFactory.get("posts");
+
+import { isEmptyObject } from "@/utils/checkType";
+import { convertISODate } from "@/utils/dateHandler";
+
 export default {
+  components: {
+    ContentLoader,
+  },
   props: {
     title: {
       type: String,
     },
+  },
+  setup() {
+    const postsData = ref([]);
+    const fakeData = [...Array(2).keys()];
+
+    const fetchHighlightPosts = async () => {
+      try {
+        const params = {
+          limit: 3,
+          sortlike: "desc",
+        };
+        const res = await postRepository.searchPost(params);
+        if (res?.data.success) {
+          postsData.value = res?.data.posts.docs;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const skipFirstElem = (arr) => {
+      return arr.slice(1, arr.length);
+    };
+
+    fetchHighlightPosts();
+    return {
+      postsData,
+      fakeData,
+      isEmptyObject,
+      convertISODate,
+      skipFirstElem,
+    };
   },
 };
 </script>

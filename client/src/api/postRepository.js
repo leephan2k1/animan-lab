@@ -6,6 +6,9 @@ const postsAPI = {
   createPost: (postPayload) => {
     return axiosClient.post(`${resource}/create-post`, postPayload);
   },
+  searchPost: (params) => {
+    return axiosClient.get(`/search`, { params });
+  },
   getPost: (slugPost) => {
     return axiosClient.get(`${resource}/${slugPost}`);
   },

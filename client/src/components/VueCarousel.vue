@@ -1,5 +1,5 @@
 <template>
-  <div class="my-4">
+  <div class="my-4 h-[30%]">
     <div class="w-full my-2 flex items-center justify-between">
       <!-- title  -->
       <router-link
@@ -36,7 +36,7 @@
     >
       <template v-if="data && data.length">
         <swiper-slide
-          class="absolute-center"
+          class="absolute-center h-full"
           v-for="item in testItems"
           :key="item"
         >
@@ -66,7 +66,7 @@
       <!-- loader  -->
       <template v-else>
         <swiper-slide
-          class="absolute-center"
+          class="absolute-center h-full"
           v-for="item in testItems"
           :key="item"
         >
