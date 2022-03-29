@@ -3,51 +3,29 @@ const Post = require("../models/Post");
 module.exports = {
   filters: async (req, res, next) => {
     const filters = req.query;
-    const { title, tags, sort } = filters;
-    let posts;
+    const { title, tags, sort, sortview, sortlike, page, limit } = filters;
 
-    //title filter
-    if (title) {
-      posts = await Post.find(
-        {
-          title: { $regex: title, $options: "i" },
-        },
-        { __v: 0 }
-      );
-    }
+    const conditions = {};
+    const options = {};
 
-    //sort filter
-    if (sort) {
-      if (!posts) {
-        posts = await Post.find({}, { _v: 0 });
-      }
-      switch (sort) {
-        case "asc":
-          posts = posts.sort(
-            (a, b) =>
-              new Date(a.createdAt.toString()) -
-              new Date(b.createdAt.toString())
-          );
-          break;
-        case "desc":
-          posts = posts.sort(
-            (a, b) =>
-              new Date(b.createdAt.toString()) -
-              new Date(a.createdAt.toString())
-          );
-          break;
-      }
-    }
+    //exclude field __v
+    options.select = "-__v";
 
-    //tags filter
-    if (tags) {
-      posts = await Post.find(
-        {
-          tags: { $in: [tags] },
-        },
-        { __v: 0 }
-      );
-    }
+    if (title) conditions.title = { $regex: title, $options: "i" };
+
+    if (tags) conditions.tags = { $in: [tags] };
+
+    if (page) options.page = +page;
+
+    if (limit) options.limit = +limit;
+
+    if (sort) options.sort = { ...options.sort, createdAt: sort };
+
+    if (sortview) options.sort = { ...options.sort, view: sortview };
+
+    if (sortlike) options.sort = { ...options.sort, like: sortlike };
+
+    const posts = await Post.paginate(conditions, options);
 
     return res.status(200).json({ success: true, posts });
   },
