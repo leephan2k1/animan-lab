@@ -94,6 +94,33 @@ module.exports = {
     });
   },
 
+  filterUser: async (req, res, next) => {
+    const filters = req.query;
+    const { gender, sortpoint, page, limit } = filters;
+
+    const conditions = {};
+    const options = {};
+
+    //default conditions:
+    conditions.can_comment = true;
+    conditions.can_post = true;
+
+    //default options:
+    options.select = "-__v -password -email -updatedAt";
+
+    if (gender) conditions.gender = gender;
+    if (sortpoint) options.sort = { ...options.sort, points: sortpoint };
+    if (page) options.page = +page;
+    if (limit) options.limit = +limit;
+
+    const users = await User.paginate(conditions, options);
+
+    return res.status(200).json({
+      success: true,
+      users,
+    });
+  },
+
   getInfo: async (req, res, next) => {
     const { user_name } = req.verified.params;
     const user = await User.findOne({ user_name }, { __v: 0, password: 0 });
