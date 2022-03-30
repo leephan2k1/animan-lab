@@ -13,9 +13,10 @@
         v-if="postsData && postsData?.length && !isEmptyObject(postsData[0])"
       >
         <div class="basis-3/5 h-full absolute-center md:justify-start">
-          <div
+          <router-link
+            :to="{ name: 'post', params: { postTypes: postsData[0]?.slug } }"
             :style="{
-              backgroundImage: `url(${postsData[0].images_url[0]})`,
+              backgroundImage: `url(${postsData[0]?.images_url[0]})`,
             }"
             class="w-[95%] md:w-[90%] h-full lg:ml-6 rounded-2xl shadow-2xl bg-white bg-cover bg-center bg-no-repeat flex items-end overflow-hidden cursor-pointer"
           >
@@ -32,7 +33,7 @@
                 {{ convertISODate(postsData[0].createdAt) }}
               </p>
             </div>
-          </div>
+          </router-link>
         </div>
       </template>
       <template v-else>
@@ -61,9 +62,10 @@
             !isEmptyObject(postsData[2])
           "
         >
-          <div
+          <router-link
             v-for="(item, index) in skipFirstElem(postsData)"
             :key="item?.id || index"
+            :to="{ name: 'post', params: { postTypes: item?.slug } }"
             class="md:w-full w-[45%] lg:w-[80%] md:basis-1/2 rounded-2xl shadow-2xl lg:mr-6 bg-cover bg-center bg-no-repeat flex justify-center items-end cursor-pointer"
             :style="{
               backgroundImage: `url(${item.images_url[0]})`,
@@ -81,7 +83,7 @@
                 {{ item.author_name }} | {{ convertISODate(item.createdAt) }}
               </p>
             </div>
-          </div>
+          </router-link>
         </template>
         <template v-else>
           <div

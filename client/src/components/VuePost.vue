@@ -105,8 +105,6 @@ export default {
     const postData = computed(() => props.postsData);
     const fakeData = [...Array(1).keys()];
 
-   
-
     return { postData, convertISODate, fakeData, isString };
   },
 };

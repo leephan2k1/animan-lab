@@ -185,7 +185,7 @@
         <div class="w-full h-[20%] absolute-center">
           <!-- setting save  -->
           <div
-            class="w-[30%] h-[50%] bg-button flex flex-col items-center md:text-base text-sm absolute-center rounded-lg cursor-pointer hover:scale-110 transition-all"
+            class="w-[30%] h-[50%] bg-button flex flex-col items-center md:text-base text-sm absolute-center rounded-lg cursor-pointer hover:scale-110 transition-all text-white"
           >
             Lưu thay đổi
           </div>

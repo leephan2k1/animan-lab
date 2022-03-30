@@ -12,14 +12,19 @@
     <!-- content wrapper -->
     <div class="grid grid-cols-4 h-full my-3">
       <!-- controller swiper  -->
-      <div class="md:col-span-3 col-span-4 relative">
+      <div
+        :class="!postsData || !postsData.length ? 'absolute-center' : ''"
+        class="md:col-span-3 col-span-4 relative"
+      >
         <div
+          v-if="postsData && postsData.length"
           @click="swp.slidePrev()"
           class="select-none cursor-pointer z-50 absolute absolute-center rounded-full hover:scale-75 transition-all w-10 h-10 border-2 border-gray-400 bg-white top-1/2"
         >
           <VueButton buttonType="<" />
         </div>
         <div
+          v-if="postsData && postsData.length"
           @click="swp.slideNext()"
           class="select-none cursor-pointer z-50 absolute absolute-center rounded-full hover:scale-75 transition-all w-10 h-10 border-2 border-gray-400 bg-white top-1/2 right-0"
         >
@@ -27,122 +32,65 @@
         </div>
 
         <!-- swiper -->
-        <swiper
-          class="w-full h-full"
-          :slides-per-view="1"
-          :space-between="50"
-          :grabCursor="true"
-          :loop="true"
-          :effect="'creative'"
-          :creativeEffect="{
-            prev: {
-              shadow: true,
-              translate: [0, 0, -400],
-            },
-            next: {
-              translate: ['100%', 0, 0],
-            },
-          }"
-          :modules="modules"
-          @swiper="onSwiper"
-        >
-          <swiper-slide class="absolute-center w-full h-full">
-            <div
-              class="w-[90%] h-full bg-cover bg-center bg-no-repeat rounded-2xl overflow-hidden flex flex-col justify-end"
-              :style="{
-                backgroundImage: `url(https://animecorner.me/wp-content/uploads/2022/02/romcom-anime-spring-april-2022.jpg)`,
-              }"
+        <template v-if="postsData && postsData.length">
+          <swiper
+            class="w-full h-full"
+            :slides-per-view="1"
+            :space-between="50"
+            :grabCursor="true"
+            :loop="true"
+            :effect="'creative'"
+            :creativeEffect="{
+              prev: {
+                shadow: true,
+                translate: [0, 0, -400],
+              },
+              next: {
+                translate: ['100%', 0, 0],
+              },
+            }"
+            :modules="modules"
+            @swiper="onSwiper"
+          >
+            <swiper-slide
+              v-for="(item, index) in postsData"
+              :key="item?._id || index"
+              class="absolute-center w-full h-full"
             >
               <div
-                class="px-4 text-white rounded-b-2xl w-full h-[100px] bg-black/40 backdrop-blur-md flex flex-col justify-center"
+                class="w-[90%] h-full bg-cover bg-center bg-no-repeat rounded-2xl overflow-hidden flex flex-col justify-end"
+                :style="{
+                  backgroundImage: `url(${item?.images_url[0]})`,
+                }"
               >
-                <h2
-                  class="md:h-[50%] h-[70%] overflow-hidden w-full md:text-lg post-title flex items-center pt-4"
+                <div
+                  class="px-4 text-white rounded-b-2xl w-full h-[100px] bg-black/40 backdrop-blur-md flex flex-col justify-center"
                 >
-                  6 RomCom Anime Coming in April 2022 Will Make Spring Filled
-                  With Romance
-                </h2>
-                <p
-                  class="md:h-[50%] h-[30%] pb-1 flex items-center md:text-base text-sm"
-                >
-                  User name | March 10, 2022
-                </p>
+                  <h2
+                    class="md:h-[50%] h-[70%] overflow-hidden w-full md:text-lg post-title flex items-center pt-4"
+                  >
+                    {{ item?.title }}
+                  </h2>
+                  <p
+                    class="md:h-[50%] h-[30%] pb-1 flex items-center md:text-base text-sm"
+                  >
+                    {{ item?.author_name }} |
+                    {{ convertISODate(item?.createdAt) }}
+                  </p>
+                </div>
               </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide class="absolute-center w-full h-full">
-            <div
-              class="w-[90%] h-full bg-cover bg-center bg-no-repeat rounded-xl overflow-hidden flex flex-col justify-end"
-              :style="{
-                backgroundImage: `url(https://animecorner.me/wp-content/uploads/2022/03/arifureta-season-2-episode-9-thumbnail.png)`,
-              }"
-            >
-              <div
-                class="px-4 text-white rounded-b-2xl w-full h-[100px] bg-black/40 backdrop-blur-md flex flex-col justify-center"
-              >
-                <h2
-                  class="md:h-[50%] h-[70%] overflow-hidden w-full md:text-lg post-title flex items-center pt-4"
-                >
-                  6 RomCom Anime Coming in April 2022 Will Make Spring Filled
-                  With Romance
-                </h2>
-                <p
-                  class="md:h-[50%] h-[30%] pb-1 flex items-center md:text-base text-sm"
-                >
-                  User name | March 10, 2022
-                </p>
-              </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide class="absolute-center w-full h-full">
-            <div
-              class="w-[90%] h-full bg-cover bg-center bg-no-repeat rounded-xl overflow-hidden flex flex-col justify-end"
-              :style="{
-                backgroundImage: `url(https://animecorner.me/wp-content/uploads/2022/03/Kisekoi-09-20.png)`,
-              }"
-            >
-              <div
-                class="px-4 text-white rounded-b-2xl w-full h-[100px] bg-black/40 backdrop-blur-md flex flex-col justify-center"
-              >
-                <h2
-                  class="md:h-[50%] h-[70%] overflow-hidden w-full md:text-lg post-title flex items-center pt-4"
-                >
-                  6 RomCom Anime Coming in April 2022 Will Make Spring Filled
-                  With Romance
-                </h2>
-                <p
-                  class="md:h-[50%] h-[30%] pb-1 flex items-center md:text-base text-sm"
-                >
-                  User name | March 10, 2022
-                </p>
-              </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide class="absolute-center w-full h-full">
-            <div
-              class="w-[90%] h-full bg-cover bg-center bg-no-repeat rounded-xl overflow-hidden flex flex-col justify-end"
-              :style="{
-                backgroundImage: `url(https://animecorner.me/wp-content/uploads/2022/03/jujutsu-game-opening-mappa-eve.jpg)`,
-              }"
-            >
-              <div
-                class="px-4 text-white rounded-b-2xl w-full h-[100px] bg-black/40 backdrop-blur-md flex flex-col justify-center"
-              >
-                <h2
-                  class="md:h-[50%] h-[70%] overflow-hidden w-full md:text-lg post-title flex items-center pt-4"
-                >
-                  6 RomCom Anime Coming in April 2022 Will Make Spring Filled
-                  With Romance
-                </h2>
-                <p
-                  class="md:h-[50%] h-[30%] pb-1 flex items-center md:text-base text-sm"
-                >
-                  User name | March 10, 2022
-                </p>
-              </div>
-            </div>
-          </swiper-slide>
-        </swiper>
+            </swiper-slide>
+          </swiper>
+        </template>
+        <template v-else>
+          <ContentLoader viewBox="0 0 1644 360">
+            <rect x="448" y="30" rx="0" ry="0" width="750" height="300" />
+            <rect x="239" y="53" rx="0" ry="0" width="643" height="254" />
+            <rect x="30" y="76" rx="0" ry="0" width="527" height="208" />
+            <rect x="762" y="53" rx="0" ry="0" width="643" height="254" />
+            <rect x="1087" y="76" rx="0" ry="0" width="527" height="208" />
+          </ContentLoader>
+        </template>
       </div>
       <!-- category  -->
       <div
@@ -193,13 +141,20 @@ import { ref } from "vue";
 
 import "swiper/css/effect-creative";
 
+import { convertISODate } from "@/utils/dateHandler";
+
 import VueButton from "@/components/VueButton.vue";
+import { ContentLoader } from "vue-content-loader";
+
+import repositoryFactory from "@/api/repositoryFactory";
+const postRepository = repositoryFactory.get("posts");
 
 export default {
   components: {
     Swiper,
     SwiperSlide,
     VueButton,
+    ContentLoader,
   },
   props: {
     title: {
@@ -208,15 +163,43 @@ export default {
   },
   setup() {
     const swp = ref(null);
+    const OPTIONS = {
+      qtyItem: 5,
+    };
+
+    const fakeData = [...Array(OPTIONS.qtyItem).keys()];
+    const postsData = ref([]);
 
     const onSwiper = (swiper) => {
       swp.value = swiper;
     };
 
+    const fetchSuggestionPosts = async () => {
+      try {
+        //get at least 5 posts have the most views
+        const params = {
+          limit: OPTIONS.qtyItem,
+          sortview: "desc",
+        };
+        const res = await postRepository.searchPost(params);
+
+        if (res?.data.success) {
+          postsData.value = res?.data.posts.docs;
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchSuggestionPosts();
+
     return {
       onSwiper,
       modules: [EffectCreative],
       swp,
+      postsData,
+      fakeData,
+      convertISODate,
     };
   },
 };
