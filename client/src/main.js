@@ -13,6 +13,9 @@ import "@/assets/styles/grid.scss";
 import "animate.css";
 import "swiper/css";
 
+// import devtools from "devtools-detect";
+import { addListener, launch } from "devtools-detector";
+
 NProgress.configure({ easing: "ease", speed: 1000, showSpinner: false });
 
 const app = createApp(App);
@@ -28,3 +31,22 @@ app.use(Toast, {
 });
 
 app.mount("#app");
+
+//protect web app
+if (process.env.NODE_ENV !== "development") {
+  (function () {
+    const app = document.querySelector("#app");
+    // 1. add listener
+    addListener((isOpen) => {
+      if (isOpen) {
+        app.innerHTML = "Còn đúng mỗi cái nịt!";
+        localStorage.removeItem("usr");
+        localStorage.removeItem("access-token");
+        localStorage.removeItem("a_secure__ls__metadata");
+        localStorage.removeItem("refresh-token");
+      }
+    });
+    // 2. launch detect
+    launch();
+  })();
+}

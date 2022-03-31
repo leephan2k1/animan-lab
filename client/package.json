@@ -12,6 +12,7 @@
     "animate.css": "^4.1.1",
     "axios": "^0.26.0",
     "core-js": "^3.8.3",
+    "devtools-detector": "^2.0.6",
     "filepond": "^4.30.3",
     "filepond-plugin-file-validate-type": "^1.2.6",
     "filepond-plugin-image-preview": "^4.6.10",
