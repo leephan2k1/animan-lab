@@ -196,7 +196,7 @@
 </template>
 
 <script>
-import { ref, defineAsyncComponent } from "vue";
+import { ref, defineAsyncComponent, onMounted } from "vue";
 import { useStore } from "vuex";
 
 import VueButton from "@/components/VueButton.vue";
@@ -228,6 +228,10 @@ export default {
       uploadAvatarDOM.value.classList.remove("animate__zoomIn");
       uploadAvatarDOM.value.classList.add("hidden");
     };
+
+    onMounted(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
     return {
       profile,

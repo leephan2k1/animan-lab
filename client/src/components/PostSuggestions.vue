@@ -101,38 +101,42 @@
         class="md:col-span-1 col-span-4 grid grid-cols-2 gap-2 md:gap-0 md:flex flex-col text-lg items-center"
       >
         <h2 class="text-center col-span-2">Tags</h2>
-        <div
+        <router-link
+          :to="{ name: 'general', params: { general: 'anime' } }"
           :style="{
             backgroundImage: `url(https://cdn.dribbble.com/users/2648505/screenshots/17548805/media/7baec254633283f78906f3d4d57824af.jpg)`,
           }"
           class="cursor-pointer category-item absolute-center w-full h-full md:h-[25%] col-span-1 rounded-2xl my-2 bg-center bg-cover bg-no-repeat overflow-hidden"
         >
           <span class="text-white z-20 uppercase font-bold">Anime</span>
-        </div>
-        <div
+        </router-link>
+        <router-link
+          :to="{ name: 'general', params: { general: 'manga' } }"
           :style="{
             backgroundImage: `url(${require('@/assets/images/manga.jpg')})`,
           }"
           class="cursor-pointer category-item absolute-center w-full h-full md:h-[25%] col-span-1 rounded-2xl my-2 bg-center bg-cover bg-no-repeat overflow-hidden"
         >
           <span class="text-white z-20 uppercase font-bold">Manga</span>
-        </div>
-        <div
+        </router-link>
+        <router-link
+          :to="{ name: 'general', params: { general: 'Japan Culture' } }"
           :style="{
             backgroundImage: `url(${require('@/assets/images/jp-culture.jpg')})`,
           }"
           class="cursor-pointer category-item absolute-center w-full h-full md:h-[25%] col-span-1 rounded-2xl my-2 bg-center bg-cover bg-no-repeat overflow-hidden"
         >
           <span class="text-white z-20 uppercase font-bold">Văn hoá JP</span>
-        </div>
-        <div
+        </router-link>
+        <router-link
+          :to="{ name: 'general', params: { general: 'Characters' } }"
           :style="{
             backgroundImage: `url(${require('@/assets/images/character-love.png')})`,
           }"
           class="cursor-pointer category-item absolute-center w-full h-full md:h-[25%] col-span-1 rounded-2xl my-2 bg-center bg-cover bg-no-repeat overflow-hidden"
         >
           <span class="text-white z-20 uppercase font-bold">Nhân vật</span>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>

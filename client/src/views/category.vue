@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
 import { TAGS } from "@/constants";
@@ -102,6 +102,10 @@ export default {
         }
       }, 500);
     };
+
+    onMounted(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
     fetchData();
 
