@@ -16,7 +16,13 @@ module.exports = {
 
     if (title) conditions.title = { $regex: title, $options: "i" };
 
-    if (tags) conditions.tags = { $in: [tags] };
+    if (tags)
+      conditions.tags = {
+        $elemMatch: {
+          $regex: tags,
+          $options: "i",
+        },
+      };
 
     if (page) options.page = +page;
 
