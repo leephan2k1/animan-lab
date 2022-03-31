@@ -12,18 +12,18 @@ import axiosClient from "@/api/axiosClient";
 
 const userRepository = RepositoryFactory.get("users");
 
-import SecureLS from "secure-ls";
+import SecureLS from  "secure-ls";
 const ls = new SecureLS({
   encodingType: "rabbit",
-  isCompression: false,
+  isCompression: true,
   encryptionSecret: process.env.VUE_APP_SECRET_LS,
 });
 
 export default {
   namespaced: true,
   state: {
-    token: window.localStorage.getItem("access-token") || "",
-    refreshToken: window.localStorage.getItem("refresh-token") || "",
+    token: ls.get("access-token") || "",
+    refreshToken: ls.get("refresh-token") || "",
     status: "",
   },
   getters: {
@@ -73,8 +73,8 @@ export default {
 
         if (response.data.success) {
           //set tokens to storage:
-          localStorage.setItem("refresh-token", refreshtoken);
-          localStorage.setItem("access-token", authorization);
+          ls.set("refresh-token", refreshtoken);
+          ls.set("access-token", authorization);
 
           //set access token to axios:
           axiosClient.defaults.headers.common[
@@ -94,8 +94,8 @@ export default {
       } catch (err) {
         console.log(err);
         commit(AUTH_ERROR, "error");
-        localStorage.removeItem("access-token");
-        localStorage.removeItem("refresh-token");
+        ls.remove("access-token");
+        ls.remove("refresh-token");
       }
     },
     [AUTH_LOGOUT]: ({ commit, dispatch, state }) => {
@@ -107,10 +107,10 @@ export default {
         if (res?.data?.success) {
           commit(AUTH_LOGOUT);
           //remove in localStorage
-          localStorage.removeItem("access-token");
+          ls.remove("access-token");
           ls.remove("usr");
           ls.remove("_secure__ls__metadata");
-          localStorage.removeItem("refresh-token");
+          ls.remove("refresh-token");
           //remove in axios
           delete axiosClient.defaults.headers.common["Authorization"];
           //remove in vuex

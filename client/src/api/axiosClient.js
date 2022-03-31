@@ -1,24 +1,31 @@
 import axios from "axios";
 import queryString from "query-string";
 
+import SecureLS from "secure-ls";
+const ls = new SecureLS({
+  encodingType: "rabbit",
+  isCompression: true,
+  encryptionSecret: process.env.VUE_APP_SECRET_LS,
+});
+
 const axiosClient = axios.create({
   baseURL: process.env.VUE_APP_URL,
   headers: {
     "content-type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem("access-token")}`,
+    Authorization: `Bearer ${ls.get("access-token")}`,
   },
   paramsSerializer: (params) => queryString.stringify(params),
 });
 
 const refreshToken = () => {
-  const refreshToken = window.localStorage.getItem("refresh-token");
+  const refreshToken = ls.get("refresh-token");
   return axiosClient.post(`users/refresh-token`, { refreshToken });
 };
 
 axiosClient.interceptors.request.use(async (config) => {
   // Handle token here ...
   // console.log(">>>CONFIG:   ", config);
-  config.headers.Authorization = `Bearer ${localStorage.getItem(
+  config.headers.Authorization = `Bearer ${ls.get(
     "access-token"
   )}`;
   return config;
@@ -44,8 +51,8 @@ axiosClient.interceptors.response.use(
           config.headers.Authorization = authorization;
 
           //set tokens to storage:
-          localStorage.setItem("refresh-token", refreshtoken);
-          localStorage.setItem("access-token", authorization);
+          ls.set("refresh-token", refreshtoken);
+          ls.set("access-token", authorization);
 
           //set access token to axios:
           axiosClient.defaults.headers.common[
