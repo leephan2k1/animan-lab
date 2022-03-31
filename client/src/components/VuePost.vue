@@ -156,11 +156,16 @@ export default {
   },
   setup(props) {
     const title = computed(() => props.title);
-
     const postData = computed(() => props.postsData);
     const fakeData = [...Array(1).keys()];
 
-    return { postData, convertISODate, fakeData, isString, title };
+    return {
+      postData,
+      convertISODate,
+      fakeData,
+      isString,
+      title,
+    };
   },
 };
 </script>

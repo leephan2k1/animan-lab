@@ -17,7 +17,11 @@
         :key="user?._id || index"
         class="w-[40%] h-[40%] absolute-center"
       >
-        <div
+        <router-link
+          :to="{
+            name: 'profileAchievements',
+            params: { username: user?.user_name },
+          }"
           class="lg:w-3/4 w-full h-full bg-white rounded-xl shadow-xl flex cursor-pointer"
         >
           <!-- rank  -->
@@ -47,7 +51,7 @@
               </p>
             </div>
           </div>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>

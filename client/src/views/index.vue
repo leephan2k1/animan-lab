@@ -46,8 +46,6 @@ export default {
     const page = ref(1);
     const hasNextPage = ref(false);
 
-    console.log(newPost.value);
-
     const fetchNewPost = async () => {
       try {
         const params = {

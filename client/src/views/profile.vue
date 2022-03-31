@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -172,6 +172,10 @@ export default {
     };
 
     fetchPostData();
+
+    onMounted(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
     checkWaifuOwner();
 

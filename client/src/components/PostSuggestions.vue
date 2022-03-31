@@ -57,7 +57,11 @@
               :key="item?._id || index"
               class="absolute-center w-full h-full"
             >
-              <div
+              <router-link
+                :to="{
+                  name: 'post',
+                  params: { postTypes: item?.slug },
+                }"
                 class="w-[90%] h-full bg-cover bg-center bg-no-repeat rounded-2xl overflow-hidden flex flex-col justify-end"
                 :style="{
                   backgroundImage: `url(${item?.images_url[0]})`,
@@ -78,7 +82,7 @@
                     {{ convertISODate(item?.createdAt) }}
                   </p>
                 </div>
-              </div>
+              </router-link>
             </swiper-slide>
           </swiper>
         </template>
