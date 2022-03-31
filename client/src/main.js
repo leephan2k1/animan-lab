@@ -39,10 +39,15 @@ if (process.env.NODE_ENV !== "development") {
     // 1. add listener
     addListener((isOpen) => {
       if (isOpen) {
-        app.innerHTML = "Còn đúng mỗi cái nịt!";
+        app.innerHTML = null;
+        const p = document.createElement("p");
+        p.classList.add("text-center", "font-bold", "text-2xl");
+        p.innerText = "Còn đúng mỗi cái nịt!";
+        app.append(p);
+
         localStorage.removeItem("usr");
         localStorage.removeItem("access-token");
-        localStorage.removeItem("a_secure__ls__metadata");
+        localStorage.removeItem("_secure__ls__metadata");
         localStorage.removeItem("refresh-token");
       }
     });
