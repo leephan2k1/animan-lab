@@ -54,12 +54,16 @@ export default {
         };
 
         //tags filter:
-        if (TAGS.find((e) => e.text.toLowerCase === currentPath.toLowerCase)) {
-          params.tags = currentPath;
+        if (
+          TAGS.find(
+            (e) => e.text.toLowerCase() === `${currentPath.value}`.toLowerCase()
+          )
+        ) {
+          params.tags = currentPath.value;
         }
         //search filter:
         else {
-          params.title = currentPath;
+          params.title = currentPath.value;
         }
 
         const res = await postRepo.searchPost(params);

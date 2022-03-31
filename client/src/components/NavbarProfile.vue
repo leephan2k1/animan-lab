@@ -1,7 +1,8 @@
 <template>
   <div
     @click.stop="handleClickProfile"
-    class="h-10 w-12 md:w-44 bg-white rounded-xl flex items-center justify-around cursor-pointer shadow-lg select-none"
+    :class="[isSearching ? 'w-12' : 'md:w-44']"
+    class="h-10 w-12 bg-white rounded-xl flex items-center justify-around cursor-pointer shadow-lg select-none"
   >
     <div class="w-8 h-8 rounded-full overflow-hidden absolute-center">
       <img
@@ -16,11 +17,13 @@
       <VueButton v-else buttonType="profile" styles="w-8 h-8" />
     </div>
     <p
-      class="md:block hidden max-w-[85px] overflow-hidden whitespace-nowrap text-ellipsis"
+      :class="[isSearching ? 'hidden' : 'md:block']"
+      class="hidden max-w-[85px] overflow-hidden whitespace-nowrap text-ellipsis"
     >
       {{ userProfile.user_name }}
     </p>
     <VueButton
+      v-if="!isSearching"
       :buttonType="!toggleDropDown ? 'chervon-down' : 'up'"
       :styles="
         !toggleDropDown
@@ -125,7 +128,7 @@
 </template>
 
 <script>
-import { reactive, ref, onMounted, onUnmounted } from "vue";
+import { reactive, ref, onMounted, onUnmounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -136,13 +139,21 @@ export default {
   components: {
     VueButton,
   },
-  setup() {
+  props: {
+    toggleSearch: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  setup(props) {
     const userProfile = reactive({});
     const isLogged = ref(false);
     const toggleDropDown = ref(false);
     const store = useStore();
     const app = document.querySelector("#app");
     const route = useRouter();
+
+    const isSearching = computed(() => props.toggleSearch);
 
     const getUserProfile = () => {
       const { profile } = store.state.user;
@@ -192,6 +203,7 @@ export default {
       toggleDropDown,
       handleClickProfile,
       handleSignOut,
+      isSearching,
     };
   },
 };

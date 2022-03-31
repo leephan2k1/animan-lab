@@ -137,7 +137,7 @@ export default function () {
   };
 
   const update = async (titleInvalid, postSuccessfully, content, slug) => {
-    try { 
+    try {
       const res = await postRepository.updatePost(slug, content);
       if (res?.data.message === "Duplicated title") {
         titleInvalid.status = true;

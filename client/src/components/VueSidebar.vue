@@ -18,6 +18,8 @@
             type="text"
             placeholder="tìm kiếm..."
             class="w-[90%] rounded-md"
+            v-focus
+            @keyup="handleSearch"
           />
           <VueButton buttonType="search" />
         </div>
@@ -69,13 +71,18 @@
 
 <script>
 import { ref, computed, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import VueButton from "@/components/VueButton.vue";
 
 export default {
   components: {
     VueButton,
+  },
+  directives: {
+    focus: {
+      mounted: (el) => el.focus(),
+    },
   },
   props: {
     showSidebar: {
@@ -86,6 +93,8 @@ export default {
     const sidebar = ref(null);
     const overlay = ref(null);
     const route = useRoute();
+    const router = useRouter();
+
     const currentPath = computed(() => {
       return route.params.general ? route.params.general : route.name;
     });
@@ -97,6 +106,14 @@ export default {
       overlay.value.classList.add("hidden");
     };
 
+    const handleSearch = (e) => {
+      if (e.key === "Enter") {
+        router.push({ name: "general", params: { general: e.target.value } });
+        handleClick();
+        e.target.value = "";
+      }
+    };
+
     //active sidebar from navbar
     watch(props, () => {
       sidebar.value.classList.add("animate__fadeInLeft");
@@ -106,6 +123,7 @@ export default {
 
     return {
       handleClick,
+      handleSearch,
       sidebar,
       overlay,
       currentPath,

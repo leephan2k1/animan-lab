@@ -51,14 +51,17 @@
           ref="searchBtn"
         >
           <input
+            id="navSearch"
             v-if="toggleSearch"
             class="w-3/4"
             type="text"
             placeholder="Tìm kiếm..."
+            @keyup="handleSearch"
+            v-focus
           />
           <VueButton buttonType="search" styles="text-gray-500" />
         </div>
-        <NavbarProfile />
+        <NavbarProfile :toggleSearch="toggleSearch" />
       </div>
     </div>
   </div>
@@ -66,7 +69,7 @@
 
 <script>
 import { ref, onMounted, onUnmounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import VueButton from "@/components/VueButton.vue";
 import NavbarProfile from "@/components/NavbarProfile.vue";
@@ -76,6 +79,11 @@ export default {
     VueButton,
     NavbarProfile,
   },
+  directives: {
+    focus: {
+      mounted: (el) => el.focus(),
+    },
+  },
   setup(_, { emit }) {
     const handleClick = () => {
       emit("activeSidebar");
@@ -84,19 +92,29 @@ export default {
     const app = document.querySelector("#app");
     const toggleSearch = ref(false);
     const route = useRoute();
+    const router = useRouter();
+
     const currentPath = computed(() => {
       return route.params.general ? route.params.general : route.name;
     });
 
+    const handleSearch = (e) => {
+      if (e.key === "Enter") {
+        router.push({ name: "general", params: { general: e.target.value } });
+        e.target.value = "";
+        handleClickCloseSearch();
+      }
+    };
+
     const handleClickOpenSearch = () => {
       searchBtn.value.classList.remove("w-10", "justify-end");
-      searchBtn.value.classList.add("w-48", "justify-center");
+      searchBtn.value.classList.add("w-64", "justify-center");
       toggleSearch.value = true;
     };
 
     const handleClickCloseSearch = () => {
       searchBtn.value.classList.add("w-10", "justify-end");
-      searchBtn.value.classList.remove("w-48", "justify-center");
+      searchBtn.value.classList.remove("w-64", "justify-center");
       toggleSearch.value = false;
     };
 
@@ -114,6 +132,7 @@ export default {
       searchBtn,
       toggleSearch,
       currentPath,
+      handleSearch,
     };
   },
 };
