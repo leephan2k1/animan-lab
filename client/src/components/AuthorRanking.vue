@@ -85,10 +85,8 @@ export default {
           sortpoint: "desc",
         };
         const res = await userRepo.search(params);
-
         if (res?.data.success) {
           usersRankData.value = res.data?.users.docs;
-          console.log(usersRankData.value);
         }
       } catch (err) {
         console.log(err);
