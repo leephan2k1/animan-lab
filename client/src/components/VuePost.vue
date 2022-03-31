@@ -44,6 +44,55 @@
           </div>
         </div>
       </router-link>
+
+      <infinite-loading
+        v-if="title !== 'profileView'"
+        class="absolute-center"
+        v-bind="$attrs"
+      >
+        <template #spinner>
+          <ContentLoader viewBox="0 0 400 200" title="Loading news...">
+            <rect
+              x="42.84"
+              y="9.93"
+              rx="5"
+              ry="5"
+              width="143.55"
+              height="86.59"
+            />
+            <rect
+              x="192.84"
+              y="9.67"
+              rx="0"
+              ry="0"
+              width="148.72"
+              height="12.12"
+            />
+            <rect x="192.84" y="25.67" rx="0" ry="0" width="89" height="9" />
+
+            <rect
+              x="42.84"
+              y="107"
+              rx="5"
+              ry="5"
+              width="143.55"
+              height="86.59"
+            />
+            <rect
+              x="192.84"
+              y="107"
+              rx="0"
+              ry="0"
+              width="148.72"
+              height="12.12"
+            />
+            <rect x="192.84" y="123" rx="0" ry="0" width="89" height="9" />
+          </ContentLoader>
+        </template>
+        <template #complete>
+          <span>Chúc mừng hiền giả đã nghiên cứu hết bài viết!</span>
+        </template>
+      </infinite-loading>
     </template>
     <div v-if="(postData?.length === 0 || !postData) && !isString(postData)">
       <div v-for="item in fakeData" :key="item">
@@ -83,6 +132,9 @@
 </template>
 
 <script>
+import InfiniteLoading from "v3-infinite-loading";
+import "v3-infinite-loading/lib/style.css";
+
 import { ContentLoader } from "vue-content-loader";
 import { computed } from "vue";
 
@@ -100,9 +152,11 @@ export default {
   },
   components: {
     ContentLoader,
+    InfiniteLoading,
   },
   setup(props) {
     const title = computed(() => props.title);
+
     const postData = computed(() => props.postsData);
     const fakeData = [...Array(1).keys()];
 

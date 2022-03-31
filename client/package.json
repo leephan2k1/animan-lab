@@ -21,6 +21,7 @@
     "quill-image-uploader": "^1.2.2",
     "secure-ls": "^1.2.6",
     "swiper": "^8.0.7",
+    "v3-infinite-loading": "^1.0.6",
     "vue": "^3.2.13",
     "vue-content-loader": "^2.0.1",
     "vue-filepond": "^7.0.2",

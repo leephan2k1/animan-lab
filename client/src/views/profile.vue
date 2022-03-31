@@ -9,6 +9,7 @@
       :postsData="OptionalData"
       :isWaifuOwner="waifuOwner"
       :isFetchingWaifu="isFetchingWaifu"
+      title="profileView"
     />
     <WaifuForm
       ref="waifuFormComp"

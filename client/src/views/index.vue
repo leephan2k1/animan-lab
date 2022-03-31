@@ -9,7 +9,9 @@
     >
       <h1 class="text-sm font-semibold uppercase">Nghiên cứu mới nhất</h1>
     </div>
-    <VuePost :postsData="newPost" />
+    <div class="w-full h-fit">
+      <VuePost :postsData="newPost" @infinite="loadMore" />
+    </div>
   </div>
 </template>
 
@@ -36,26 +38,61 @@ export default {
   },
   setup() {
     const newPost = ref([]);
+    const OPTIONS = {
+      limit: 5,
+      sort: "desc",
+    };
+
+    const page = ref(1);
+    const hasNextPage = ref(false);
+
+    console.log(newPost.value);
 
     const fetchNewPost = async () => {
       try {
         const params = {
-          page: 1,
-          limit: 10,
-          sort: "desc",
+          page: page.value,
+          limit: OPTIONS.limit,
+          sort: OPTIONS.sort,
         };
         const res = await postRepo.searchPost(params);
         if (res?.data.success) {
-          newPost.value = res.data?.posts.docs;
+          if (page.value === 1) {
+            newPost.value = res.data?.posts.docs;
+          } else {
+            newPost.value = newPost.value.concat(res.data?.posts.docs);
+          }
+          hasNextPage.value = res.data?.posts.hasNextPage;
         }
       } catch (err) {
         console.log(err);
       }
     };
 
+    const loadMore = (state) => {
+      //setTimeout make sure skeleton always is loaded
+      setTimeout(async () => {
+        try {
+          if (hasNextPage.value) {
+            //next page:
+            page.value++;
+            //fetch next page:
+            await fetchNewPost();
+            //loading
+            state.loaded();
+          } else {
+            hasNextPage.value = false;
+            state.complete();
+          }
+        } catch (err) {
+          state.error();
+        }
+      }, 500);
+    };
+
     fetchNewPost();
 
-    return { newPost };
+    return { newPost, loadMore };
   },
 };
 </script>
