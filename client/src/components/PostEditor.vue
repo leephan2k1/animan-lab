@@ -124,6 +124,8 @@ import { useRoute } from "vue-router";
 
 import { isEmptyObject } from "@/utils/checkType";
 
+import { TAGS } from "@/constants";
+
 import { QuillEditor, Quill } from "@vueup/vue-quill";
 import QuillImageUploader from "quill-image-uploader";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
@@ -182,26 +184,7 @@ export default {
     const typeOfEditor = computed(() => route.name);
 
     //quill editor config
-    const autocompleteItems = [
-      {
-        text: "Anime",
-      },
-      {
-        text: "Manga",
-      },
-      {
-        text: "Cosplay",
-      },
-      {
-        text: "Characters",
-      },
-      {
-        text: "Japan Culture",
-      },
-      {
-        text: "Japan",
-      },
-    ];
+    const autocompleteItems = TAGS;
     const tagValidation = [
       {
         classes: "no-numbers",

@@ -39,7 +39,7 @@ export default {
   setup() {
     const newPost = ref([]);
     const OPTIONS = {
-      limit: 5,
+      limit: 10,
       sort: "desc",
     };
 

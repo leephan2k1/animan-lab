@@ -24,14 +24,14 @@
           <router-link
             class="nav-element min-w-1/4 px-2 transition-all duration-300"
             :class="{ active: currentPath === 'anime' }"
-            :to="{ name: 'anime' }"
+            :to="{ name: 'general', params: { general: 'anime' } }"
           >
             Anime docs
           </router-link>
           <router-link
             class="nav-element min-w-1/4 px-2 transition-all duration-300"
             :class="{ active: currentPath === 'manga' }"
-            :to="{ name: 'manga' }"
+            :to="{ name: 'general', params: { general: 'manga' } }"
           >
             Manga docs
           </router-link>
@@ -84,7 +84,9 @@ export default {
     const app = document.querySelector("#app");
     const toggleSearch = ref(false);
     const route = useRoute();
-    let currentPath = computed(() => route.name);
+    const currentPath = computed(() => {
+      return route.params.general ? route.params.general : route.name;
+    });
 
     const handleClickOpenSearch = () => {
       searchBtn.value.classList.remove("w-10", "justify-end");

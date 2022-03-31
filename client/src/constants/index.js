@@ -13,6 +13,57 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const USER_SUCCESS = "USER_SUCCESS";
 export const USER_ERROR = "USER_ERROR";
 
+export const TAGS = [
+  {
+    text: "Anime",
+  },
+  {
+    text: "Manga",
+  },
+  {
+    text: "Cosplay",
+  },
+  {
+    text: "Characters",
+  },
+  {
+    text: "Japan Culture",
+  },
+  {
+    text: "Japan",
+  },
+  {
+    text: "Romance",
+  },
+  {
+    text: "Action",
+  },
+  {
+    text: "Adventure",
+  },
+  {
+    text: "Comedy",
+  },
+  {
+    text: "Fantasy",
+  },
+  {
+    text: "Horror",
+  },
+  {
+    text: "Isekai",
+  },
+  {
+    text: "Slice Of Life",
+  },
+  {
+    text: "School",
+  },
+  {
+    text: "Ninja",
+  },
+];
+
 export const contentsToS = {
   title: '<h1 class="m-4 text-xl font-bold">Điều khoản dịch vụ</h1>',
   contents: [

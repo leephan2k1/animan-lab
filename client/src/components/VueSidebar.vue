@@ -36,7 +36,7 @@
             class="w-full absolute-center pt-4 md:pt-8 transition-all duration-300"
             :class="{ active: currentPath === 'anime' }"
             @click.self="handleClick"
-            :to="{ name: 'anime' }"
+            :to="{ name: 'general', params: { general: 'anime' } }"
           >
             Anime docs
           </router-link>
@@ -44,7 +44,7 @@
             class="w-full absolute-center pt-4 md:pt-8 transition-all duration-300"
             :class="{ active: currentPath === 'manga' }"
             @click.self="handleClick"
-            :to="{ name: 'manga' }"
+            :to="{ name: 'general', params: { general: 'manga' } }"
           >
             Manga docs
           </router-link>
@@ -86,7 +86,9 @@ export default {
     const sidebar = ref(null);
     const overlay = ref(null);
     const route = useRoute();
-    const currentPath = computed(() => route.name);
+    const currentPath = computed(() => {
+      return route.params.general ? route.params.general : route.name;
+    });
 
     //hidden sidebar
     const handleClick = () => {
@@ -101,7 +103,6 @@ export default {
       sidebar.value.classList.remove("animate__fadeOutLeft", "hidden");
       overlay.value.classList.remove("hidden");
     });
-
 
     return {
       handleClick,
