@@ -65,7 +65,7 @@
   <div
     ref="overlay"
     @click.stop="handleClick"
-    class="w-full h-full absolute top-0 left-0 bg-overlay z-20 hidden"
+    class="w-full h-full absolute top-0 left-0 bg-overlay z-40 hidden"
   ></div>
 </template>
 

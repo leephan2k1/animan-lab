@@ -19,14 +19,14 @@
         <div
           v-if="postsData && postsData.length"
           @click="swp.slidePrev()"
-          class="select-none cursor-pointer z-50 absolute absolute-center rounded-full hover:scale-75 transition-all w-10 h-10 border-2 border-gray-400 bg-white top-1/2"
+          class="select-none cursor-pointer z-30 absolute absolute-center rounded-full hover:scale-75 transition-all w-10 h-10 border-2 border-gray-400 bg-white top-1/2"
         >
           <VueButton buttonType="<" />
         </div>
         <div
           v-if="postsData && postsData.length"
           @click="swp.slideNext()"
-          class="select-none cursor-pointer z-50 absolute absolute-center rounded-full hover:scale-75 transition-all w-10 h-10 border-2 border-gray-400 bg-white top-1/2 right-0"
+          class="select-none cursor-pointer z-30 absolute absolute-center rounded-full hover:scale-75 transition-all w-10 h-10 border-2 border-gray-400 bg-white top-1/2 right-0"
         >
           <VueButton buttonType=">" />
         </div>
