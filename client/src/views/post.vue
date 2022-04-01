@@ -6,8 +6,10 @@
     <PostDetails
       @handleReport="handleToggleReportForm"
       @editPost="handleEditPost"
+      @openComment="handleOpenComment"
       v-if="postType !== 'editor'"
     />
+    <PostComment :isOpenComment="isOpenComment" />
     <ReportForm
       v-if="isReporting"
       @handleReport="handleToggleReportForm"
@@ -25,6 +27,7 @@ import { useToast } from "vue-toastification";
 import PostEditor from "@/components/PostEditor.vue";
 import PostDetails from "@/components/PostDetails.vue";
 import ReportForm from "@/components/ReportForm.vue";
+import PostComment from "@/components/PostComment.vue";
 
 import repositoryFactory from "@/api/repositoryFactory";
 const postRepository = repositoryFactory.get("posts");
@@ -34,6 +37,7 @@ export default {
     PostEditor,
     PostDetails,
     ReportForm,
+    PostComment,
   },
   setup() {
     const route = useRoute();
@@ -43,6 +47,7 @@ export default {
 
     const isLogged = ref();
     const isReporting = ref(false);
+    const isOpenComment = ref(false);
     const oldPost = ref({});
 
     const postType = computed(() => {
@@ -110,15 +115,21 @@ export default {
       //go to editor:
     };
 
+    const handleOpenComment = () => {
+      isOpenComment.value = !isOpenComment.value; 
+    };
+
     // just accept create post for logged user
     validateParams();
     return {
       postType,
       isLogged,
+      isOpenComment,
       handleToggleReportForm,
       isReporting,
       handleSubmitForm,
       handleEditPost,
+      handleOpenComment,
       oldPost,
       route,
     };

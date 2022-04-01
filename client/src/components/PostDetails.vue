@@ -109,10 +109,10 @@
         v-html="postData?.content"
       ></div>
 
-      <div class="w-full h-14 flex items-center mx-4 mb-2 cursor-pointer">
+      <div class="w-full h-14 flex items-center justify-between mx-4 mb-2">
         <div
           @click.stop="activeLike"
-          class="w-[150px] h-[50px] bg-main flex absolute-center rounded-lg select-none"
+          class="w-[150px] h-[50px] bg-main flex absolute-center rounded-lg select-none cursor-pointer"
         >
           <div
             class="animate__animated"
@@ -124,6 +124,15 @@
             />
           </div>
           <span class="mx-2">Thích</span>
+        </div>
+        <div
+          @click.stop="activeComment"
+          class="w-[150px] h-[50px] bg-main flex absolute-center rounded-lg select-none cursor-pointer mr-6"
+        >
+          <div class="animate__animated">
+            <VueButton buttonType="chat" />
+          </div>
+          <span class="mx-2">Bình luận</span>
         </div>
       </div>
     </template>
@@ -277,6 +286,10 @@ export default {
       }
     };
 
+    const activeComment = () => {
+      emit("openComment", true);
+    };
+
     const activeBookmarkAndLike = () => {
       const { bookmark_posts, like_list } = profile;
       if (bookmark_posts?.find((postId) => postId === postData.value?._id)) {
@@ -348,6 +361,7 @@ export default {
       handleBookmark,
       bookmarkButton,
       wasBookmarked,
+      activeComment,
       handleDropdown,
       dropDown,
       isPostOwner,
