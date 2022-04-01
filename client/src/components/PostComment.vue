@@ -1,7 +1,7 @@
 <template>
   <div
     ref="commentsDOM"
-    class="w-[80%] lg:w-3/4 min-h-[620px] md:min-h-[650px] lg:min-h-[600px] h-fit bg-white border-[1px] border-gray-500 absolute top-[5%] left-1/2 -translate-x-1/2 rounded-xl overflow-hidden shadow-xl animate__animated animate__faster hidden"
+    class="w-[80%] lg:w-3/4 min-h-[620px] md:min-h-[650px] lg:min-h-[600px] h-fit bg-white border-[1px] border-gray-500 absolute top-[5%] left-1/2 -translate-x-1/2 rounded-xl overflow-hidden shadow-xl animate__animated animate__faster hidden z-40"
   >
     <!-- nav control  -->
     <div class="w-full h-[50px] flex items-center justify-end">
@@ -27,7 +27,10 @@
         để phản biện nghiên cứu...
       </p>
       <!-- comment create  -->
-      <div v-else class="w-full h-[130px] flex items-center justify-center">
+      <div
+        v-else
+        class="w-full h-[130px] flex items-center justify-center relative"
+      >
         <!-- user avatar  -->
         <div
           :style="{
@@ -39,12 +42,29 @@
         <div
           class="w-3/4 h-1/2 md:ml-2 rounded-3xl absolute-center overflow-hidden"
         >
-          <input
-            v-focus
-            class="w-full h-4/5 px-4 rounded-3xl border-[1px] border-gray-500"
-            type="text"
-            placeholder="Nhập bình luận...."
-          />
+          <div
+            class="w-full h-4/5 rounded-3xl overflow-hidden border-[1px] border-gray-500 absolute-center"
+          >
+            <input
+              ref="inputDOM"
+              class="w-[85%] h-full px-4 rounded-3xl"
+              type="text"
+              placeholder="Nhập bình luận...."
+              v-model="commentContents"
+              @keyup="handleCreateComment"
+              @click.stop="isOpenEmoji = false"
+            />
+            <button @click.stop="handleToggleEmoji" class="h-15% h-full">
+              <VueButton buttonType="smile" />
+            </button>
+          </div>
+        </div>
+        <!-- emoji box  -->
+        <div
+          v-if="isOpenEmoji"
+          class="absolute top-24 md:left-[55%] left-1/2 -translate-x-1/2 rounded-2xl overflow-hidden"
+        >
+          <VuemojiPicker @emojiClick="handleEmojiClick" />
         </div>
       </div>
     </div>
@@ -91,20 +111,23 @@
 </template>
 
 <script>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+
 import VueButton from "@/components/VueButton.vue";
+import { VuemojiPicker } from "vuemoji-picker";
+import { useToast } from "vue-toastification";
 
 import { avatarHandler } from "@/utils/userHandler";
+import { BLACKLIST } from "@/constants";
+
+import useComment from "@/hooks/comment";
 
 export default {
   components: {
     VueButton,
-  },
-  directives: {
-    focus: {
-      mounted: (el) => el.focus(),
-    },
+    VuemojiPicker,
   },
   props: {
     isOpenComment: {
@@ -119,20 +142,102 @@ export default {
     });
     const profile = ref(store.getters["user/getProfile"]);
     const fakeData = [...Array(12).keys()];
+    const comment = useComment();
+    const route = useRoute();
+    const toast = useToast();
+    const TOAST_OPTION = {
+      position: "top-center",
+      timeout: 2500,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      draggable: true,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: false,
+      hideProgressBar: true,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    };
 
     const isActiveComment = ref(false);
     const activeFromProps = computed(() => props.isOpenComment);
+    const isOpenEmoji = ref(false);
+
+    const commentContents = ref("");
     const commentsDOM = ref(null);
+    const inputDOM = ref(null);
+
+    const app = document.querySelector("#app");
+    const overlay = document.createElement("div");
+    overlay.classList.add(
+      "w-full",
+      "h-full",
+      "absolute",
+      "top-0",
+      "left-0",
+      "bg-overlay",
+      "z-30"
+    );
 
     watch(activeFromProps, () => {
       handleOpenComment();
     });
 
+    const handleToggleEmoji = () => {
+      isOpenEmoji.value = !isOpenEmoji.value;
+    };
+
+    const handleEmojiClick = (e) => {
+      commentContents.value += ` ${e.unicode}`;
+      commentContents.value = commentContents.value.trim();
+
+      isOpenEmoji.value = false;
+    };
+
+    const handleCreateComment = async (e) => {
+      if (e.key === "Enter") {
+        const slug = route.params.postTypes;
+        let content = commentContents.value;
+        let valid = true;
+        content = content.trim();
+
+        if (content.length < 3) {
+          toast.error("Bình luận phải có ít nhất 3 ký tự!", TOAST_OPTION);
+          valid = false;
+        }
+
+        BLACKLIST.forEach((word) => {
+          if (content.indexOf(word) !== -1) {
+            toast.error("Bình luận có chứa ngôn từ tục tĩu!", TOAST_OPTION);
+            valid = false;
+          }
+        });
+
+        if (!valid) return;
+
+        const state = await comment.create(content, slug);
+        if (state) {
+          toast.success(
+            "Bình luận thành công! sẽ được chờ phê duyệt",
+            TOAST_OPTION
+          );
+          //reset value:
+          commentContents.value = "";
+        }
+      }
+    };
+
     const handleOpenComment = () => {
       isActiveComment.value = true;
+
+      inputDOM.value.focus();
+
       commentsDOM.value.classList.add("animate__fadeIn");
       commentsDOM.value.classList.remove("animate__fadeOut", "hidden");
+
       window.scrollTo({ top: 30, behavior: "smooth" });
+      app.appendChild(overlay);
     };
 
     const handleCloseComments = () => {
@@ -142,16 +247,40 @@ export default {
       setTimeout(() => {
         commentsDOM.value.classList.add("hidden");
       }, 500);
+      app.removeChild(overlay);
     };
 
+    onMounted(() => {
+      overlay.addEventListener("click", handleCloseComments);
+    });
+
+    onUnmounted(() => {
+      overlay.removeEventListener("click", handleCloseComments);
+      if (overlay) {
+        overlay.remove();
+      }
+    });
+
     return {
+      handleToggleEmoji,
+      handleCreateComment,
+      handleEmojiClick,
       isLogged,
+      isOpenEmoji,
       fakeData,
       avatarHandler,
       profile,
       handleCloseComments,
       commentsDOM,
+      inputDOM,
+      commentContents,
     };
   },
 };
 </script>
+
+<style lang="scss">
+emoji-picker {
+  @apply md:w-[400px] md:h-[350px] w-[90%] h-[300px] mx-auto rounded-xl;
+}
+</style>

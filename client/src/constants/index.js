@@ -13,6 +13,45 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const USER_SUCCESS = "USER_SUCCESS";
 export const USER_ERROR = "USER_ERROR";
 
+export const BLACKLIST = [
+  "nứng",
+  "loz",
+  "lolz",
+  "lone",
+  "lồz",
+  "lồn",
+  "Lồn",
+  "đĩ",
+  "Đĩ",
+  "đỉ",
+  "cặc",
+  "cc",
+  "ncc",
+  "fuck",
+  "Fuck",
+  "bitch",
+  "Bitch",
+  "đụ",
+  "Đụ",
+  "đm",
+  "Đm",
+  "ĐM",
+  "dm",
+  "Dm",
+  "DM",
+  "đmm",
+  "Đmm",
+  "dmm",
+  "Dmm",
+  "cl",
+  "clm",
+  "clmm",
+  "clgt",
+  "Clgt",
+  "đéo",
+  "Đéo",
+];
+
 export const TAGS = [
   {
     text: "Anime",

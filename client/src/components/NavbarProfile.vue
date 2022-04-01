@@ -187,11 +187,11 @@ export default {
     };
 
     onMounted(() => {
-      app.addEventListener("click", handleClickApp);
+      app?.addEventListener("click", handleClickApp);
     });
 
     onUnmounted(() => {
-      app.removeEventListener("click", handleClickApp);
+      app?.removeEventListener("click", handleClickApp);
     });
 
     checkUserLogin();
