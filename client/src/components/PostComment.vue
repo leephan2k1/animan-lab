@@ -110,11 +110,16 @@
       </div>
     </div>
     <!-- loading list  -->
-    <div v-else class="w-full h-[450px] overflow-y-scroll">
+    <div
+      v-if="
+        (!commentsData || commentsData.length === 0) && !isString(commentsData)
+      "
+      class="w-full h-[450px] overflow-y-scroll"
+    >
       <div
         v-for="item in fakeData"
         :key="item"
-        class="w-full h-[25%] overflow-hidden"
+        class="w-full h-[25%] overflow-hidden my-4"
       >
         <ContentLoader viewBox="0 0 400 160">
           <rect x="110" y="21" rx="4" ry="4" width="254" height="6" />
@@ -122,7 +127,7 @@
           <rect x="304" y="-46" rx="3" ry="3" width="350" height="6" />
           <rect x="371" y="-45" rx="3" ry="3" width="380" height="6" />
           <rect x="484" y="-45" rx="3" ry="3" width="201" height="6" />
-          <circle cx="48" cy="48" r="25" />
+          <circle cx="48" cy="35" r="15" />
         </ContentLoader>
       </div>
     </div>
@@ -272,7 +277,7 @@ export default {
         commentsData.value = "empty";
       } else {
         commentsData.value = data.docs;
-      } 
+      }
     };
 
     const handleOpenComment = () => {
@@ -280,7 +285,7 @@ export default {
 
       commentsDOM.value.classList.add("animate__fadeIn");
       commentsDOM.value.classList.remove("animate__fadeOut", "hidden");
- 
+
       inputDOM.value.focus();
 
       window.scrollTo({ top: 30, behavior: "smooth" });
