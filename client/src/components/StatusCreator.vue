@@ -13,6 +13,7 @@
       <!-- input  -->
       <div class="w-[80%] lg:pr-6 absolute-center">
         <div
+          @click="handleCreateContent"
           class="flex items-center justify-evenly cursor-pointer w-[80%] h-[60%] lg:w-[90%] lg:h-[80%] lg:px-0 px-4 bg-main hover:bg-gray-300 rounded-xl"
         >
           <p class="lg:text-base md:text-[15px] text-[10px]">
@@ -33,6 +34,13 @@ import VueButton from "@/components/VueButton.vue";
 export default {
   components: {
     VueButton,
+  },
+  setup(_, { emit }) {
+    const handleCreateContent = () => {
+      emit("openStatusEditor");
+    };
+
+    return { handleCreateContent };
   },
 };
 </script>

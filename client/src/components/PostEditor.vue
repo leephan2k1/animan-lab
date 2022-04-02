@@ -111,14 +111,13 @@
 
 <script>
 import usePost from "@/hooks/post";
-import RepositoryFactory from "@/api/repositoryFactory";
-const postsRepository = RepositoryFactory.get("posts");
 
 import VueButton from "@/components/VueButton.vue";
 import VueTagsInput from "@sipec/vue3-tags-input";
 
 import { reactive, ref, onMounted, onUnmounted, computed } from "vue";
 import axios from "axios";
+
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 

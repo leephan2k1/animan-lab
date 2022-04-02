@@ -119,7 +119,7 @@ export default function () {
     return await wasBookmarked;
   };
 
-  const publish = async (titleInvalid, postSuccessfully, postPayload) => {
+  const publish = async (titleInvalid, postSuccessfully, postPayload) => { 
     try {
       const res = await postRepository.createPost(postPayload);
       if (res?.data.message === "Duplicated title") {
