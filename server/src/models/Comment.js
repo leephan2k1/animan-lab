@@ -7,6 +7,7 @@ const Comment = new Schema(
   {
     author_id: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     author_name: { type: String, required: true, min: 2 },
+    approve: { type: Boolean, default: false },
     post: { type: Schema.Types.ObjectId, required: true, ref: "Post" },
     content: { type: String, required: true, min: 3 },
     banned: { type: Boolean, default: false },

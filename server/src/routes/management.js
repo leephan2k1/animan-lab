@@ -13,6 +13,14 @@ router
   .get(verifyAccessToken, checkApprover, ManagementController.getPost);
 
 /*
+/v1/managements/get-comments (approve: false)
+roles: admin || mod
+*/
+router
+  .route("/get-comments")
+  .get(verifyAccessToken, checkApprover, ManagementController.getComments);
+
+/*
 /v1/managements/get-flag-post (is_flag: false)
 roles: admin || mod
 */
@@ -39,6 +47,19 @@ router
     checkApprover,
     validateBody(schemas.objectIdRequiredSchema),
     ManagementController.approvePost
+  );
+
+/*
+/v1/managements/approve-post
+roles: admin || mod
+*/
+router
+  .route("/approve-comment")
+  .post(
+    verifyAccessToken,
+    checkApprover,
+    validateBody(schemas.objectIdRequiredSchema),
+    ManagementController.approveComment
   );
 
 /*
