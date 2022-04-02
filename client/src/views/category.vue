@@ -6,7 +6,13 @@
     >
       Trung tâm nghiên cứu về {{ currentPath }}
     </h1>
-    <h1 v-else class="mt-2 uppercase text-lg">Bài viết về {{ currentPath }}</h1>
+    <h1 v-else class="mt-2 uppercase text-lg">
+      {{
+        optionalData === "optional data empty"
+          ? `Chưa có bài viết nào về ${currentPath}`
+          : `Bài viết về ${currentPath}`
+      }}
+    </h1>
     <VuePost
       :title="'Học liệu ' + currentPath"
       :postsData="optionalData"
@@ -39,7 +45,6 @@ export default {
       limit: 10,
       sort: "desc",
     };
-    const fakeData = [];
     const optionalData = ref([]);
 
     const page = ref(1);
@@ -69,7 +74,11 @@ export default {
         const res = await postRepo.searchPost(params);
         if (res?.data.success) {
           if (page.value === 1) {
-            optionalData.value = res.data?.posts.docs;
+            if (res.data?.posts.docs.length > 0) {
+              optionalData.value = res.data?.posts.docs;
+            } else {
+              optionalData.value = "optional data empty";
+            }
           } else {
             optionalData.value = optionalData.value.concat(
               res.data?.posts.docs
@@ -109,7 +118,7 @@ export default {
 
     fetchData();
 
-    return { currentPath, fakeData, optionalData, loadMore };
+    return { currentPath, optionalData, loadMore };
   },
 };
 </script>
