@@ -6,7 +6,32 @@ const { existChecker, nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
   index: async (req, res, next) => {
-    const comments = await Comment.find({});
+    const { sort, page, limit, postId } = req.query;
+
+    if (!postId) {
+      return res.status(200).json({
+        success: false,
+        message: "Bad request",
+      });
+    }
+
+    const conditions = {};
+    //default condition:
+    conditions.approve = true;
+    conditions.post = postId;
+
+    const options = {};
+    //default condition:
+    options.select = "-__v";
+
+    if (sort) options.sort = { ...options.sort, createdAt: sort };
+
+    if (page) options.page = +page;
+
+    if (limit) options.limit = +limit;
+
+    const comments = await Comment.paginate(conditions, options);
+
     return res.status(200).json({
       success: true,
       comments,

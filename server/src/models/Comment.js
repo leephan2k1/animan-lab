@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const mongoosePaginate = require("mongoose-paginate-v2");
+
 const User = require("./User");
 const Post = require("./Post");
 
@@ -33,5 +35,7 @@ Comment.pre("remove", async function (next) {
     next(err);
   }
 });
+
+Comment.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Comment", Comment);
