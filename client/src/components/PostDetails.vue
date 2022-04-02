@@ -200,6 +200,15 @@ export default {
         if (res?.data.success) {
           postData.value = res.data.post;
 
+          //assign id to DOM:
+          const postDOM = document.querySelector("#post");
+          if (postDOM) {
+            postDOM.setAttribute("data-id", postData.value?._id);
+          }
+
+          //emit state to parent post:
+          emit("dataReady", true);
+
           //define post owner:
           isPostOwner.value = user_name === postData.value?.author_name;
           isAdmin.value = user_name === "admin";

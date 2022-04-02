@@ -47,7 +47,7 @@
           >
             <input
               ref="inputDOM"
-              class="w-[85%] h-full px-4 rounded-3xl"
+              class="w-[85%] h-full pr-4 rounded-3xl"
               type="text"
               placeholder="Nhập bình luận...."
               v-model="commentContents"
@@ -69,12 +69,15 @@
       </div>
     </div>
     <!-- container  -->
-    <div class="w-full h-[450px] overflow-y-scroll">
+    <div
+      v-if="commentsData && commentsData.length > 0 && !isString(commentsData)"
+      class="w-full h-[450px] overflow-y-scroll"
+    >
       <!-- comments list  -->
       <div
-        v-for="item in fakeData"
-        :key="item"
-        class="w-full h-[130px] flex items-center justify-center"
+        v-for="(item, index) in commentsData"
+        :key="item?._id || index"
+        class="w-full min-h-[75px] h-fit flex items-center justify-center"
       >
         <!-- user avatar  -->
         <div
@@ -82,31 +85,52 @@
         >
           <div
             :style="{
-              backgroundImage: `url(${avatarHandler(profile)})`,
+              backgroundImage: `url(${avatarHandler(item?.author_id)})`,
             }"
             class="md:w-12 w-10 md:h-12 h-10 rounded-full bg-black bg-center bg-cover bg-no-repeat"
           ></div>
           <p
             class="text-[13px] whitespace-nowrap text-ellipsis overflow-hidden"
           >
-            User name
+            {{ item?.author_id.user_name }}
           </p>
         </div>
         <!-- comment box  -->
         <div
-          class="w-3/4 h-1/2 md:ml-2 rounded-3xl absolute-center overflow-hidden"
+          class="w-3/4 min-h-[52px] h-fit md:ml-2 rounded-3xl absolute-center"
         >
-          <p
-            class="w-full h-4/5 px-4 rounded-3xl post-title border-[1px] overflow-hidden border-gray-500 md:text-base text-sm md:py-0 py-2"
+          <div
+            class="w-full min-h-[52px] h-fit px-4 rounded-3xl border-[1px] overflow-hidden border-gray-500 md:text-base text-sm md:py-0 flex items-center"
           >
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem
-            beatae cupiditate ipsa repellat optio, nobis officiis? Eos
-            consequuntur provident porro odit quas eius omnis, perferendis
-            adipisci labore molestiae suscipit amet.
-          </p>
+            <p class="w-full h-full post-desc">
+              {{ item?.content }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
+    <!-- loading list  -->
+    <div v-else class="w-full h-[450px] overflow-y-scroll">
+      <div
+        v-for="item in fakeData"
+        :key="item"
+        class="w-full h-[25%] overflow-hidden"
+      >
+        <ContentLoader viewBox="0 0 400 160">
+          <rect x="110" y="21" rx="4" ry="4" width="254" height="6" />
+          <rect x="111" y="41" rx="3" ry="3" width="185" height="7" />
+          <rect x="304" y="-46" rx="3" ry="3" width="350" height="6" />
+          <rect x="371" y="-45" rx="3" ry="3" width="380" height="6" />
+          <rect x="484" y="-45" rx="3" ry="3" width="201" height="6" />
+          <circle cx="48" cy="48" r="25" />
+        </ContentLoader>
+      </div>
+    </div>
+    <!-- empty list  -->
+    <div
+      v-if="commentsData && isString(commentsData) && commentsData === 'empty'"
+      class="w-full h-[450px] overflow-y-scroll"
+    ></div>
   </div>
 </template>
 
@@ -118,9 +142,13 @@ import { useRoute } from "vue-router";
 import VueButton from "@/components/VueButton.vue";
 import { VuemojiPicker } from "vuemoji-picker";
 import { useToast } from "vue-toastification";
+import { ContentLoader } from "vue-content-loader";
 
 import { avatarHandler } from "@/utils/userHandler";
 import { BLACKLIST } from "@/constants";
+
+import { isString } from "@/utils/checkType";
+import { isExactMatch } from "@/utils/stringHandler";
 
 import useComment from "@/hooks/comment";
 
@@ -128,6 +156,7 @@ export default {
   components: {
     VueButton,
     VuemojiPicker,
+    ContentLoader,
   },
   props: {
     isOpenComment: {
@@ -167,6 +196,7 @@ export default {
     const commentContents = ref("");
     const commentsDOM = ref(null);
     const inputDOM = ref(null);
+    const commentsData = ref([]);
 
     const app = document.querySelector("#app");
     const overlay = document.createElement("div");
@@ -208,7 +238,7 @@ export default {
         }
 
         BLACKLIST.forEach((word) => {
-          if (content.indexOf(word) !== -1) {
+          if (isExactMatch(content, word)) {
             toast.error("Bình luận có chứa ngôn từ tục tĩu!", TOAST_OPTION);
             valid = false;
           }
@@ -228,13 +258,30 @@ export default {
       }
     };
 
+    const fetchComment = async () => {
+      const post = document.querySelector("#post");
+      const { id } = post.dataset;
+      const params = {
+        postId: id,
+        sort: "desc",
+        limit: 10,
+      };
+      const data = await comment.getAll(params);
+      //post has 0 comment
+      if (data.docs.length === 0) {
+        commentsData.value = "empty";
+      } else {
+        commentsData.value = data.docs;
+      } 
+    };
+
     const handleOpenComment = () => {
       isActiveComment.value = true;
 
-      inputDOM.value.focus();
-
       commentsDOM.value.classList.add("animate__fadeIn");
       commentsDOM.value.classList.remove("animate__fadeOut", "hidden");
+ 
+      inputDOM.value.focus();
 
       window.scrollTo({ top: 30, behavior: "smooth" });
       app.appendChild(overlay);
@@ -261,7 +308,10 @@ export default {
       }
     });
 
+    fetchComment();
+
     return {
+      isString,
       handleToggleEmoji,
       handleCreateComment,
       handleEmojiClick,
@@ -274,6 +324,7 @@ export default {
       commentsDOM,
       inputDOM,
       commentContents,
+      commentsData,
     };
   },
 };

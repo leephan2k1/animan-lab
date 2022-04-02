@@ -1,5 +1,6 @@
 <template>
   <div
+    id="post"
     class="w-full min-h-[400px] lg:min-h-[300px] md:min-h-[600px] h-fit relative"
   >
     <router-view :editPostValue="oldPost" />
@@ -7,9 +8,10 @@
       @handleReport="handleToggleReportForm"
       @editPost="handleEditPost"
       @openComment="handleOpenComment"
+      @dataReady="handleDataReady"
       v-if="postType !== 'editor'"
     />
-    <PostComment :isOpenComment="isOpenComment" />
+    <PostComment v-if="dataReady" :isOpenComment="isOpenComment" />
     <ReportForm
       v-if="isReporting"
       @handleReport="handleToggleReportForm"
@@ -48,6 +50,7 @@ export default {
     const isLogged = ref();
     const isReporting = ref(false);
     const isOpenComment = ref(false);
+    const dataReady = ref(false);
     const oldPost = ref({});
 
     const postType = computed(() => {
@@ -116,12 +119,17 @@ export default {
     };
 
     const handleOpenComment = () => {
-      isOpenComment.value = !isOpenComment.value; 
+      isOpenComment.value = !isOpenComment.value;
+    };
+
+    const handleDataReady = () => {
+      dataReady.value = true;
     };
 
     // just accept create post for logged user
     validateParams();
     return {
+      dataReady,
       postType,
       isLogged,
       isOpenComment,
@@ -129,6 +137,7 @@ export default {
       isReporting,
       handleSubmitForm,
       handleEditPost,
+      handleDataReady,
       handleOpenComment,
       oldPost,
       route,
