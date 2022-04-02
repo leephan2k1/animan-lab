@@ -23,6 +23,7 @@ module.exports = {
     const options = {};
     //default condition:
     options.select = "-__v";
+    options.populate = "author_id";
 
     if (sort) options.sort = { ...options.sort, createdAt: sort };
 
