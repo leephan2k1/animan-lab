@@ -5,6 +5,7 @@
         <div
           v-for="(post, index) in data"
           :key="post?._id || index"
+          :data-id="post?._id"
           class="shadow-xl lg:w-[50%] md:w-[70%] w-[80%] lg:h-[650px] md:h-[500px] h-[450px] bg-white rounded-xl overflow-hidden mb-4"
         >
           <!-- info  -->
@@ -43,27 +44,7 @@
               ></div>
             </div>
             <!-- content interact  -->
-            <div class="w-[30%] h-full flex flex-col justify-center">
-              <div
-                @click="handleLikeButton"
-                ref="likeButton"
-                class="animate__animated cursor-pointer mt-8 w-10 h-10 rounded-full bg-main absolute-center"
-                :class="{
-                  animate__heartBeat: isActiveLike,
-                  active: isActiveLike,
-                }"
-              >
-                <VueButton
-                  :buttonType="isActiveLike ? 'heart-active' : 'heart'"
-                  :styles="isActiveLike ? 'active' : ''"
-                />
-              </div>
-              <div
-                class="cursor-pointer mt-8 w-10 h-10 rounded-full bg-main absolute-center"
-              >
-                <VueButton buttonType="chat" />
-              </div>
-            </div>
+            <StatusInteract :postId="post?._id" />
           </div>
         </div>
         <infinite-loading
@@ -96,7 +77,7 @@
 //animate__pulse
 import { ref } from "vue";
 
-import VueButton from "@/components/VueButton.vue";
+import StatusInteract from "@/components/StatusInteract.vue";
 
 import { isString } from "@/utils/checkType";
 import { avatarHandler } from "@/utils/userHandler";
@@ -107,9 +88,9 @@ import "v3-infinite-loading/lib/style.css";
 
 export default {
   components: {
-    VueButton,
     ContentLoader,
     InfiniteLoading,
+    StatusInteract,
   },
   props: {
     data: {
@@ -119,16 +100,9 @@ export default {
   },
   setup() {
     const isActiveLike = ref(false);
-    const likeButton = ref(null);
-
-    const handleLikeButton = () => {
-      isActiveLike.value = !isActiveLike.value;
-    };
 
     return {
-      isActiveLike,
-      handleLikeButton,
-      likeButton,
+      isActiveLike, 
       isString,
       avatarHandler,
     };
@@ -136,8 +110,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.active {
-  @apply text-red-500;
-}
-</style>

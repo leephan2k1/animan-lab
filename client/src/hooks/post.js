@@ -36,6 +36,9 @@ export default function () {
   };
 
   const likePost = async (isLiked, profile, user_name, id) => {
+    if (user_name === "") {
+      user_name = profile?.user_name;
+    }
     try {
       //add like post
       const res = await userRepository.addLikePost(user_name, { id });
@@ -55,6 +58,9 @@ export default function () {
   };
 
   const removeLikePost = async (isLiked, profile, user_name, id) => {
+    if (user_name === "") {
+      user_name = profile?.user_name;
+    }
     try {
       //remove like post
       const res = await userRepository.removeLikePost(user_name, {
@@ -119,7 +125,7 @@ export default function () {
     return await wasBookmarked;
   };
 
-  const publish = async (titleInvalid, postSuccessfully, postPayload) => { 
+  const publish = async (titleInvalid, postSuccessfully, postPayload) => {
     try {
       const res = await postRepository.createPost(postPayload);
       if (res?.data.message === "Duplicated title") {
