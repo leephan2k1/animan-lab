@@ -3,8 +3,17 @@ const Post = require("../models/Post");
 module.exports = {
   filters: async (req, res, next) => {
     const filters = req.query;
-    const { title, tags, sort, sortview, sortlike, page, limit, excludetags } =
-      filters;
+    const {
+      title,
+      tags,
+      sort,
+      sortview,
+      sortlike,
+      page,
+      limit,
+      excludetags,
+      populate,
+    } = filters;
 
     const conditions = {};
     const options = {};
@@ -14,6 +23,10 @@ module.exports = {
 
     //just accept approved post:
     conditions.approve = true;
+
+    if (populate) {
+      options.populate = "author_id";
+    }
 
     if (title) conditions.title = { $regex: title, $options: "i" };
 
