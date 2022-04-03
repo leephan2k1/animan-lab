@@ -1,7 +1,8 @@
 <template>
   <div
     ref="commentsDOM"
-    class="w-[80%] lg:w-3/4 min-h-[620px] md:min-h-[650px] lg:min-h-[600px] h-fit bg-white border-[1px] border-gray-500 absolute top-[5%] left-1/2 -translate-x-1/2 rounded-xl overflow-hidden shadow-xl animate__animated animate__faster hidden z-40"
+    :class="styles"
+    class="lg:w-3/4 min-h-[620px] md:min-h-[650px] lg:min-h-[600px] h-fit bg-white border-[1px] border-gray-500 rounded-xl overflow-hidden shadow-xl animate__animated animate__faster hidden z-40"
   >
     <!-- nav control  -->
     <div class="w-full h-[50px] flex items-center justify-end">
@@ -168,17 +169,30 @@ export default {
       type: Boolean,
       default: false,
     },
+    postId: {
+      type: String,
+      default: "",
+    },
+    postSlug: {
+      type: String,
+      default: "",
+    },
+    styles: {
+      type: String,
+      default: "",
+    },
   },
   setup(props) {
     const store = useStore();
+    const route = useRoute();
+    const toast = useToast();
+
     const isLogged = computed(() => {
       return store.getters["auth/isAuthenticated"];
     });
     const profile = ref(store.getters["user/getProfile"]);
-    const fakeData = [...Array(12).keys()];
+    const fakeData = [...Array(5).keys()];
     const comment = useComment();
-    const route = useRoute();
-    const toast = useToast();
     const TOAST_OPTION = {
       position: "top-center",
       timeout: 2500,
@@ -217,6 +231,11 @@ export default {
 
     watch(activeFromProps, () => {
       handleOpenComment();
+
+      //try to fetch again for short post
+      if (props.postSlug) {
+        fetchComment();
+      }
     });
 
     const handleToggleEmoji = () => {
@@ -232,7 +251,7 @@ export default {
 
     const handleCreateComment = async (e) => {
       if (e.key === "Enter") {
-        const slug = route.params.postTypes;
+        const slug = route.params.postTypes || props.postSlug;
         let content = commentContents.value;
         let valid = true;
         content = content.trim();
@@ -265,7 +284,8 @@ export default {
 
     const fetchComment = async () => {
       const post = document.querySelector("#post");
-      const { id } = post.dataset;
+      const id = post?.dataset.id || props.postId;
+
       const params = {
         postId: id,
         sort: "desc",
@@ -273,10 +293,10 @@ export default {
       };
       const data = await comment.getAll(params);
       //post has 0 comment
-      if (data.docs.length === 0) {
+      if (data?.docs?.length === 0) {
         commentsData.value = "empty";
       } else {
-        commentsData.value = data.docs;
+        commentsData.value = data?.docs || "empty";
       }
     };
 
@@ -288,7 +308,11 @@ export default {
 
       inputDOM.value.focus();
 
-      window.scrollTo({ top: 30, behavior: "smooth" });
+      const post = document.querySelector("#post");
+      if (post) {
+        //scroll for post detail
+        window.scrollTo({ top: 30, behavior: "smooth" });
+      }
       app.appendChild(overlay);
     };
 
@@ -297,7 +321,7 @@ export default {
       commentsDOM.value.classList.remove("animate__fadeIn");
       commentsDOM.value.classList.add("animate__fadeOut");
       setTimeout(() => {
-        commentsDOM.value.classList.add("hidden");
+        commentsDOM.value?.classList.add("hidden");
       }, 500);
       app.removeChild(overlay);
     };

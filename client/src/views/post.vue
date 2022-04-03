@@ -11,7 +11,11 @@
       @dataReady="handleDataReady"
       v-if="postType !== 'editor'"
     />
-    <PostComment v-if="dataReady" :isOpenComment="isOpenComment" />
+    <PostComment
+      styles="w-[80%] absolute top-[3%] left-1/2 -translate-x-1/2"
+      v-if="dataReady"
+      :isOpenComment="isOpenComment"
+    />
     <ReportForm
       v-if="isReporting"
       @handleReport="handleToggleReportForm"

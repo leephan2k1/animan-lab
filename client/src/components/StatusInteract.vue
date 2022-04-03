@@ -41,8 +41,12 @@ export default {
       type: String,
       default: "",
     },
+    slug: {
+      type: String,
+      default: "",
+    },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
     const router = useRouter();
     const post = usePost();
@@ -54,13 +58,15 @@ export default {
     let profile;
     if (isLogged) {
       profile = store.getters["user/getProfile"];
-    } 
+    }
 
     //active like
     (function () {
-      const { like_list } = profile;
-      if (like_list.find((postId) => postId === props.postId)) {
-        isActiveLike.value = true;
+      if (isLogged) {
+        const { like_list } = profile;
+        if (like_list.find((postId) => postId === props.postId)) {
+          isActiveLike.value = true;
+        }
       }
     })();
 
@@ -96,6 +102,7 @@ export default {
         router.push({ name: "login" });
         return;
       }
+      emit("openComment", { id: props.postId, slug: props.slug });
     };
 
     return { isActiveLike, handleLikeButton, handleCommentButton };

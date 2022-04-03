@@ -1,7 +1,7 @@
 <template>
   <div
     ref="imageReviewDOM"
-    class="fixed rounded-2xl overflow-hidden z-40 md:w-[65%] w-[95%] h-[500px] md:h-[600px] bg-white top-[10%] left-1/2 -translate-x-1/2 hidden animate__animated animate__faster"
+    class="rounded-2xl overflow-hidden z-40 md:w-[65%] w-[95%] h-[500px] md:h-[600px] bg-white fixed top-[10%] left-1/2 -translate-x-1/2 hidden animate__animated animate__faster"
   >
     <!-- nav control  -->
     <div class="w-full h-[10%] flex justify-end items-center">

@@ -4,6 +4,15 @@
       :triggerOpenImageReview="triggerOpenImageReview"
       :imageURL="urlImageReview"
     />
+
+    <!-- comment  -->
+    <PostComment
+      styles="lg:w-1/2 md:w-3/4 w-[85%] fixed top-[10%] left-1/2 -translate-x-1/2"
+      :isOpenComment="commentAppear"
+      :postId="postId"
+      :postSlug="postSlug"
+    />
+
     <div class="w-full min-h-[600px] h-fit mt-4 flex flex-col items-center">
       <template v-if="data?.length > 0 && data && !isString(data)">
         <div
@@ -49,7 +58,11 @@
               ></div>
             </div>
             <!-- content interact  -->
-            <StatusInteract :postId="post?._id" />
+            <StatusInteract
+              :postId="post?._id"
+              :slug="post?.slug"
+              @openComment="handleOpenComment"
+            />
           </div>
         </div>
         <infinite-loading
@@ -84,6 +97,7 @@ import { ref } from "vue";
 
 import StatusInteract from "@/components/StatusInteract.vue";
 import ImageReview from "@/components/ImageReview.vue";
+import PostComment from "@/components/PostComment.vue";
 
 import { isString } from "@/utils/checkType";
 import { avatarHandler } from "@/utils/userHandler";
@@ -97,6 +111,7 @@ export default {
     ContentLoader,
     InfiniteLoading,
     StatusInteract,
+    PostComment,
     ImageReview,
   },
   props: {
@@ -109,20 +124,33 @@ export default {
     const isActiveLike = ref(false);
 
     const triggerOpenImageReview = ref(false);
+    const commentAppear = ref(false);
     const urlImageReview = ref("");
+    const postId = ref("");
+    const postSlug = ref("");
 
     const handleOpenImageReview = (_, url) => {
       triggerOpenImageReview.value = !triggerOpenImageReview.value;
       urlImageReview.value = url;
     };
 
+    const handleOpenComment = (obj) => {
+      postId.value = obj?.id;
+      postSlug.value = obj?.slug;
+      commentAppear.value = !commentAppear.value;
+    };
+
     return {
       isActiveLike,
       triggerOpenImageReview,
       urlImageReview,
+      commentAppear,
+      postId,
+      postSlug,
       isString,
       avatarHandler,
       handleOpenImageReview,
+      handleOpenComment,
     };
   },
 };
