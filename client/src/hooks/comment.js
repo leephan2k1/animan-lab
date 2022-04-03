@@ -2,8 +2,7 @@ import repositoryFactory from "@/api/repositoryFactory";
 const commentRepo = repositoryFactory.get("comments");
 
 export default function () {
-  const create = async (content, postSlug) => {
-    console.log({ content, postSlug });
+  const create = async (content, postSlug) => { 
     try {
       const res = await commentRepo.createComment({ content, postSlug });
       if (res?.data.success) {

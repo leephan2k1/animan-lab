@@ -6,7 +6,7 @@
         <div
           class="w-10 h-10 rounded-full bg-center bg-cover bg-no-repeat"
           :style="{
-            backgroundImage: `url(${require('@/assets/images/defaultAvatar.jpg')})`,
+            backgroundImage: `url(${avatarHandler(profile)})`,
           }"
         ></div>
       </div>
@@ -29,18 +29,37 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
 import VueButton from "@/components/VueButton.vue";
+import { avatarHandler } from "@/utils/userHandler";
 
 export default {
   components: {
     VueButton,
   },
   setup(_, { emit }) {
+    const store = useStore();
+    const router = useRouter();
+
+    let profile;
+    const isLogged = store.getters["auth/isAuthenticated"];
+
+    if (isLogged) {
+      profile = store.getters["user/getProfile"];
+    }
+
     const handleCreateContent = () => {
+      if (!isLogged) {
+        router.push({ name: "login" });
+        return;
+      }
+
       emit("openStatusEditor");
     };
 
-    return { handleCreateContent };
+    return { handleCreateContent, profile, avatarHandler };
   },
 };
 </script>
