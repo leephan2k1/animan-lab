@@ -7,6 +7,9 @@
       <h1 class="text-center" v-if="postData === 'like list empty'">
         Chưa có bài viết nào được bạn like.
       </h1>
+      <h1 class="text-center" v-if="postData === 'my posts empty'">
+        Bạn chưa viết bài nào hoặc chưa được phê duyệt!.
+      </h1>
     </div>
     <template v-if="postData?.length > 0 && postData && !isString(postData)">
       <router-link

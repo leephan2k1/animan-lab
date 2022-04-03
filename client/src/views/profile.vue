@@ -141,8 +141,11 @@ export default {
             res = await userRepository.getMyPosts(username);
             if (res?.data.success) {
               OptionalData.value = res.data.posts.filter(
-                (post) => post.approve === true
+                (post) => post.approve === true && !post.tags.includes("short")
               );
+              if (OptionalData.value.length === 0) {
+                OptionalData.value = "my posts empty";
+              }
             } else {
               OptionalData.value = [];
             }

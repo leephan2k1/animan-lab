@@ -41,6 +41,7 @@ export default {
     const OPTIONS = {
       limit: 10,
       sort: "desc",
+      exclude: "short",
     };
 
     const page = ref(1);
@@ -52,6 +53,7 @@ export default {
           page: page.value,
           limit: OPTIONS.limit,
           sort: OPTIONS.sort,
+          excludetags: OPTIONS.exclude,
         };
         const res = await postRepo.searchPost(params);
         if (res?.data.success) {

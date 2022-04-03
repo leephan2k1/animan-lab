@@ -6,7 +6,7 @@
       label-idle="Kéo thả ảnh hoặc click vào đây!"
       :allow-multiple="false"
       accepted-file-types="image/jpeg, image/png"
-      max-file-size="500KB"
+      max-file-size="1MB"
       allow-image-crop="true"
       :server="filePondOptions"
       :files="myFiles"
