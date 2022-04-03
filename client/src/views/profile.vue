@@ -119,9 +119,8 @@ export default {
             if (res?.data.success) {
               OptionalData.value = res?.data.bookmark_posts;
               //config title:
-              if (OptionalData.value.length === 0) {
+              if (OptionalData.value.length === 0)
                 OptionalData.value = "bookmark empty";
-              }
             } else {
               OptionalData.value = [];
             }
@@ -130,9 +129,11 @@ export default {
             res = await userRepository.getLikeList(user_name);
             if (res?.data.success) {
               OptionalData.value = res?.data.like_list;
-              if (OptionalData.value.length === 0) {
+              OptionalData.value = OptionalData.value.filter(
+                (post) => !post.tags.includes("short")
+              );
+              if (OptionalData.value.length === 0)
                 OptionalData.value = "like list empty";
-              }
             } else {
               OptionalData.value = [];
             }
@@ -143,9 +144,8 @@ export default {
               OptionalData.value = res.data.posts.filter(
                 (post) => post.approve === true && !post.tags.includes("short")
               );
-              if (OptionalData.value.length === 0) {
+              if (OptionalData.value.length === 0)
                 OptionalData.value = "my posts empty";
-              }
             } else {
               OptionalData.value = [];
             }
