@@ -83,6 +83,7 @@ import {
   watch,
   reactive,
   computed,
+  onMounted,
   onUnmounted,
   defineAsyncComponent,
 } from "vue";
@@ -267,8 +268,14 @@ export default {
       isOpenEmoji.value = !isOpenEmoji.value;
     };
 
+    onMounted(() => {
+      overlay.addEventListener("click", handleCloseEditor);
+    });
+
     onUnmounted(() => {
       if (overlay) {
+        overlay.removeEventListener("click", handleCloseEditor);
+
         overlay.remove();
       }
     });
