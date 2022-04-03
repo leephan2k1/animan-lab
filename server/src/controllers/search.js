@@ -3,7 +3,8 @@ const Post = require("../models/Post");
 module.exports = {
   filters: async (req, res, next) => {
     const filters = req.query;
-    const { title, tags, sort, sortview, sortlike, page, limit } = filters;
+    const { title, tags, sort, sortview, sortlike, page, limit, excludetags } =
+      filters;
 
     const conditions = {};
     const options = {};
@@ -23,6 +24,19 @@ module.exports = {
           $options: "i",
         },
       };
+
+    if (excludetags) {
+      conditions["$nor"] = [
+        {
+          tags: {
+            $elemMatch: {
+              $regex: excludetags,
+              $options: "i",
+            },
+          },
+        },
+      ];
+    }
 
     if (page) options.page = +page;
 
