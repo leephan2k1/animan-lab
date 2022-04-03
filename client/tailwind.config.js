@@ -10,6 +10,10 @@ module.exports = {
       listStyleType: {
         circle: "circle",
       },
+      aspectRatio: {
+        "1/3": "1 / 3",
+        "4/3": "4 / 3",
+      },
     },
     fontFamily: {
       body: "Nunito, sans-serif",

@@ -1,5 +1,9 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full h-full relative">
+    <ImageReview
+      :triggerOpenImageReview="triggerOpenImageReview"
+      :imageURL="urlImageReview"
+    />
     <div class="w-full min-h-[600px] h-fit mt-4 flex flex-col items-center">
       <template v-if="data?.length > 0 && data && !isString(data)">
         <div
@@ -37,7 +41,8 @@
             <!-- content image  -->
             <div class="w-[70%] h-full md:h-[95%] absolute-center">
               <div
-                class="w-[80%] h-[80%] md:h-[95%] rounded-xl bg-center bg-cover bg-no-repeat"
+                @click.stop="handleOpenImageReview(_, post?.images_url[0])"
+                class="cursor-pointer w-[80%] h-[80%] md:h-[95%] rounded-xl bg-center bg-cover bg-no-repeat"
                 :style="{
                   backgroundImage: `url(${post?.images_url[0]})`,
                 }"
@@ -78,6 +83,7 @@
 import { ref } from "vue";
 
 import StatusInteract from "@/components/StatusInteract.vue";
+import ImageReview from "@/components/ImageReview.vue";
 
 import { isString } from "@/utils/checkType";
 import { avatarHandler } from "@/utils/userHandler";
@@ -91,6 +97,7 @@ export default {
     ContentLoader,
     InfiniteLoading,
     StatusInteract,
+    ImageReview,
   },
   props: {
     data: {
@@ -101,12 +108,22 @@ export default {
   setup() {
     const isActiveLike = ref(false);
 
+    const triggerOpenImageReview = ref(false);
+    const urlImageReview = ref("");
+
+    const handleOpenImageReview = (_, url) => {
+      triggerOpenImageReview.value = !triggerOpenImageReview.value;
+      urlImageReview.value = url;
+    };
+
     return {
-      isActiveLike, 
+      isActiveLike,
+      triggerOpenImageReview,
+      urlImageReview,
       isString,
       avatarHandler,
+      handleOpenImageReview,
     };
   },
 };
 </script>
-
