@@ -1,7 +1,7 @@
 <template>
   <div
     ref="waifuForm"
-    class="w-3/4 md:h-[80%] h-[65%] bg-white border-[1px] border-gray-500 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 md:-translate-y-[60%] -translate-y-[70%]"
+    class="md:w-3/4 w-[85%] h-[600px] bg-white border-[1px] border-gray-500 rounded-lg absolute top-[30%] left-1/2 -translate-x-1/2 md:-translate-y-[60%] -translate-y-[70%]"
   >
     <div class="w-full h-12 flex items-center justify-end">
       <div
@@ -137,7 +137,7 @@ export default {
       debounceTime.value = setTimeout(async () => {
         isTyping.value = false;
         try {
-          const res = await jikanjs.search("character", e.target.value, 1); 
+          const res = await jikanjs.search("character", e.target.value, 1);
           if (res?.results) {
             dataResult.value = res?.results;
           } else {
