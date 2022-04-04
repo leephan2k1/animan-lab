@@ -18,6 +18,9 @@ const usersAPI = {
   getUser: (params) => {
     return axiosClient.get(`${resource}/${params}`);
   },
+  updateUser: (userName, newProfilePayload) => {
+    return axiosClient.patch(`${resource}/${userName}`, newProfilePayload);
+  },
   getMyPosts: (userName) => {
     return axiosClient.get(`${resource}/${userName}/posts`);
   },

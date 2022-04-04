@@ -1,3 +1,3 @@
 export const convertISODate = (ISODate) => {
-  return new Date(ISODate).toISOString().substring(0, 10);
+  if (ISODate) return new Date(ISODate).toISOString().substring(0, 10);
 };
