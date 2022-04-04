@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { reactive, ref, onMounted, onUnmounted, computed } from "vue";
+import { reactive, ref, onMounted, onUnmounted, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -154,10 +154,14 @@ export default {
     const route = useRouter();
 
     const isSearching = computed(() => props.toggleSearch);
+    const user = computed(() => store.getters["user/getProfile"]);
+
+    watch(user, () => {
+      getUserProfile();
+    });
 
     const getUserProfile = () => {
-      const { profile } = store.state.user;
-      const { user_name, avatar } = profile;
+      const { user_name, avatar } = user.value;
 
       userProfile.user_name = user_name || "Hi there!";
       userProfile.avatar = avatar || "default";
