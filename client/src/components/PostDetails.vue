@@ -109,6 +109,21 @@
         v-html="postData?.content"
       ></div>
 
+      <!-- tags  -->
+      <p class="w-full mx-4 mb-2">Tags:</p>
+      <div class="w-full min-h-14 h-fit flex flex-wrap mx-4 mb-2">
+        <router-link
+          v-for="(tag, index) in postData.tags"
+          :key="tag || index"
+          :to="{ name: 'general', params: { general: tag } }"
+          :class="tagColor(TAG_COLORS, index)"
+          class="absolute-center w-fit px-4 mx-4 h-10 rounded-lg text-white"
+        >
+          {{ tag }}
+        </router-link>
+      </div>
+
+      <!-- Interactive  -->
       <div class="w-full h-14 flex items-center justify-between mx-4 mb-2">
         <div
           @click.stop="activeLike"
@@ -160,6 +175,7 @@ const postRepository = repositoryFactory.get("posts");
 const userRepository = repositoryFactory.get("users");
 
 import { isEmptyObject } from "@/utils/checkType";
+import { tagColor } from "@/utils/postHandler";
 import computeRoleName from "@/utils/computeLevelName";
 
 import usePost from "@/hooks/post";
@@ -192,6 +208,14 @@ export default {
 
     const profile = store.getters["user/getProfile"];
     const { user_name } = profile;
+
+    const TAG_COLORS = [
+      "bg-button",
+      "bg-green-400",
+      "bg-cyan-400",
+      "bg-violet-400",
+      "bg-fuchsia-400",
+    ];
 
     const fetchPost = async () => {
       try {
@@ -238,7 +262,14 @@ export default {
             }
           } else {
             console.log("not found post");
-            router.push({ name: "notFound" });
+            router.push({
+              name: "notFound",
+              params: {
+                pathMatch: route.path.split("/").slice(1),
+              },
+              query: route.query,
+              hash: route.hash,
+            });
           }
         }
       } catch (err) {
@@ -383,6 +414,8 @@ export default {
       isEmptyObject,
       handleEditPost,
       computeRoleName,
+      tagColor,
+      TAG_COLORS,
     };
   },
 };
