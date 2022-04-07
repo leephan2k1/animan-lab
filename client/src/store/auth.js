@@ -12,7 +12,7 @@ import axiosClient from "@/api/axiosClient";
 
 const userRepository = RepositoryFactory.get("users");
 
-import SecureLS from  "secure-ls";
+import SecureLS from "secure-ls";
 const ls = new SecureLS({
   encodingType: "rabbit",
   isCompression: true,

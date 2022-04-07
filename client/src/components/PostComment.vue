@@ -306,13 +306,13 @@ export default {
       commentsDOM.value.classList.add("animate__fadeIn");
       commentsDOM.value.classList.remove("animate__fadeOut", "hidden");
 
-      inputDOM.value.focus();
+      try {
+        inputDOM.value.focus();
+      } catch (err) {}
 
-      const post = document.querySelector("#post");
-      if (post) {
-        //scroll for post detail
-        window.scrollTo({ top: 30, behavior: "smooth" });
-      }
+      //scroll for post detail
+      window.scrollTo({ top: 30, behavior: "smooth" });
+
       app.appendChild(overlay);
     };
 
