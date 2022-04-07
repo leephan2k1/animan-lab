@@ -6,7 +6,6 @@ const Token = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
     ref: "User",
-    unique: true,
   },
   token: { type: String, required: true },
   createdAt: { type: Date, expires: 365 * 24 * 60 * 60, default: Date.now },

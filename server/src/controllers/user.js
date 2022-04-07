@@ -215,9 +215,8 @@ module.exports = {
       throw createError.BadRequest();
     }
 
-    const { sub } = await verifyRefreshToken(refreshToken);
-    const refreshTokenOdd = await RefreshToken.findOne({ userId: sub });
-    await refreshTokenOdd.remove();
+    const { oddToken } = await verifyRefreshToken(refreshToken);
+    await oddToken.remove();
 
     res.status(200).json({
       success: true,
