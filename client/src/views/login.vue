@@ -30,7 +30,7 @@
             </label>
             <input
               @keyup="resetStyles"
-              type="text"
+              type="email"
               ref="emailRef"
               required
               class="h-8 p-2 rounded-md border-[1px] border-gray-700 focus:ring focus:border-blue-500"
@@ -56,9 +56,12 @@
           </div>
           <div class="row">
             <div class="w-full flex items-center mt-1">
-              <a class="hover:underline hover:decoration-solid" href="#"
-                >Quên mật khẩu?</a
-              >
+              <router-link
+                :to="{ name: 'forgotPassword' }"
+                class="hover:underline hover:decoration-solid"
+                href="#"
+                >Quên mật khẩu?
+              </router-link>
             </div>
           </div>
           <div class="row absolute-center">

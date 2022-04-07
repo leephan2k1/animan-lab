@@ -12,6 +12,15 @@ const usersAPI = {
   signIn: (payload) => {
     return axiosClient.post(`${resource}/sign-in`, payload);
   },
+  resetPassEmail: (email, tokenCofig) => {
+    return axiosClient.post(`${resource}/reset-password-email`, email);
+  },
+  resetPassword: (password, token) => {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    return axiosClient.patch(`${resource}/reset-password`, password, config);
+  },
   signOut: (payload) => {
     return axiosClient.delete(`${resource}/sign-out`, { data: payload });
   },

@@ -125,6 +125,24 @@ const routes = [
     beforeEnter: isNotAuthenticated,
   },
   {
+    path: "/forgot-password",
+    name: "forgotPassword",
+    meta: {
+      layout: "auth",
+    },
+    component: () => import("@/views/forgotPass.vue"),
+    beforeEnter: isNotAuthenticated,
+  },
+  {
+    path: "/reset-password",
+    name: "resetPassword",
+    meta: {
+      layout: "auth",
+    },
+    component: () => import("@/views/resetPass.vue"),
+    beforeEnter: isNotAuthenticated,
+  },
+  {
     path: "/login",
     name: "login",
     meta: {

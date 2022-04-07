@@ -25,9 +25,8 @@ const refreshToken = () => {
 axiosClient.interceptors.request.use(async (config) => {
   // Handle token here ...
   // console.log(">>>CONFIG:   ", config);
-  config.headers.Authorization = `Bearer ${ls.get(
-    "access-token"
-  )}`;
+  if (ls.get("access-token"))
+    config.headers.Authorization = `Bearer ${ls.get("access-token")}`;
   return config;
 });
 
@@ -41,7 +40,10 @@ axiosClient.interceptors.response.use(
   async (error) => {
     if (error.response.status === 401) {
       const { config } = error.response;
-      if (error.response.data.message === "jwt expired") {
+      if (
+        config.url !== "/users/reset-password" &&
+        error.response.data.message === "jwt expired"
+      ) {
         //get new access token
         const res = await refreshToken();
         const { authorization, refreshtoken } = res.headers;
