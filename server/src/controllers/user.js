@@ -94,6 +94,23 @@ module.exports = {
     });
   },
 
+  resetPassword: async (req, res, next) => {
+    const { password } = req.verified.body;
+    const { sub } = req.payload;
+
+    const user = await User.findById(sub);
+
+    if (user) {
+      user.password = password;
+      await user.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "ok",
+    });
+  },
+
   filterUser: async (req, res, next) => {
     const filters = req.query;
     const { gender, sortpoint, page, limit } = filters;

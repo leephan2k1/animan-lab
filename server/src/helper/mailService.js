@@ -16,7 +16,7 @@ const sendMail = (userEmail, token) => {
     to: userEmail,
     subject: "Đây là đường dẫn đặt lại mật khẩu Animan Lab của bạn:",
     html:
-      '<p>Không chia sẻ đường dẫn này với bất kỳ ai khác, vào đây: <a href="http://localhost:8080/reset-password?token=' +
+      '<p>Không chia sẻ đường dẫn này với bất kỳ ai khác, đường dẫn chỉ có hiệu lực trong 10 phút! vào đây: <a href="http://localhost:8080/reset-password?token=' +
       token +
       '">link</a> để đặt lại mật khẩu</p>',
   };
