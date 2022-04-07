@@ -373,6 +373,17 @@ export default {
       titleInput.value?.focus();
       //load data edit post:
       dataLoader();
+
+      //fix style editor:
+      const qlTooltip = document.querySelector(".ql-tooltip");
+      const qlEditing = document.querySelector(".ql-editing");
+      try {
+        qlTooltip.style.cssText =
+          "right: -250px; left: 0; top: 0px;  width: 350px !important; transform: translate(120%, -70%)";
+
+        qlEditing.style.cssText =
+          "right: -250px; left: 0; top: 0px;  width: 350px !important";
+      } catch (err) {}
     });
 
     return {
