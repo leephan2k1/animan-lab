@@ -1,3 +1,3 @@
 export const tagColor = (arrayColors, currentIdx) => {
-  return arrayColors[currentIdx % 5];
+  return arrayColors[currentIdx % arrayColors.length];
 };

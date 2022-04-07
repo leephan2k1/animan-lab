@@ -2,6 +2,11 @@ import axios from "axios";
 import queryString from "query-string";
 
 import SecureLS from "secure-ls";
+
+import store from "@/store";
+import { AUTH_LOGOUT } from "@/constants";
+import { useStore } from "vuex";
+
 const ls = new SecureLS({
   encodingType: "rabbit",
   isCompression: true,
@@ -44,24 +49,36 @@ axiosClient.interceptors.response.use(
         config.url !== "/users/reset-password" &&
         error.response.data.message === "jwt expired"
       ) {
-        //get new access token
-        const res = await refreshToken();
-        const { authorization, refreshtoken } = res.headers;
+        try {
+          //get new access token
+          const res = await refreshToken();
+          const { authorization, refreshtoken } = res.headers;
 
-        if (res.data.success) {
-          //set new token in config (last request)
-          config.headers.Authorization = authorization;
+          if (res.data.success) {
+            //set new token in config (last request)
+            config.headers.Authorization = authorization;
 
-          //set tokens to storage:
-          ls.set("refresh-token", refreshtoken);
-          ls.set("access-token", authorization);
+            //set tokens to storage:
+            ls.set("refresh-token", refreshtoken);
+            ls.set("access-token", authorization);
 
-          //set access token to axios:
-          axiosClient.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${authorization}`;
+            //set access token to axios:
+            axiosClient.defaults.headers.common[
+              "Authorization"
+            ] = `Bearer ${authorization}`;
 
-          return axiosClient(config);
+            return axiosClient(config);
+          }
+          // refresh token expired
+          else {
+            const route = useStore();
+
+            await store.dispatch(`auth/${AUTH_LOGOUT}`);
+
+            route.push({ name: "login" });
+          }
+        } catch (err) {
+          console.log(err);
         }
       }
     }
