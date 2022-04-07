@@ -188,6 +188,7 @@ export default {
         const params = {
           limit: OPTIONS.qtyItem,
           sortview: "desc",
+          excludetags: "short",
         };
         const res = await postRepository.searchPost(params);
 

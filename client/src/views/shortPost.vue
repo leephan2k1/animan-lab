@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
+import { useRoute } from "vue-router";
 
 import StatusCreator from "@/components/StatusCreator.vue";
 import StatusEditor from "@/components/StatusEditor.vue";
@@ -15,6 +16,7 @@ import VueStatus from "@/components/VueStatus.vue";
 
 import repositoryFactory from "@/api/repositoryFactory";
 const postRepo = repositoryFactory.get("posts");
+const userRepo = repositoryFactory.get("users");
 
 export default {
   components: {
@@ -29,6 +31,9 @@ export default {
     const data = ref([]);
     const page = ref(1);
     const hasNextPage = ref(false);
+
+    const route = useRoute();
+    const params = computed(() => route.params.shortType);
 
     const OPTIONS = {
       limit: 5,
@@ -64,6 +69,24 @@ export default {
       }
     };
 
+    const fetchOptionData = async () => {
+      try {
+        const res = await postRepo.getPost(params.value);
+        if (res?.data.success) {
+          const post = res.data.post;
+
+          const res_author = await userRepo.getUser(post?.author_name);
+          if (res_author?.data.success) {
+            //assign author_id because config in VueStatus.vue
+            post.author_id = res_author.data?.user;
+            data.value.push(post);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     const loadMore = (state) => {
       //setTimeout make sure skeleton always is loaded
       setTimeout(async () => {
@@ -89,7 +112,11 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    fetchData();
+    if (params.value === "animans") {
+      fetchData();
+    } else {
+      fetchOptionData();
+    }
 
     return {
       fakeData,

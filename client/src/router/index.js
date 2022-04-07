@@ -20,7 +20,7 @@ const routes = [
     component: () => import("@/views/category.vue"),
   },
   {
-    path: "/short",
+    path: "/short/:shortType",
     name: "short",
     meta: {
       layout: "default",

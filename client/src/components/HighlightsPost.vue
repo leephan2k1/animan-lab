@@ -135,6 +135,7 @@ export default {
         const params = {
           limit: 3,
           sortlike: "desc",
+          excludetags: 'short',
         };
         const res = await postRepository.searchPost(params);
         if (res?.data.success) {

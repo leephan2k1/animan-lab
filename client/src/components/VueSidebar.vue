@@ -54,7 +54,7 @@
             class="w-full absolute-center pt-4 md:pt-8 transition-all duration-300"
             :class="{ active: currentPath === 'short' }"
             @click.self="handleClick"
-            :to="{ name: 'short' }"
+            :to="{ name: 'short', params: { shortType: 'animans' } }"
           >
             Animan shorts
           </router-link>

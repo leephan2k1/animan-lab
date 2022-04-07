@@ -38,7 +38,7 @@
           <router-link
             class="nav-element min-w-1/4 px-2 transition-all duration-300"
             :class="{ active: currentPath === 'short' }"
-            :to="{ name: 'short' }"
+            :to="{ name: 'short', params: { shortType: 'animans' } }"
           >
             Short Animans
           </router-link>
