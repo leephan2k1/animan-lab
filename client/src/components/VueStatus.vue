@@ -25,20 +25,30 @@
           <div class="w-full h-[15%] flex lg:mb-0 mb-0 md:mb-4">
             <!-- avatar  -->
             <div class="md:w-[15%] w-[25%] h-full flex items-center pl-5">
-              <div
+              <router-link
+                :to="{
+                  name: 'profileAchievements',
+                  params: { username: post?.author_name },
+                }"
                 class="w-10 h-10 rounded-full bg-center bg-cover bg-no-repeat"
                 :style="{
                   backgroundImage: `url(${avatarHandler(post.author_id)})`,
                 }"
-              ></div>
+              ></router-link>
             </div>
             <!-- info detail  -->
             <div
               class="md:w-[85%] w-[75%] h-20 overflow-hidden text-gray-600 flex flex-col justify-center"
             >
-              <p class="h-1/2 mt-2 flex items-center text-lg font-bold">
+              <router-link
+                :to="{
+                  name: 'profileAchievements',
+                  params: { username: post?.author_name },
+                }"
+                class="h-1/2 mt-2 flex items-center text-lg font-bold"
+              >
                 {{ post?.author_name }}
-              </p>
+              </router-link>
               <p class="h-1/2 w-[80%] text-sm post-title overflow-hidden">
                 {{ post?.content }}
               </p>
