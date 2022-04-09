@@ -97,17 +97,7 @@
           </p>
         </div>
         <!-- comment box  -->
-        <div
-          class="w-3/4 min-h-[52px] h-fit md:ml-2 rounded-3xl absolute-center"
-        >
-          <div
-            class="w-full min-h-[52px] h-fit px-4 rounded-3xl border-[1px] overflow-hidden border-gray-500 md:text-base text-sm md:py-0 flex items-center"
-          >
-            <p class="w-full h-full post-desc">
-              {{ item?.content }}
-            </p>
-          </div>
-        </div>
+        <VueComment :item="item" />
       </div>
     </div>
     <!-- loading list  -->
@@ -146,6 +136,7 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 
 import VueButton from "@/components/VueButton.vue";
+import VueComment from "@/components/VueComment.vue";
 import { VuemojiPicker } from "vuemoji-picker";
 import { useToast } from "vue-toastification";
 import { ContentLoader } from "vue-content-loader";
@@ -161,6 +152,7 @@ import useComment from "@/hooks/comment";
 export default {
   components: {
     VueButton,
+    VueComment,
     VuemojiPicker,
     ContentLoader,
   },
@@ -327,14 +319,16 @@ export default {
     };
 
     onMounted(() => {
-      overlay.addEventListener("click", handleCloseComments);
+      try {
+        overlay.addEventListener("click", handleCloseComments);
+      } catch (err) {}
     });
 
     onUnmounted(() => {
-      overlay.removeEventListener("click", handleCloseComments);
-      if (overlay) {
+      try {
+        overlay.removeEventListener("click", handleCloseComments);
         overlay.remove();
-      }
+      } catch (err) {}
     });
 
     fetchComment();

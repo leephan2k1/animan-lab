@@ -9,6 +9,12 @@ const commentsAPI = {
   getComments: (params) => {
     return axiosClient.get(`${resource}`, { params });
   },
+  likeComment: (id) => {
+    return axiosClient.post(`${resource}/like`, id);
+  },
+  unLikeComment: (id) => {
+    return axiosClient.post(`${resource}/unlike`, id);
+  },
 };
 
 export default commentsAPI;
