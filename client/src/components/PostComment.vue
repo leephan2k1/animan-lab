@@ -221,7 +221,8 @@ export default {
       "z-30"
     );
 
-    watch(activeFromProps, () => {
+    watch(activeFromProps, () => { 
+
       handleOpenComment();
 
       //try to fetch again for short post
@@ -303,7 +304,7 @@ export default {
       } catch (err) {}
 
       //scroll for post detail
-      window.scrollTo({ top: 30, behavior: "smooth" });
+      if (!props.postSlug) window.scrollTo({ top: 30, behavior: "smooth" });
 
       app.appendChild(overlay);
     };
