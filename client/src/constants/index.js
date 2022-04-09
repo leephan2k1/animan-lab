@@ -168,17 +168,43 @@ export const contentsDMCA = {
     },
   ],
 };
-export const contentsPurpose = {
-  title: '<h1 class="m-4 text-xl font-bold">Mục đích ra đời của website</h1>',
+export const contentsFAQs = {
+  title: '<h1 class="m-4 text-xl font-bold">Những câu hỏi thường gặp</h1>',
   contents: [
     {
-      title: '<h2 class="m-4 text-lg font-semibold">1. Demo công nghệ</h2>',
-      desc: "Website sửa dụng bộ công nghệ mã nguồn mở (MongoDB, ExpressJS, VueJS, NodeJS) - Mục đích website ra đời để học tập và triển khai các công cụ trong bộ công nghệ này.",
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Làm sao để đăng bài viết có hình ảnh?</h2>',
+      desc: "Bạn có thể vào xem video hướng dẫn của mình <a class='text-button' href='https://youtu.be/pOUWljFtLgQ' target='_blank'>Hướng dẫn upload bài viết</a>",
     },
     {
       title:
-        '<h2 class="m-4 text-lg font-semibold">2. Đánh giá Anime và Manga</h2>',
-      desc: "Website phục vụ viết bài và xem các bài đánh giá - cảm nhận về các bộ phim hoạt hình Nhật Bản (Anime) và truyện tranh Nhật Bản (Manga). Nội dung tập trung duy nhất về Anime và Manga và khu vực chia sẻ cảm nhận nhanh Short Animans. Các nội dung ngoài các mục đích này sẽ không được phê duyệt hoặc xoá vĩnh viễn khỏi webiste.",
+        '<h2 class="m-4 text-lg font-semibold">Tại sao không có tuỳ chỉnh Avatar qua việc upload?</h2>',
+      desc: "Ban đầu mình có làm hướng này, nhưng nghĩ lại mấy ông up ảnh hiền tài lên thì toang mất 😱",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Ai là người phê duyệt các bài viết và bình luận?</h2>',
+      desc: "<a class='text-button' target='_blank' href='https://discordapp.com/users/lee2001#9563'>Mình</a> duyệt tay tất :D, tuy nhiên mình có chia thêm role mod. Thời gian tới sẽ tìm thêm người duyệt tiếp.",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Animan Lab còn dự định phát triển thêm gì không?</h2>',
+      desc: "<a>Chức năng thông báo, xử lý các tương tác 'real-time' hơn, up và đọc truyện là các tính năng cuối cùng mình sẽ phát triển cho Animan Lab.</a>",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Website này ra đời làm gì?</h2>',
+      desc: "Mục đích website ra đời để học tập và triển khai các công cụ trong bộ công nghệ MEVN Stack đồng thời phục vụ viết bài đánh giá, cảm nhận, chia sẽ ngắn về nội dung Anime, Manga.",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Tại sao Website tin tức mà đi làm theo kiểu SPA?</h2>',
+      desc: "VueJS là framework thứ 2 mình mới tiếp cận (Nói đúng ra vừa cày xong làm project này luôn), vừa viết Backend lẫn Frontend nên chưa đủ thời gian viết sang NuxtJS, và còn 1 số lý do chủ quan khác hehe 😌",
+    },
+    {
+      title:
+        '<h2 class="m-4 text-lg font-semibold">Webiste sẽ duy trì đến khi nào?</h2>',
+      desc: "Animan Lab sẽ hoạt động thử trong 1 tháng đầu tiên bằng tiền túi của mình 😎, tháng tiếp theo? mình sẽ chuyển về máy chủ miễn phí nên có lẽ load sẽ chậm hơn. Đồng thời Website cũng sẽ ngưng hoạt động nếu mình cảm thấy có gì đó không ổn về nội dung.",
     },
   ],
 };

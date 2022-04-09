@@ -29,9 +29,9 @@
         <router-link
           @click="handleClickToDocs"
           class="hover:text-button cursor-pointer border-r-2 border-button mt-2 mr-4 w-full px-4 block"
-          :to="{ name: 'docs', params: { doctype: 'purposes-of-the-website' } }"
+          :to="{ name: 'docs', params: { doctype: 'faqs' } }"
         >
-          Mục đích của website
+          Câu hỏi thường gặp
         </router-link>
         <router-link
           @click="handleClickToDocs"
@@ -65,10 +65,10 @@
         </router-link>
         <router-link
           @click="handleClickToDocs"
-          :to="{ name: 'docs', params: { doctype: 'purposes-of-the-website' } }"
+          :to="{ name: 'docs', params: { doctype: 'faqs' } }"
           class="hover:text-button cursor-pointer mt-2 w-full px-4 block"
         >
-          The purpose of the website.
+          FAQs.
         </router-link>
         <router-link
           @click="handleClickToDocs"
@@ -122,7 +122,7 @@ export default {
     VueButton,
     VueWriter,
   },
-  setup() {
+   setup() {
     const handleClickToDocs = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
