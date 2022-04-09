@@ -18,11 +18,6 @@ const MyLove = new Schema(
       min: 5,
     },
     tags: [{ type: String, min: 2 }],
-    type: {
-      type: String,
-      required: true,
-      min: 2,
-    },
     author: {
       type: Schema.Types.ObjectId,
       required: true,

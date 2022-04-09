@@ -51,14 +51,27 @@ const schemas = {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
   }),
+  resetPassFromEmail: Joi.object().keys({
+    email: Joi.string().email().required(),
+  }),
   userNameSchema: Joi.object().keys({
     user_name: Joi.string().min(1),
+  }),
+  updateProfileSchema: Joi.object().keys({
+    first_name: Joi.string().min(1).max(25),
+    last_name: Joi.string().min(1).max(25),
+    avatar: Joi.string().min(4),
+    oldPassword: Joi.string().min(6),
+    newPassword: Joi.string().min(6),
+    gender: Joi.string().min(1),
+    birthday: Joi.date(),
   }),
   postSchema: Joi.object().keys({
     title: Joi.string().required().min(3).max(100),
     content: Joi.string().required().min(10),
-    images_url: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
-    tags: Joi.array().items(Joi.string().regex(/^[0-9A-Fa-f]{24}$/)),
+    plainText: Joi.string().required().min(10),
+    images_url: Joi.array().items(Joi.string()),
+    tags: Joi.array().items(Joi.string()),
   }),
   deletePostSchema: Joi.object().keys({
     slug: Joi.string().min(1).required(),
@@ -66,6 +79,9 @@ const schemas = {
   updatePostSchema: Joi.object().keys({
     title: Joi.string().min(3).max(100),
     content: Joi.string().min(10),
+    plainText: Joi.string().required().min(10),
+    tags: Joi.array().items(Joi.string().min(2)),
+    images_url: Joi.array().items(Joi.string()),
   }),
   commentSchema: Joi.object().keys({
     content: Joi.string().required().min(3),
@@ -93,7 +109,6 @@ const schemas = {
   }),
   myLoveSchema: Joi.object().keys({
     title: Joi.string().required().min(5),
-    type: Joi.string().required().min(2),
     description: Joi.string().min(5),
     image: Joi.string().min(3),
     tags: Joi.array().items(Joi.string().min(2)),

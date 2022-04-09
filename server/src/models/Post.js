@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 const { Schema } = mongoose;
 
 const Post = new Schema(
@@ -7,6 +8,7 @@ const Post = new Schema(
     is_flag: { type: Boolean, default: false },
     report_list: [{ type: Schema.Types.ObjectId, ref: "Report" }],
     title: { type: String, required: true, min: 3, unique: true },
+    plainText: { type: String, required: true, min: 10 },
     slug: { type: String, unique: true },
     content: { type: String, required: true, min: 10 },
     author_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -22,5 +24,7 @@ const Post = new Schema(
     timestamps: true,
   }
 );
+
+Post.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Post", Post);

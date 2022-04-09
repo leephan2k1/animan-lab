@@ -13,7 +13,7 @@ const signAccessToken = async (userId) => {
       },
       JWT_SECRET,
       {
-        expiresIn: "6h",
+        expiresIn: "10m",
       },
       (err, payload) => {
         if (err) {

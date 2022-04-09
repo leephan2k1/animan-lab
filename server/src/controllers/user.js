@@ -2,47 +2,40 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const MyLove = require("../models/MyLove");
 const RefreshToken = require("../models/Token");
-const querystring = require("querystring");
+
 const {
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
 } = require("../helper/jwtService");
 const createError = require("http-errors");
-const { existChecker, nonExistChecker } = require("../helper/existChecker");
+const { nonExistChecker } = require("../helper/existChecker");
+
+const sendMail = require("../helper/mailService");
+const logEvents = require("../helper/logEvents");
+const { nanoid } = require("nanoid");
 
 module.exports = {
-  filters: async (req, res, next) => {
-    const { email, user_name } = req.query;
-    const pureEmail = querystring.unescape(email);
-    const conditions = {};
-    if (email) conditions.email = pureEmail;
-    if (user_name) conditions.user_name = user_name;
-
-    const user = await User.findOne(conditions, { __v: 0 });
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      user,
-    });
-  },
-
   signUp: async (req, res, next) => {
     const { first_name, last_name, user_name, email, password } =
       req.verified.body;
     //check email was registered
     const existEmail = await User.findOne({ email });
-    existChecker(existEmail, "email is already registered", res);
+    if (existEmail) {
+      return res.status(200).json({
+        success: false,
+        message: "email is already registered",
+      });
+    }
 
     //check user_name was registered
     const existUserName = await User.findOne({ user_name });
-    existChecker(existUserName, "user name already exists", res);
+    if (existUserName) {
+      return res.status(200).json({
+        success: false,
+        message: "user name already exists",
+      });
+    }
 
     //create user & save user to db
     const newUser = new User({
@@ -76,6 +69,33 @@ module.exports = {
     });
   },
 
+  resetPasswordEmail: async (req, res, next) => {
+    const { email } = req.verified.body; 
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(200).json({
+        success: false,
+        message: "The Email is not registered with us",
+      });
+    }
+
+    //generate access token
+    const token = await signAccessToken(user._id);
+
+    const resultSend = sendMail(email, token);
+
+    if (resultSend) {
+      logEvents(`id:${nanoid(5)} --- mail service end success`);
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "ok",
+    });
+  },
+
   getInfo: async (req, res, next) => {
     const { user_name } = req.verified.params;
     const user = await User.findOne({ user_name }, { __v: 0, password: 0 });
@@ -83,6 +103,68 @@ module.exports = {
     nonExistChecker(user, "User not found", res);
 
     res.status(200).json({ success: true, user });
+  },
+
+  updateInfo: async (req, res, next) => {
+    const { sub } = req.payload;
+    const { user_name } = req.verified.params;
+
+    const {
+      first_name,
+      last_name,
+      avatar,
+      oldPassword,
+      newPassword,
+      gender,
+      birthday,
+    } = req.verified.body;
+
+    const user = await User.findById(sub);
+
+    if (user_name !== user.user_name) {
+      return res.status(200).json({
+        success: false,
+        message: "username doesn't match",
+      });
+    }
+
+    //check field password:
+    if (oldPassword) {
+      if (!newPassword) {
+        return res.status(200).json({
+          success: false,
+          message: "required new password",
+        });
+      }
+
+      const isValidPassword = await user.verifyPassword(oldPassword);
+      if (!isValidPassword) {
+        return res.status(200).json({
+          success: false,
+          message: "Incorrect password",
+        });
+      } else {
+        // re-sign new password (password will hash in pre save())
+        user.password = newPassword;
+      }
+    }
+
+    if (first_name) user.first_name = first_name;
+
+    if (last_name) user.last_name = last_name;
+
+    if (avatar) user.avatar = avatar;
+
+    if (gender) user.gender = gender;
+
+    if (birthday) user.birthday = birthday;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      messsage: "ok",
+    });
   },
 
   signOut: async (req, res, next) => {
@@ -113,6 +195,16 @@ module.exports = {
     res.setHeader("RefreshToken", newRefreshToken);
 
     res.status(201).json({ success: true });
+  },
+
+  getMyPosts: async (req, res, next) => {
+    const { user_name } = req.params;
+    const posts = await Post.find({ author_name: user_name }, { __v: 0 });
+
+    return res.status(200).json({
+      success: true,
+      posts,
+    });
   },
 
   addBookmark: async (req, res, next) => {
@@ -230,11 +322,19 @@ module.exports = {
 
   createMyLove: async (req, res, next) => {
     const { sub } = req.payload;
-    const { title, type, description, image, tags } = req.body;
+    const { title, description, image, tags } = req.body;
+
+    const existMyLove = await MyLove.findOne({ title });
+
+    if (existMyLove && existMyLove.author.toString() === sub.toString()) {
+      return res.status(200).json({
+        success: false,
+        message: "Waifu already exist",
+      });
+    }
 
     const myLove = new MyLove({
       title,
-      type,
       author: sub,
       description: description || "",
       image: image || "",

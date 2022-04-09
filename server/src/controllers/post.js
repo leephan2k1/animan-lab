@@ -7,7 +7,28 @@ const { existChecker, nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
   index: async (req, res, next) => {
-    const posts = await Post.find({ approve: true }, { __v: 0 });
+    const { page, limit } = req.query;
+
+    if (limit && isNaN(limit)) {
+      return res.status(200).json({
+        success: false,
+        message: "Bad request",
+      });
+    }
+
+    if (page && isNaN(page)) {
+      return res.status(200).json({
+        success: false,
+        message: "Bad request",
+      });
+    }
+
+    const options = {
+      sort: { createdAt: -1 },
+      limit: +limit,
+      page: +page,
+    };
+    const posts = await Post.paginate({ approve: true }, options);
     return res.status(200).json({ success: true, posts });
   },
 
@@ -29,11 +50,32 @@ module.exports = {
     return res.status(200).json({ success: true, post });
   },
 
+  getPrivatePost: async (req, res, next) => {
+    const { sub } = req.payload; // -> userId (access token return)
+    const { slug } = req.params;
+
+    const post = await Post.findOne({ slug }, { __v: 0 });
+
+    if (!post) {
+      return res
+        .status(200)
+        .json({ success: false, message: "Post not found" });
+    }
+
+    const postOwner = await User.findById(sub);
+
+    if (postOwner._id.toString() !== post.author_id.toString()) {
+      return res.status(200).json({ success: false, message: "Unauthorized" });
+    }
+
+    return res.status(200).json({ success: true, post });
+  },
+
   createPost: async (req, res, next) => {
     const { sub } = req.payload; // -> userId (access token return)
     const owner = await User.findById(sub);
     const postPayload = req.verified.body;
-    const { title, content } = postPayload;
+    const { title, content, plainText } = postPayload;
 
     //check exist post title
     const duplicatedTitle = await Post.findOne({ title });
@@ -58,6 +100,7 @@ module.exports = {
       approve: isAdmin,
       title,
       content,
+      plainText,
       author_id: sub,
       author_name: user_name,
       images_url: postPayload?.images_url || [],

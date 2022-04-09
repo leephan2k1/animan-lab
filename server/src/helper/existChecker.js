@@ -1,7 +1,7 @@
 module.exports = {
   existChecker: (instance, message, response) => {
     if (instance) {
-      return response.status(401).json({
+      return response.status(200).json({
         success: false,
         message: message,
       });
@@ -9,7 +9,7 @@ module.exports = {
   },
   nonExistChecker: (instance, message, response) => {
     if (!instance) {
-      return response.status(404).json({
+      return response.status(200).json({
         success: false,
         message: message,
       });

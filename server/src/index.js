@@ -9,7 +9,14 @@ const logEvents = require("./helper/logEvents");
 const { nanoid } = require("nanoid");
 const route = require("./routes");
 const db = require("./configs/db");
-const createError = require('http-errors')
+const createError = require("http-errors");
+
+const corsOptions = {
+  exposedHeaders: ["Authorization", "RefreshToken"],
+};
+
+//enable all CORS requests
+app.use(cors(corsOptions));
 
 //connect mongodb
 db.connect();
@@ -21,9 +28,6 @@ app.use(
   })
 );
 app.use(express.json());
-
-//enable all CORS requests
-app.use(cors());
 
 //security middleware
 app.use(helmet());

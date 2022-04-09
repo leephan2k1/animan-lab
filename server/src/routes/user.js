@@ -11,11 +11,6 @@ const { verifyAccessToken } = require("../helper/jwtService");
 const { checkExistPost_UserName } = require("../middlewares/validateModel");
 
 /*
-/v1/users/search
-*/
-router.route("/search").get(UserController.filters);
-
-/*
 /v1/users/:user-name
 */
 router
@@ -23,6 +18,12 @@ router
   .get(
     validateParams(schemas.userNameSchema, "user_name"),
     UserController.getInfo
+  )
+  .patch(
+    validateParams(schemas.userNameSchema, "user_name"),
+    validateBody(schemas.updateProfileSchema),
+    verifyAccessToken,
+    UserController.updateInfo
   );
 
 /*
@@ -43,6 +44,12 @@ router
     checkExistPost_UserName,
     UserController.removeBookmark
   );
+
+/*
+/v1/users/:user_name/getMyPosts
+*/
+router.route("/:user_name/posts").get(UserController.getMyPosts);
+
 /*
 /v1/users/:user_name/mylove
 */
@@ -95,6 +102,16 @@ router
     validateBody(schemas.loginSchema),
     passport.authenticate("local", { session: false }),
     UserController.signIn
+  );
+
+/*
+/v1/users/reset-password-email
+*/
+router
+  .route("/reset-password-email")
+  .post(
+    validateBody(schemas.resetPassFromEmail),
+    UserController.resetPasswordEmail
   );
 
 /*
