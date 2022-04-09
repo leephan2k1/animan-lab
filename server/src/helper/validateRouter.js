@@ -54,6 +54,9 @@ const schemas = {
   resetPassFromEmail: Joi.object().keys({
     email: Joi.string().email().required(),
   }),
+  resetPass: Joi.object().keys({
+    password: Joi.string().min(6).required(),
+  }),
   userNameSchema: Joi.object().keys({
     user_name: Joi.string().min(1),
   }),

@@ -11,6 +11,20 @@ const { verifyAccessToken } = require("../helper/jwtService");
 const { checkExistPost_UserName } = require("../middlewares/validateModel");
 
 /*
+/v1/users/reset-password
+*/
+router.route("/reset-password").patch(
+  validateBody(schemas.resetPass),
+  verifyAccessToken,
+  UserController.resetPassword
+);
+
+/*
+/v1/users/search
+*/
+router.route("/search").get(UserController.filterUser);
+
+/*
 /v1/users/:user-name
 */
 router

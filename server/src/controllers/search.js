@@ -3,51 +3,65 @@ const Post = require("../models/Post");
 module.exports = {
   filters: async (req, res, next) => {
     const filters = req.query;
-    const { title, tags, sort } = filters;
-    let posts;
+    const {
+      title,
+      tags,
+      sort,
+      sortview,
+      sortlike,
+      page,
+      limit,
+      excludetags,
+      populate,
+    } = filters;
 
-    //title filter
-    if (title) {
-      posts = await Post.find(
-        {
-          title: { $regex: title, $options: "i" },
+    const conditions = {};
+    const options = {};
+
+    //exclude field __v
+    options.select = "-__v";
+
+    //just accept approved post:
+    conditions.approve = true;
+
+    if (populate) {
+      options.populate = "author_id";
+    }
+
+    if (title) conditions.title = { $regex: title, $options: "i" };
+
+    if (tags)
+      conditions.tags = {
+        $elemMatch: {
+          $regex: tags,
+          $options: "i",
         },
-        { __v: 0 }
-      );
-    }
+      };
 
-    //sort filter
-    if (sort) {
-      if (!posts) {
-        posts = await Post.find({}, { _v: 0 });
-      }
-      switch (sort) {
-        case "asc":
-          posts = posts.sort(
-            (a, b) =>
-              new Date(a.createdAt.toString()) -
-              new Date(b.createdAt.toString())
-          );
-          break;
-        case "desc":
-          posts = posts.sort(
-            (a, b) =>
-              new Date(b.createdAt.toString()) -
-              new Date(a.createdAt.toString())
-          );
-          break;
-      }
-    }
-
-    //tags filter
-    if (tags) {
-      posts = await Post.find(
+    if (excludetags) {
+      conditions["$nor"] = [
         {
-          tags: { $in: [tags] },
+          tags: {
+            $elemMatch: {
+              $regex: excludetags,
+              $options: "i",
+            },
+          },
         },
-        { __v: 0 }
-      );
+      ];
     }
+
+    if (page) options.page = +page;
+
+    if (limit) options.limit = +limit;
+
+    if (sort) options.sort = { ...options.sort, createdAt: sort };
+
+    if (sortview) options.sort = { ...options.sort, view: sortview };
+
+    if (sortlike) options.sort = { ...options.sort, like: sortlike };
+
+    const posts = await Post.paginate(conditions, options);
 
     return res.status(200).json({ success: true, posts });
   },

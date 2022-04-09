@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const mongoosePaginate = require("mongoose-paginate-v2");
 const bcrypt = require("bcryptjs");
 
 const User = new Schema(
@@ -30,7 +31,7 @@ const User = new Schema(
     roles: { type: Array, default: ["user"] },
     points: { type: Number, default: 0 },
     like_list: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-    myLove_list: [{type: Schema.Types.ObjectId, ref: "MyLove"}]
+    myLove_list: [{ type: Schema.Types.ObjectId, ref: "MyLove" }],
   },
   {
     timestamps: true,
@@ -43,7 +44,7 @@ User.pre("save", async function (next) {
     // only hash the password if it has been modified (or is new)
     const user = this;
     if (!user.isModified("password")) return next();
- 
+
     const salt = await bcrypt.genSalt(10);
     const passwordHashed = await bcrypt.hash(this.password, salt);
     //Store  password hash
@@ -62,5 +63,7 @@ User.methods.verifyPassword = async function (reqPassword) {
     throw new Error(err);
   }
 };
+
+User.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("User", User);

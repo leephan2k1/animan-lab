@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const mongoosePaginate = require("mongoose-paginate-v2");
+
 const User = require("./User");
 const Post = require("./Post");
 
@@ -7,6 +9,7 @@ const Comment = new Schema(
   {
     author_id: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     author_name: { type: String, required: true, min: 2 },
+    approve: { type: Boolean, default: false },
     post: { type: Schema.Types.ObjectId, required: true, ref: "Post" },
     content: { type: String, required: true, min: 3 },
     banned: { type: Boolean, default: false },
@@ -32,5 +35,7 @@ Comment.pre("remove", async function (next) {
     next(err);
   }
 });
+
+Comment.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Comment", Comment);

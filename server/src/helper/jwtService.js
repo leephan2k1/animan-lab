@@ -42,19 +42,12 @@ const signRefreshToken = async (userId) => {
         }
         // -> store refresh token to mongodb
         try {
-          const existUserToken = await RefreshToken.findOne({ userId });
-          if (existUserToken) {
-            //exist -> update
-            existUserToken.token = payload;
-            await existUserToken.save();
-          } else {
-            //!exist -> create
-            const newRefreshToken = new RefreshToken({
-              userId,
-              token: payload,
-            });
-            await newRefreshToken.save();
-          }
+          //!exist -> create
+          const newRefreshToken = new RefreshToken({
+            userId,
+            token: payload,
+          });
+          await newRefreshToken.save();
         } catch (error) {
           return reject(createError.InternalServerError());
         }
@@ -97,12 +90,16 @@ const verifyRefreshToken = async (refreshToken) => {
       }
       const { sub } = payload;
       try {
-        const existRefreshToken = await RefreshToken.findOne({ userId: sub });
-        //valid refresh token (refresh token client = refresh token in db)
-        if (existRefreshToken && refreshToken === existRefreshToken.token) {
+        const existRefreshToken = await RefreshToken.find({ userId: sub });
+        //valid refresh token (refresh token client = refresh token in db) 
+        const oddToken = existRefreshToken.find(
+          (item) => item.token === refreshToken
+        );
+        if (existRefreshToken && oddToken) {
+          payload.oddToken = oddToken;
           resolve(payload);
         }
-        if (refreshToken !== existRefreshToken.token) {
+        if (!oddToken) { 
           return reject(createError.Unauthorized());
         }
       } catch (error) {

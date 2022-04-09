@@ -12,8 +12,6 @@ const createError = require("http-errors");
 const { nonExistChecker } = require("../helper/existChecker");
 
 const sendMail = require("../helper/mailService");
-const logEvents = require("../helper/logEvents");
-const { nanoid } = require("nanoid");
 
 module.exports = {
   signUp: async (req, res, next) => {
@@ -70,7 +68,7 @@ module.exports = {
   },
 
   resetPasswordEmail: async (req, res, next) => {
-    const { email } = req.verified.body; 
+    const { email } = req.verified.body;
 
     const user = await User.findOne({ email });
 
@@ -87,12 +85,56 @@ module.exports = {
     const resultSend = sendMail(email, token);
 
     if (resultSend) {
-      logEvents(`id:${nanoid(5)} --- mail service end success`);
+      console.log(`id:${nanoid(5)} --- mail service end success`);
     }
 
     return res.status(200).json({
       success: true,
       message: "ok",
+    });
+  },
+
+  resetPassword: async (req, res, next) => {
+    const { password } = req.verified.body;
+    const { sub } = req.payload;
+
+    const user = await User.findById(sub);
+
+    if (user) {
+      user.password = password;
+      await user.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "ok",
+    });
+  },
+
+  filterUser: async (req, res, next) => {
+    const filters = req.query;
+    const { gender, sortpoint, page, limit } = filters;
+
+    const conditions = {};
+    const options = {};
+
+    //default conditions:
+    conditions.can_comment = true;
+    conditions.can_post = true;
+
+    //default options:
+    options.select = "-__v -password -email -updatedAt";
+
+    if (gender) conditions.gender = gender;
+    if (sortpoint) options.sort = { ...options.sort, points: sortpoint };
+    if (page) options.page = +page;
+    if (limit) options.limit = +limit;
+
+    const users = await User.paginate(conditions, options);
+
+    return res.status(200).json({
+      success: true,
+      users,
     });
   },
 
@@ -173,9 +215,8 @@ module.exports = {
       throw createError.BadRequest();
     }
 
-    const { sub } = await verifyRefreshToken(refreshToken);
-    const refreshTokenOdd = await RefreshToken.findOne({ userId: sub });
-    await refreshTokenOdd.remove();
+    const { oddToken } = await verifyRefreshToken(refreshToken);
+    await oddToken.remove();
 
     res.status(200).json({
       success: true,

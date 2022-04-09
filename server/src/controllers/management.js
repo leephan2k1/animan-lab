@@ -1,11 +1,17 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 const { nonExistChecker } = require("../helper/existChecker");
 
 module.exports = {
   getPost: async (req, res, next) => {
     const posts = await Post.find({ approve: false }, { __v: 0 });
     return res.status(200).json({ success: true, posts });
+  },
+
+  getComments: async (req, res, next) => {
+    const comments = await Comment.find({ approve: false }, { __v: 0 });
+    return res.status(200).json({ success: true, comments });
   },
 
   getFlagPost: async (req, res, next) => {
@@ -16,15 +22,34 @@ module.exports = {
   approvePost: async (req, res, next) => {
     const { id } = req.verified.body;
     const post = await Post.findById(id);
-    const { approve } = post;
 
     nonExistChecker(post, "Post not found", res);
+
+    const { approve } = post;
 
     if (!approve) {
       await post.updateOne({ approve: true });
       const user = await User.findById(post.author_id);
       let { points } = user;
       points += 10;
+      await user.updateOne({ points });
+    }
+
+    res.status(200).json({ success: true });
+  },
+
+  approveComment: async (req, res, next) => {
+    const { id } = req.verified.body;
+    const comment = await Comment.findById(id);
+    nonExistChecker(comment, "Comment not found", res);
+
+    const { approve } = comment;
+
+    if (!approve) {
+      await comment.updateOne({ approve: true });
+      const user = await User.findById(comment.author_id);
+      let { points } = user;
+      points += 1;
       await user.updateOne({ points });
     }
 
