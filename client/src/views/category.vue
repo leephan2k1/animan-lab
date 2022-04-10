@@ -1,4 +1,16 @@
 <template>
+  <Teleport to="head">
+    <meta
+      name="description"
+      :content="`Animan Lab - Thể loại ${currentPath}`"
+    />
+    <meta property="og:site_name" content="Animan Lab" />
+    <meta
+      property="og:image"
+      :content="require('@/assets/images/thumbnail.png')"
+    />
+    <meta property="og:url" :content="computeURL()" />
+  </Teleport>
   <div class="w-full z-10 min-h-[400px] h-fit">
     <h1
       v-if="currentPath === 'anime' || currentPath === 'manga'"
@@ -49,6 +61,10 @@ export default {
 
     const page = ref(1);
     const hasNextPage = ref(false);
+
+    const computeURL = () => {
+      return window.location.href;
+    };
 
     const fetchData = async () => {
       try {
@@ -118,7 +134,7 @@ export default {
 
     fetchData();
 
-    return { currentPath, optionalData, loadMore };
+    return { currentPath, optionalData, loadMore, computeURL };
   },
 };
 </script>

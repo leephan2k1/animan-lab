@@ -14,7 +14,7 @@ import { useRoute } from "vue-router";
 import {
   contentsToS,
   contentsDMCA,
-  contentsPurpose,
+  contentsFAQs,
   contentsContact,
   contentsPP,
   contentsRulesOfPost,
@@ -27,8 +27,8 @@ export default {
       switch (route.params.doctype) {
         case "terms-of-service":
           return contentsToS;
-        case "purposes-of-the-website":
-          return contentsPurpose;
+        case "faqs":
+          return contentsFAQs;
         case "dmca":
           return contentsDMCA;
         case "contact":

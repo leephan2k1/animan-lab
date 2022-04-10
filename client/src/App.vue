@@ -1,4 +1,18 @@
 <template>
+  <Teleport to="head">
+    <template v-if="routeName === 'home'">
+      <meta
+        name="description"
+        content="Animan Lab - Chia sẽ & đánh giá Anime, Manga"
+      />
+      <meta property="og:site_name" content="Animan Lab" />
+      <meta
+        property="og:image"
+        :content="require('@/assets/images/thumbnail.png')"
+      />
+      <meta property="og:url" :content="computeURL()" />
+    </template>
+  </Teleport>
   <component :is="layout">
     <router-view />
   </component>
@@ -15,6 +29,8 @@ export default {
     const route = useRoute();
     const store = useStore();
 
+    const routeName = computed(() => route.name);
+
     const fetchUserInfoDetail = async () => {
       const isLogged = store.getters["auth/isAuthenticated"];
       const profile = store.getters["user/getProfile"];
@@ -24,8 +40,14 @@ export default {
       }
     };
 
+    const computeURL = () => {
+      return window.location.href;
+    };
+
     fetchUserInfoDetail();
     return {
+      routeName,
+      computeURL,
       layout: computed(() => (route.meta.layout || PUBLIC_LAYOUT) + "-layout"),
     };
   },

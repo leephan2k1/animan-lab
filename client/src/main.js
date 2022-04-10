@@ -13,7 +13,6 @@ import "@/assets/styles/grid.scss";
 import "animate.css";
 import "swiper/css";
 
-// import devtools from "devtools-detect";
 import { addListener, launch } from "devtools-detector";
 
 NProgress.configure({ easing: "ease", speed: 1000, showSpinner: false });
@@ -29,7 +28,6 @@ app.use(Toast, {
   maxToasts: 20,
   newestOnTop: true,
 });
-
 app.mount("#app");
 
 //protect web app
@@ -39,12 +37,11 @@ if (process.env.NODE_ENV !== "development") {
     // 1. add listener
     addListener((isOpen) => {
       if (isOpen) {
-        app.innerHTML = null;
-        const p = document.createElement("p");
-        p.classList.add("text-center", "font-bold", "text-2xl");
-        p.innerText = "Còn đúng mỗi cái nịt!";
-        app.append(p);
-
+        // app.innerHTML = null;
+        // const p = document.createElement("p");
+        // p.classList.add("text-center", "font-bold", "text-2xl");
+        // p.innerText = "Còn đúng mỗi cái nịt!";
+        // app.append(p);
         localStorage.removeItem("usr");
         localStorage.removeItem("access-token");
         localStorage.removeItem("_secure__ls__metadata");
