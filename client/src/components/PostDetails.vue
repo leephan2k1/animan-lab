@@ -5,6 +5,13 @@
     <template
       v-if="postData && !isEmptyObject(postData) && !isEmptyObject(postOwner)"
     >
+      <Teleport to="head">
+        <meta name="description" :content="postData?.title" />
+        <meta property="og:site_name" content="Animan Lab" />
+        <meta name="og:description" :content="postData?.title" />
+        <meta property="og:image" :content="postData.images_url[0]" />
+        <meta property="og:url" :content="computeURL()" />
+      </Teleport>
       <h1 class="lg:pl-7 p-4 text-2xl font-bold">
         {{ postData?.title }}
       </h1>
@@ -190,7 +197,6 @@ export default {
     const router = useRouter();
     const store = useStore();
     const post = usePost();
-
     const postData = ref(null);
 
     const postOwner = ref({});
@@ -216,6 +222,10 @@ export default {
       "bg-violet-400",
       "bg-fuchsia-400",
     ];
+
+    const computeURL = () => {
+      return window.location.href;
+    };
 
     const fetchPost = async () => {
       try {
@@ -416,6 +426,7 @@ export default {
       computeRoleName,
       tagColor,
       TAG_COLORS,
+      computeURL,
     };
   },
 };

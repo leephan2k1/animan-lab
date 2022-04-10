@@ -1,4 +1,14 @@
 <template>
+  <Teleport to="head">
+    <meta name="description" :content="`Trang cá nhân ${profile.user_name}`" />
+    <meta property="og:site_name" content="Animan Lab" />
+    <meta
+      name="og:description"
+      :content="`Trang cá nhân ${profile.user_name}`"
+    />
+    <meta property="og:image" :content="avatarHandler(profile)" />
+    <meta property="og:url" :content="computeURL()" />
+  </Teleport>
   <div class="w-full h-fit relative">
     <HeaderProfile />
     <h1 class="font-semibold md:text-lg pt-4 text-center">
@@ -27,6 +37,8 @@ import { useStore } from "vuex";
 import HeaderProfile from "@/components/HeaderProfile.vue";
 import WaifuForm from "@/components/WaifuForm.vue";
 import VueButton from "@/components/VueButton.vue";
+
+import { avatarHandler } from "@/utils/userHandler";
 
 import repositoryFactory from "@/api/repositoryFactory";
 const userRepository = repositoryFactory.get("users");
@@ -174,6 +186,10 @@ export default {
       }
     };
 
+    const computeURL = () => {
+      return window.location.href;
+    };
+
     fetchPostData();
 
     onMounted(() => {
@@ -183,6 +199,8 @@ export default {
     checkWaifuOwner();
 
     return {
+      avatarHandler,
+      profile,
       currentComponent,
       OptionalTittle,
       OptionalData,
@@ -190,6 +208,7 @@ export default {
       handleOpenWaifuForm,
       waifuFormComp,
       isFetchingWaifu,
+      computeURL,
     };
   },
 };

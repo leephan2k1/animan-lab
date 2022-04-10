@@ -1,4 +1,15 @@
 <template>
+  <Teleport to="head">
+    <meta name="description" content="Short Animans - Cảm nhận nhanh" />
+    <meta property="og:site_name" content="Animan Lab" />
+    <meta name="og:description" content="Short Animans - Cảm nhận nhanh" />
+    <meta
+      property="og:image"
+      :content="require('@/assets/images/thumbnail.png')"
+    />
+    <meta property="og:url" :content="computeURL()" />
+  </Teleport>
+
   <div class="w-full h-full relative">
     <StatusCreator @openStatusEditor="handleOpenStatusEditor" />
     <StatusEditor :openEditor="triggerOpenEditor" />
@@ -108,6 +119,10 @@ export default {
       }, 500);
     };
 
+    const computeURL = () => {
+      return window.location.href;
+    };
+
     onMounted(() => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -124,6 +139,7 @@ export default {
       triggerOpenEditor,
       data,
       loadMore,
+      computeURL,
     };
   },
 };
