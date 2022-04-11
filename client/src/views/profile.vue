@@ -1,14 +1,4 @@
 <template>
-  <Teleport to="head">
-    <meta name="description" :content="`Trang cá nhân ${profile.user_name}`" />
-    <meta property="og:site_name" content="Animan Lab" />
-    <meta
-      name="og:description"
-      :content="`Trang cá nhân ${profile.user_name}`"
-    />
-    <meta property="og:image" :content="avatarHandler(profile)" />
-    <meta property="og:url" :content="computeURL()" />
-  </Teleport>
   <div class="w-full h-fit relative">
     <HeaderProfile />
     <h1 class="font-semibold md:text-lg pt-4 text-center">
@@ -30,7 +20,7 @@
 </template>
 
 <script>
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
@@ -42,6 +32,8 @@ import { avatarHandler } from "@/utils/userHandler";
 
 import repositoryFactory from "@/api/repositoryFactory";
 const userRepository = repositoryFactory.get("users");
+
+import { useHead } from "@vueuse/head";
 
 export default {
   components: {
@@ -75,6 +67,60 @@ export default {
       }
     });
     const OptionalData = ref(null);
+
+    useHead({
+      title: computed(() => `Trang cá nhân ${profile.value?.user_name}`),
+      meta: [
+        {
+          name: "description",
+          content: computed(() => `Trang cá nhân ${profile.value?.user_name}`),
+        },
+        {
+          property: "og:description",
+          content: computed(() => `Trang cá nhân ${profile.value?.user_name}`),
+        },
+        {
+          property: "og:url",
+          content: computed(() => window.location.href),
+        },
+        {
+          property: "og:image",
+          content: computed(() => avatarHandler(profile)),
+        },
+        {
+          property: "og:site_name",
+          content: "Animan Lab",
+        },
+      ],
+    });
+
+    onUnmounted(() => {
+      useHead({
+        title: "Animan Lab",
+        meta: [
+          {
+            name: "description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:url",
+            content: computed(() => window.location.href),
+          },
+          {
+            property: "og:image",
+            content: computed(() => require("@/assets/images/thumbnail.png")),
+          },
+          {
+            property: "og:site_name",
+            content: "Animan Lab",
+          },
+        ],
+      });
+    });
 
     //config VueWaifu Component:
     const waifuOwner = ref(true);

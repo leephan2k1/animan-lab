@@ -1,18 +1,4 @@
 <template>
-  <Teleport to="head">
-    <template v-if="routeName === 'home'">
-      <meta
-        name="description"
-        content="Animan Lab - Chia sẽ & đánh giá Anime, Manga"
-      />
-      <meta property="og:site_name" content="Animan Lab" />
-      <meta
-        property="og:image"
-        :content="require('@/assets/images/thumbnail.png')"
-      />
-      <meta property="og:url" :content="computeURL()" />
-    </template>
-  </Teleport>
   <component :is="layout">
     <router-view />
   </component>
@@ -23,6 +9,8 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { PUBLIC_LAYOUT, USER_REQUEST } from "@/constants";
 import { useStore } from "vuex";
+
+import { useHead } from "@vueuse/head";
 
 export default {
   setup() {
@@ -39,6 +27,34 @@ export default {
         await store.dispatch(`user/${USER_REQUEST}`, user_name);
       }
     };
+
+    if (routeName.value === "home") {
+      useHead({
+        title: "Animan Lab",
+        meta: [
+          {
+            name: "description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:url",
+            content: computed(() => window.location.href),
+          },
+          {
+            property: "og:image",
+            content: computed(() => require("@/assets/images/thumbnail.png")),
+          },
+          {
+            property: "og:site_name",
+            content: "Animan Lab",
+          },
+        ],
+      });
+    }
 
     const computeURL = () => {
       return window.location.href;

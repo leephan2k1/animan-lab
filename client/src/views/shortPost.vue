@@ -1,15 +1,4 @@
 <template>
-  <Teleport to="head">
-    <meta name="description" content="Short Animans - Cảm nhận nhanh" />
-    <meta property="og:site_name" content="Animan Lab" />
-    <meta name="og:description" content="Short Animans - Cảm nhận nhanh" />
-    <meta
-      property="og:image"
-      :content="require('@/assets/images/thumbnail.png')"
-    />
-    <meta property="og:url" :content="computeURL()" />
-  </Teleport>
-
   <div class="w-full h-full relative">
     <StatusCreator @openStatusEditor="handleOpenStatusEditor" />
     <StatusEditor :openEditor="triggerOpenEditor" />
@@ -18,7 +7,7 @@
 </template>
 
 <script>
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 
 import StatusCreator from "@/components/StatusCreator.vue";
@@ -28,6 +17,8 @@ import VueStatus from "@/components/VueStatus.vue";
 import repositoryFactory from "@/api/repositoryFactory";
 const postRepo = repositoryFactory.get("posts");
 const userRepo = repositoryFactory.get("users");
+
+import { useHead } from "@vueuse/head";
 
 export default {
   components: {
@@ -56,6 +47,60 @@ export default {
     const handleOpenStatusEditor = () => {
       triggerOpenEditor.value = !triggerOpenEditor.value;
     };
+
+    useHead({
+      title: computed(() => `Animan Lab`),
+      meta: [
+        {
+          name: "description",
+          content: computed(() => `Short Animans - Cảm nhận nhanh`),
+        },
+        {
+          property: "og:description",
+          content: computed(() => `Short Animans - Cảm nhận nhanh`),
+        },
+        {
+          property: "og:url",
+          content: computed(() => window.location.href),
+        },
+        {
+          property: "og:image",
+          content: computed(() => require("@/assets/images/thumbnail.png")),
+        },
+        {
+          property: "og:site_name",
+          content: "Animan Lab",
+        },
+      ],
+    });
+
+    onUnmounted(() => {
+      useHead({
+        title: "Animan Lab",
+        meta: [
+          {
+            name: "description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:url",
+            content: computed(() => window.location.href),
+          },
+          {
+            property: "og:image",
+            content: computed(() => require("@/assets/images/thumbnail.png")),
+          },
+          {
+            property: "og:site_name",
+            content: "Animan Lab",
+          },
+        ],
+      });
+    });
 
     const fetchData = async () => {
       try {

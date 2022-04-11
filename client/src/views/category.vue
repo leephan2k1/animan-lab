@@ -1,16 +1,4 @@
 <template>
-  <Teleport to="head">
-    <meta
-      name="description"
-      :content="`Animan Lab - Thể loại ${currentPath}`"
-    />
-    <meta property="og:site_name" content="Animan Lab" />
-    <meta
-      property="og:image"
-      :content="require('@/assets/images/thumbnail.png')"
-    />
-    <meta property="og:url" :content="computeURL()" />
-  </Teleport>
   <div class="w-full z-10 min-h-[400px] h-fit">
     <h1
       v-if="currentPath === 'anime' || currentPath === 'manga'"
@@ -34,7 +22,7 @@
 </template>
 
 <script>
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 
 import { TAGS } from "@/constants";
@@ -43,6 +31,8 @@ import VuePost from "@/components/VuePost.vue";
 
 import repositoryFactory from "@/api/repositoryFactory";
 const postRepo = repositoryFactory.get("posts");
+
+import { useHead } from "@vueuse/head";
 
 export default {
   components: {
@@ -65,6 +55,60 @@ export default {
     const computeURL = () => {
       return window.location.href;
     };
+
+    useHead({
+      title: computed(() => `Animan Lab - Thể loại ${currentPath.value}`),
+      meta: [
+        {
+          name: "description",
+          content: computed(() => `Animan Lab - Thể loại ${currentPath.value}`),
+        },
+        {
+          property: "og:description",
+          content: computed(() => `Animan Lab - Thể loại ${currentPath.value}`),
+        },
+        {
+          property: "og:url",
+          content: computed(() => window.location.href),
+        },
+        {
+          property: "og:image",
+          content: computed(() => require("@/assets/images/thumbnail.png")),
+        },
+        {
+          property: "og:site_name",
+          content: "Animan Lab",
+        },
+      ],
+    });
+
+    onUnmounted(() => {
+      useHead({
+        title: "Animan Lab",
+        meta: [
+          {
+            name: "description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:url",
+            content: computed(() => window.location.href),
+          },
+          {
+            property: "og:image",
+            content: computed(() => require("@/assets/images/thumbnail.png")),
+          },
+          {
+            property: "og:site_name",
+            content: "Animan Lab",
+          },
+        ],
+      });
+    });
 
     const fetchData = async () => {
       try {
