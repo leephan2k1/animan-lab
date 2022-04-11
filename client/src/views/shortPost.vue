@@ -18,8 +18,6 @@ import repositoryFactory from "@/api/repositoryFactory";
 const postRepo = repositoryFactory.get("posts");
 const userRepo = repositoryFactory.get("users");
 
-import { useHead } from "@vueuse/head";
-
 export default {
   components: {
     StatusCreator,
@@ -48,59 +46,33 @@ export default {
       triggerOpenEditor.value = !triggerOpenEditor.value;
     };
 
-    useHead({
-      title: computed(() => `Animan Lab`),
-      meta: [
-        {
-          name: "description",
-          content: computed(() => `Short Animans - Cảm nhận nhanh`),
-        },
-        {
-          property: "og:description",
-          content: computed(() => `Short Animans - Cảm nhận nhanh`),
-        },
-        {
-          property: "og:url",
-          content: computed(() => window.location.href),
-        },
-        {
-          property: "og:image",
-          content: computed(() => require("@/assets/images/thumbnail.png")),
-        },
-        {
-          property: "og:site_name",
-          content: "Animan Lab",
-        },
-      ],
-    });
+    const handleMetaTags = () => {
+      try {
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute("content", `Bài viết về bài đăng ngắn`);
+        document
+          .querySelector('meta[property="og:title"]')
+          .setAttribute("content", `Animan Lab`);
+        document
+          .querySelector('meta[property="og:description"]')
+          .setAttribute("content", `Bài viết về bài đăng ngắn`);
+        document
+          .querySelector('meta[property="og:url"]')
+          .setAttribute("content", window.location.href);
+        document
+          .querySelector('meta[property="og:image"]')
+          .setAttribute(
+            "content",
+            "https://res.cloudinary.com/lee1002/image/upload/v1649660370/animan/c0skrmfi0rvnpu20gwbj.png"
+          );
+        document
+          .querySelector('meta[property="og:site_name"]')
+          .setAttribute("content", "Animan Lab");
+      } catch (error) {}
+    };
 
-    onUnmounted(() => {
-      useHead({
-        title: "Animan Lab",
-        meta: [
-          {
-            name: "description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:url",
-            content: computed(() => window.location.href),
-          },
-          {
-            property: "og:image",
-            content: computed(() => require("@/assets/images/thumbnail.png")),
-          },
-          {
-            property: "og:site_name",
-            content: "Animan Lab",
-          },
-        ],
-      });
-    });
+    handleMetaTags();
 
     const fetchData = async () => {
       try {

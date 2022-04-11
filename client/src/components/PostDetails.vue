@@ -167,8 +167,6 @@ import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 
-import { useHead } from "@vueuse/head";
-
 import VueButton from "@/components/VueButton.vue";
 import { ContentLoader } from "vue-content-loader";
 
@@ -210,59 +208,7 @@ export default {
     const profile = store.getters["user/getProfile"];
     const { user_name } = profile;
 
-    useHead({
-      title: computed(() => postData.value?.title),
-      meta: [
-        {
-          name: "description",
-          content: computed(() => postData.value?.title),
-        },
-        {
-          property: "og:description",
-          content: computed(() => postData.value?.title),
-        },
-        {
-          property: "og:url",
-          content: computed(() => window.location.href),
-        },
-        {
-          property: "og:image",
-          content: computed(() => postData.value?.images_url[0]),
-        },
-        {
-          property: "og:site_name",
-          content: "Animan Lab",
-        },
-      ],
-    });
-
-    onUnmounted(() => {
-      useHead({
-        title: "Animan Lab",
-        meta: [
-          {
-            name: "description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:url",
-            content: computed(() => window.location.href),
-          },
-          {
-            property: "og:image",
-            content: computed(() => require("@/assets/images/thumbnail.png")),
-          },
-          {
-            property: "og:site_name",
-            content: "Animan Lab",
-          },
-        ],
-      });
-    });
+    onUnmounted(() => {});
 
     const TAG_COLORS = [
       "bg-button",
@@ -272,12 +218,37 @@ export default {
       "bg-fuchsia-400",
     ];
 
+    const handleMetaTags = () => {
+      try {
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute("content", postData.value?.title);
+        document
+          .querySelector('meta[property="og:title"]')
+          .setAttribute("content", postData.value?.title);
+        document
+          .querySelector('meta[property="og:description"]')
+          .setAttribute("content", postData.value?.plainText);
+        document
+          .querySelector('meta[property="og:url"]')
+          .setAttribute("content", window.location.href);
+        document
+          .querySelector('meta[property="og:image"]')
+          .setAttribute("content", postData.value.images_url[0]);
+        document
+          .querySelector('meta[property="og:site_name"]')
+          .setAttribute("content", "Animan Lab");
+      } catch (error) {}
+    };
+
     const fetchPost = async () => {
       try {
         const res = await postRepository.getPost(params?.value);
 
         if (res?.data.success) {
           postData.value = res.data.post;
+
+          handleMetaTags();
 
           //assign id to DOM:
           const postDOM = document.querySelector("#post");
@@ -431,7 +402,7 @@ export default {
       });
     };
 
-    onMounted(() => {
+    onMounted(() => { 
       //add events
       app.addEventListener("click", handleClickToApp);
       //scroll to top:
