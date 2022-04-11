@@ -5,13 +5,6 @@
     <template
       v-if="postData && !isEmptyObject(postData) && !isEmptyObject(postOwner)"
     >
-      <Teleport to="head">
-        <meta name="description" :content="postData?.title" />
-        <meta property="og:site_name" content="Animan Lab" />
-        <meta name="og:description" :content="postData?.title" />
-        <meta property="og:image" :content="postData.images_url[0]" />
-        <meta property="og:url" :content="computeURL()" />
-      </Teleport>
       <h1 class="lg:pl-7 p-4 text-2xl font-bold">
         {{ postData?.title }}
       </h1>
@@ -174,6 +167,8 @@ import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 
+import { useHead } from "@vueuse/head";
+
 import VueButton from "@/components/VueButton.vue";
 import { ContentLoader } from "vue-content-loader";
 
@@ -215,6 +210,60 @@ export default {
     const profile = store.getters["user/getProfile"];
     const { user_name } = profile;
 
+    useHead({
+      title: computed(() => postData.value?.title),
+      meta: [
+        {
+          name: "description",
+          content: computed(() => postData.value?.title),
+        },
+        {
+          property: "og:description",
+          content: computed(() => postData.value?.title),
+        },
+        {
+          property: "og:url",
+          content: computed(() => window.location.href),
+        },
+        {
+          property: "og:image",
+          content: computed(() => postData.value?.images_url[0]),
+        },
+        {
+          property: "og:site_name",
+          content: "Animan Lab",
+        },
+      ],
+    });
+
+    onUnmounted(() => {
+      useHead({
+        title: "Animan Lab",
+        meta: [
+          {
+            name: "description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:description",
+            content: "Animan Lab",
+          },
+          {
+            property: "og:url",
+            content: computed(() => window.location.href),
+          },
+          {
+            property: "og:image",
+            content: computed(() => require("@/assets/images/thumbnail.png")),
+          },
+          {
+            property: "og:site_name",
+            content: "Animan Lab",
+          },
+        ],
+      });
+    });
+
     const TAG_COLORS = [
       "bg-button",
       "bg-green-400",
@@ -222,10 +271,6 @@ export default {
       "bg-violet-400",
       "bg-fuchsia-400",
     ];
-
-    const computeURL = () => {
-      return window.location.href;
-    };
 
     const fetchPost = async () => {
       try {
@@ -426,7 +471,6 @@ export default {
       computeRoleName,
       tagColor,
       TAG_COLORS,
-      computeURL,
     };
   },
 };

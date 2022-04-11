@@ -56,7 +56,7 @@
             @click.self="handleClick"
             :to="{ name: 'short', params: { shortType: 'animans' } }"
           >
-            Animan shorts
+            Short animans
           </router-link>
         </ul>
       </div>
