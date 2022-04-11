@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { computed, ref, onMounted, onUnmounted } from "vue";
+import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { TAGS } from "@/constants";
@@ -83,6 +83,10 @@ export default {
     };
 
     handleMetaTags();
+
+    watch(currentPath, () => {
+      fetchData();
+    });
 
     const fetchData = async () => {
       try {
