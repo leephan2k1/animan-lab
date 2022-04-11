@@ -33,8 +33,6 @@ import { avatarHandler } from "@/utils/userHandler";
 import repositoryFactory from "@/api/repositoryFactory";
 const userRepository = repositoryFactory.get("users");
 
-import { useHead } from "@vueuse/head";
-
 export default {
   components: {
     HeaderProfile,
@@ -68,59 +66,7 @@ export default {
     });
     const OptionalData = ref(null);
 
-    useHead({
-      title: computed(() => `Trang cá nhân ${profile.value?.user_name}`),
-      meta: [
-        {
-          name: "description",
-          content: computed(() => `Trang cá nhân ${profile.value?.user_name}`),
-        },
-        {
-          property: "og:description",
-          content: computed(() => `Trang cá nhân ${profile.value?.user_name}`),
-        },
-        {
-          property: "og:url",
-          content: computed(() => window.location.href),
-        },
-        {
-          property: "og:image",
-          content: computed(() => avatarHandler(profile)),
-        },
-        {
-          property: "og:site_name",
-          content: "Animan Lab",
-        },
-      ],
-    });
-
-    onUnmounted(() => {
-      useHead({
-        title: "Animan Lab",
-        meta: [
-          {
-            name: "description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:url",
-            content: computed(() => window.location.href),
-          },
-          {
-            property: "og:image",
-            content: computed(() => require("@/assets/images/thumbnail.png")),
-          },
-          {
-            property: "og:site_name",
-            content: "Animan Lab",
-          },
-        ],
-      });
-    });
+    onUnmounted(() => {});
 
     //config VueWaifu Component:
     const waifuOwner = ref(true);
@@ -133,6 +79,34 @@ export default {
       fetchPostData();
       checkWaifuOwner();
     });
+
+    const handleMetaTags = () => {
+      try {
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute("content", `Trang cá nhân ${profile?.user_name}`);
+        document
+          .querySelector('meta[property="og:title"]')
+          .setAttribute("content", `Trang cá nhân ${profile?.user_name}`);
+        document
+          .querySelector('meta[property="og:description"]')
+          .setAttribute(
+            "content",
+            `Trang cá nhân ${profile?.user_name} - ${route.name}`
+          );
+        document
+          .querySelector('meta[property="og:url"]')
+          .setAttribute("content", window.location.href);
+        document
+          .querySelector('meta[property="og:image"]')
+          .setAttribute("content", avatarHandler(profile));
+        document
+          .querySelector('meta[property="og:site_name"]')
+          .setAttribute("content", "Animan Lab");
+      } catch (error) {}
+    };
+
+    handleMetaTags();
 
     const checkWaifuOwner = () => {
       const { user_name } = profile;

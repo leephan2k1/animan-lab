@@ -1,5 +1,4 @@
 import { createApp } from "vue";
-import { createHead } from "@vueuse/head";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
@@ -19,12 +18,10 @@ import { addListener, launch } from "devtools-detector";
 NProgress.configure({ easing: "ease", speed: 1000, showSpinner: false });
 
 const app = createApp(App);
-const head = createHead();
 
 assignGlobalComponents(app);
 
 app.use(store);
-app.use(head);
 app.use(router);
 app.use(Toast, {
   transition: "Vue-Toastification__bounce",

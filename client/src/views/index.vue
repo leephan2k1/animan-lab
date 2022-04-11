@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 import VueCarousel from "@/components/VueCarousel.vue";
 import HighlightsPost from "@/components/HighlightsPost.vue";
@@ -89,6 +89,38 @@ export default {
         }
       }, 500);
     };
+
+    onMounted(() => {
+      try {
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute(
+            "content",
+            "Animan Lab - Chia sẽ & đánh giá Anime, Manga"
+          );
+        document
+          .querySelector('meta[property="og:description"]')
+          .setAttribute(
+            "content",
+            "Animan Lab - Chia sẽ & đánh giá Anime, Manga"
+          );
+        document
+          .querySelector('meta[property="og:title"]')
+          .setAttribute("content", "Animan Lab");
+        document
+          .querySelector('meta[property="og:url"]')
+          .setAttribute("content", "https://animanlab.online");
+        document
+          .querySelector('meta[property="og:image"]')
+          .setAttribute(
+            "content",
+            "https://res.cloudinary.com/lee1002/image/upload/v1649660370/animan/c0skrmfi0rvnpu20gwbj.png"
+          );
+        document
+          .querySelector('meta[property="og:site_name"]')
+          .setAttribute("content", "Animan Lab");
+      } catch (error) {}
+    });
 
     fetchNewPost();
 

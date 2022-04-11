@@ -4,6 +4,22 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Animan Lab - Chia sẽ & đánh giá Anime, Manga"
+    />
+    <meta property="og:title" content="Animan Lab" />
+    <meta
+      property="og:description"
+      content="Animan Lab - Chia sẽ & đánh giá Anime, Manga"
+    />
+    <meta property="og:site_name" content="Animan Lab" />
+    <meta
+      id="meta-og-image"
+      property="og:image"
+      content="https://res.cloudinary.com/lee1002/image/upload/v1649660370/animan/c0skrmfi0rvnpu20gwbj.png"
+    />
+    <meta id="meta-location" property="og:url" content="" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <link
       href="https://unpkg.com/nprogress@0.2.0/nprogress.css"
@@ -26,4 +42,9 @@
     </noscript>
     <div id="app" class="bg-main relative z-10 scroll-smooth"></div>
   </body>
+  <script>
+    document
+      .querySelector("#meta-location")
+      .setAttribute("content", window.location.href);
+  </script>
 </html>
