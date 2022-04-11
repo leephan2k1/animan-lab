@@ -291,7 +291,7 @@ export default {
       first_name: profile?.first_name,
       last_name: profile?.last_name,
       gender: profile?.gender,
-      birthday: convertISODate(profile?.birthday),
+      birthday: convertISODate(profile?.birthday) || "",
       avatar: profile?.avatar,
     };
 

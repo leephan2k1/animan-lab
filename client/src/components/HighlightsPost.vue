@@ -135,7 +135,7 @@ export default {
         const params = {
           limit: 3,
           sortlike: "desc",
-          excludetags: 'short',
+          excludetags: "short",
         };
         const res = await postRepository.searchPost(params);
         if (res?.data.success) {
@@ -150,7 +150,9 @@ export default {
       return arr.slice(1, arr.length);
     };
 
-    fetchHighlightPosts();
+    if (postsData.value.length === 0) {
+      fetchHighlightPosts();
+    }
     return {
       postsData,
       fakeData,
