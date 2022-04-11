@@ -32,8 +32,6 @@ import VuePost from "@/components/VuePost.vue";
 import repositoryFactory from "@/api/repositoryFactory";
 const postRepo = repositoryFactory.get("posts");
 
-import { useHead } from "@vueuse/head";
-
 export default {
   components: {
     VuePost,
@@ -56,59 +54,35 @@ export default {
       return window.location.href;
     };
 
-    useHead({
-      title: computed(() => `Animan Lab - Thể loại ${currentPath.value}`),
-      meta: [
-        {
-          name: "description",
-          content: computed(() => `Animan Lab - Thể loại ${currentPath.value}`),
-        },
-        {
-          property: "og:description",
-          content: computed(() => `Animan Lab - Thể loại ${currentPath.value}`),
-        },
-        {
-          property: "og:url",
-          content: computed(() => window.location.href),
-        },
-        {
-          property: "og:image",
-          content: computed(() => require("@/assets/images/thumbnail.png")),
-        },
-        {
-          property: "og:site_name",
-          content: "Animan Lab",
-        },
-      ],
-    });
+    onUnmounted(() => {});
 
-    onUnmounted(() => {
-      useHead({
-        title: "Animan Lab",
-        meta: [
-          {
-            name: "description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:description",
-            content: "Animan Lab",
-          },
-          {
-            property: "og:url",
-            content: computed(() => window.location.href),
-          },
-          {
-            property: "og:image",
-            content: computed(() => require("@/assets/images/thumbnail.png")),
-          },
-          {
-            property: "og:site_name",
-            content: "Animan Lab",
-          },
-        ],
-      });
-    });
+    const handleMetaTags = () => {
+      try {
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute("content", `Bài viết về ${currentPath.value}`);
+        document
+          .querySelector('meta[property="og:title"]')
+          .setAttribute("content", `Animan Lab`);
+        document
+          .querySelector('meta[property="og:description"]')
+          .setAttribute("content", `Bài viết về ${currentPath.value}`);
+        document
+          .querySelector('meta[property="og:url"]')
+          .setAttribute("content", window.location.href);
+        document
+          .querySelector('meta[property="og:image"]')
+          .setAttribute(
+            "content",
+            "https://res.cloudinary.com/lee1002/image/upload/v1649660370/animan/c0skrmfi0rvnpu20gwbj.png"
+          );
+        document
+          .querySelector('meta[property="og:site_name"]')
+          .setAttribute("content", "Animan Lab");
+      } catch (error) {}
+    };
+
+    handleMetaTags();
 
     const fetchData = async () => {
       try {
