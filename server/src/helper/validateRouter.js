@@ -47,7 +47,7 @@ const schemas = {
   signUpSchema: Joi.object().keys({
     first_name: Joi.string().required().min(1).max(25),
     last_name: Joi.string().required().min(1).max(25),
-    user_name: Joi.string().required().min(2).max(10),
+    user_name: Joi.string().required().min(2).max(20),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
   }),
