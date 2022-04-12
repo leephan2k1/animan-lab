@@ -7,7 +7,7 @@ const User = new Schema(
   {
     first_name: { type: String, min: 1, max: 20 },
     last_name: { type: String, min: 1, max: 20 },
-    user_name: { type: String, min: 2, max: 10, required: true, unique: true },
+    user_name: { type: String, min: 2, max: 20, required: true, unique: true },
     about: { type: String, min: 1, max: 50 },
     birthday: { type: Date },
     email: {
