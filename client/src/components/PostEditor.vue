@@ -302,7 +302,7 @@ export default {
         return;
       }
 
-      const pureTags = tags.value.map((e) => e.text);
+      const pureTags = tags.value.map((e) => e.text || e);
 
       // get image for thumbnail
       const images_url = [];
@@ -323,6 +323,18 @@ export default {
 
       //update post
       if (typeOfEditor.value === "editPost") {
+        // if title unchanged
+        if (title.value === oldContentPost.value?.title) {
+          delete postPayload.title;
+        }
+
+        //if tags unchanged
+        if (
+          JSON.stringify(oldContentPost.value.tags) === JSON.stringify(pureTags)
+        ) {
+          delete postPayload.tags;
+        }
+
         await post.update(
           titleInvalid,
           postSuccessfully,
@@ -334,6 +346,8 @@ export default {
       else {
         await post.publish(titleInvalid, postSuccessfully, postPayload);
       }
+
+      console.log(postSuccessfully.value);
     };
 
     //load data if edit route

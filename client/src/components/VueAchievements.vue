@@ -30,7 +30,7 @@
           <div class="ml-4 my-2">
             <k-progress
               class="whitespace-nowrap"
-              :percent="profile.points"
+              :percent="Math.ceil(profile.points / 10)"
               :format="format"
               active
               :color="['#f5af19', '#f12711', '#9254de', '#40a9ff', '#5cdbd3']"
