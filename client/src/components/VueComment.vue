@@ -49,7 +49,7 @@
           <p @click.stop="handleEditComment" class="hover:text-button">
             Chỉnh sửa
           </p>
-          <p class="hover:text-button">Xoá</p>
+          <p @click.stop="handleDeleteComment" class="hover:text-button">Xoá</p>
         </div>
       </button>
     </div>
@@ -132,6 +132,28 @@ export default {
       setTimeout(() => {
         inputEdit.value?.focus();
       }, 250);
+    };
+
+    const handleDeleteComment = async () => {
+      const id = props.item._id;
+
+      const state = await comment.delete_c(id);
+
+      /* 
+      wait a second!
+      i can't write shorthand like 'if(state) {} else {}' bc state has undefined value!
+      undefined value bc user selected 'cancel' in window.confirm!
+      i don' want show error or success message when user select 'cancel'
+      alright! don't complain this block of code below! hihi :> 
+      */
+      if (state === false) {
+        toast.error("Oops! Có gì đó không ổn, vui lòng thử lại", TOAST_OPTION);
+      }
+      if (state === true) {
+        toast.success("Xoá bình luận thành công!", TOAST_OPTION);
+        //update comment list
+        emit("refreshComment");
+      }
     };
 
     const handleEditContent = async (e) => {
@@ -253,16 +275,21 @@ export default {
 
     return {
       handleEditComment,
+      handleDeleteComment,
       handleEditContent,
+
       isEditing,
+      isLiked,
+
       inputEdit,
       selectBox,
       activeLike,
-      isLiked,
+
       likeCount,
       handleNumberLikeCount,
-      commentOwner,
       toggleSelectBox,
+
+      commentOwner,
     };
   },
 };

@@ -26,6 +26,21 @@ export default function () {
     }
   };
 
+  const delete_c = async (id) => {
+    if (window.confirm("Bạn thực sự có muốn xoá comment này?")) {
+      if (window.confirm("Lần cuối, chắc không?? :))")) {
+        try {
+          const res = await commentRepo.deleteComment(id);
+          if (res?.data.success) return true;
+          return false;
+        } catch (err) {
+          console.log(err);
+          return false;
+        }
+      }
+    }
+  };
+
   const getAll = async (params) => {
     try {
       const res = await commentRepo.getComments(params);
@@ -61,5 +76,5 @@ export default function () {
     }
   };
 
-  return { create, getAll, like, unLike, update };
+  return { create, getAll, like, unLike, update, delete_c };
 }

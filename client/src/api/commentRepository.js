@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "./axiosClient";
 
 const resource = "/comments";
@@ -12,6 +13,10 @@ const commentsAPI = {
       newContent
     );
   },
+  deleteComment: (commentId) => {
+    return axiosClient.delete(`${resource}/delete-comment/${commentId}`);
+  },
+
   getComments: (params) => {
     return axiosClient.get(`${resource}`, { params });
   },
