@@ -146,7 +146,7 @@ module.exports = {
     //check title if exist:
     if (payload.title) {
       //check exist post title
-      const duplicatedTitle = await Post.findOne({ title: payload.title });
+      const duplicatedTitle = await Post.findOne({ title: payload.title }); 
       existChecker(duplicatedTitle, "Duplicated title", res);
       //save new title
       post.title = payload.title;
@@ -159,6 +159,12 @@ module.exports = {
       post.content = payload.content;
     }
 
+    if(payload.tags){
+      post.tags = payload.tags;
+    }
+
+    post.plainText = payload.plainText;
+    post.approve = false;
     await post.save();
 
     return res.status(200).json({ success: true, post });
