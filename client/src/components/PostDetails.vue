@@ -402,7 +402,7 @@ export default {
       });
     };
 
-    onMounted(() => { 
+    onMounted(() => {
       //add events
       app.addEventListener("click", handleClickToApp);
       //scroll to top:
