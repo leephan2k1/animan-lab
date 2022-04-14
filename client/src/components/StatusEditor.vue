@@ -226,7 +226,7 @@ export default {
       BLACKLIST.forEach((word) => {
         if (isExactMatch(str, word)) {
           isValidContent.status = false;
-          isValidContent.message = "Nội dung có chứa ký tự tục tĩu!";
+          isValidContent.message = "Nội dung có chứa ký tự nhạy cảm!";
           return;
         }
       });

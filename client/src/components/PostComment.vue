@@ -2,6 +2,7 @@
   <div
     ref="commentsDOM"
     :class="styles"
+    id="comments"
     class="lg:w-3/4 min-h-[620px] md:min-h-[650px] lg:min-h-[600px] h-fit bg-white border-[1px] border-gray-500 rounded-xl overflow-hidden shadow-xl animate__animated animate__faster hidden z-40"
   >
     <!-- nav control  -->
@@ -97,7 +98,12 @@
           </p>
         </div>
         <!-- comment box  -->
-        <VueComment :item="item" />
+        <VueComment
+          :item="item"
+          :user="profile"
+          :activeComment="isActiveComment"
+          @refreshComment="fetchComment"
+        />
       </div>
     </div>
     <!-- loading list  -->
@@ -221,8 +227,7 @@ export default {
       "z-30"
     );
 
-    watch(activeFromProps, () => { 
-
+    watch(activeFromProps, () => {
       handleOpenComment();
 
       //try to fetch again for short post
@@ -347,8 +352,10 @@ export default {
       handleCloseComments,
       commentsDOM,
       inputDOM,
+      isActiveComment,
       commentContents,
       commentsData,
+      fetchComment,
     };
   },
 };
