@@ -124,6 +124,8 @@ module.exports = {
     }
 
     const { content } = req.verified.body;
+
+    comment.approve = false;
     await comment.updateOne({ content });
 
     res
