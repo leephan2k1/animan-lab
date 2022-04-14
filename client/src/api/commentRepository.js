@@ -6,6 +6,12 @@ const commentsAPI = {
   createComment: (commentPayload) => {
     return axiosClient.post(`${resource}/create-comment`, commentPayload);
   },
+  updateComment: (commentId, newContent) => {
+    return axiosClient.patch(
+      `${resource}/update-comment/${commentId}`,
+      newContent
+    );
+  },
   getComments: (params) => {
     return axiosClient.get(`${resource}`, { params });
   },

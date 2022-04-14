@@ -13,6 +13,19 @@ export default function () {
     }
   };
 
+  const update = async (id, content) => {
+    try {
+      const res = await commentRepo.updateComment(id, { content });
+      if (res?.data.success) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  };
+
   const getAll = async (params) => {
     try {
       const res = await commentRepo.getComments(params);
@@ -48,5 +61,5 @@ export default function () {
     }
   };
 
-  return { create, getAll, like, unLike };
+  return { create, getAll, like, unLike, update };
 }
