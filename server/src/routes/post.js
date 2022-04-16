@@ -6,23 +6,14 @@ const { verifyAccessToken } = require("../helper/jwtService");
 /*
 /v1/posts
 */
-router.route("/").get(PostController.index);
-
-/*
-/v1/posts/create-post
-*/
 router
-  .route("/create-post")
+  .route("/")
+  .get(PostController.index)
   .post(
     validateBody(schemas.postSchema),
     verifyAccessToken,
     PostController.createPost
-  );
-/*
-/v1/posts/delete-post
-*/
-router
-  .route("/delete-post")
+  )
   .delete(
     validateBody(schemas.deletePostSchema),
     verifyAccessToken,

@@ -4,7 +4,12 @@ const resource = "/posts";
 
 const postsAPI = {
   createPost: (postPayload) => {
-    return axiosClient.post(`${resource}/create-post`, postPayload);
+    return axiosClient.post(`${resource}`, postPayload);
+  },
+  deletePost: (slugPostPayload) => {
+    return axiosClient.delete(`${resource}`, {
+      data: slugPostPayload,
+    });
   },
   searchPost: (params) => {
     return axiosClient.get(`/search`, { params });
@@ -17,11 +22,6 @@ const postsAPI = {
   },
   reportPost: (slugPostPayload, reportPayload) => {
     return axiosClient.post(`${resource}/${slugPostPayload}`, reportPayload);
-  },
-  deletePost: (slugPostPayload) => {
-    return axiosClient.delete(`${resource}/delete-post`, {
-      data: slugPostPayload,
-    });
   },
   updatePost: (slugPost, contentPayload) => {
     return axiosClient.patch(`${resource}/${slugPost}`, contentPayload);
