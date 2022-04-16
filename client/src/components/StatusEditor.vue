@@ -60,10 +60,15 @@
     <!-- submit  -->
     <div class="w-full h-[50px] absolute-center mb-4">
       <button
-        @click.stop="handleSubmit"
-        class="w-3/4 mx-auto h-full rounded-2xl bg-button text-white"
+        @click.stop="readyPayload"
+        class="w-3/4 mx-auto h-full rounded-2xl bg-button text-white absolute-center"
       >
-        Đăng
+        <span v-if="!isLoading">Đăng</span>
+        <VueButton
+          v-if="isLoading"
+          styles="animate__animated animate__rotateIn animate__faster animate__infinite"
+          buttonType="refresh"
+        />
       </button>
     </div>
   </div>
@@ -96,6 +101,7 @@ import { BLACKLIST } from "@/constants";
 import { isExactMatch } from "@/utils/stringHandler";
 
 import usePost from "@/hooks/post";
+import useNsfw from "@/hooks/nsfwjs";
 
 import { nanoid } from "nanoid";
 
@@ -112,6 +118,7 @@ export default {
       type: Boolean,
     },
   },
+  emits: ["refreshContent"],
   setup(props, { emit }) {
     const editor = ref(null);
     const isOpenEditorProps = computed(() => props.openEditor);
@@ -123,10 +130,12 @@ export default {
     const content = ref("");
     const image_url = ref("");
     const resetImage = ref(false);
+    const isLoading = ref(false);
 
     const post = usePost();
-
     const toast = useToast();
+    const nsfw = useNsfw();
+
     const TOAST_OPTION = {
       position: "top-center",
       timeout: 2500,
@@ -234,8 +243,19 @@ export default {
       return isValidContent.status;
     };
 
-    const handleSubmit = async () => {
+    //validate adult content
+    const img = ref(new Image());
+    const imageSize = reactive({
+      width: 0,
+      height: 0,
+    });
+
+    //build content for submit
+    const readyPayload = () => {
+      isLoading.value = true;
+
       if (!validateContent(content.value)) {
+        isLoading.value = false;
         return;
       }
 
@@ -249,16 +269,48 @@ export default {
         images_url: [image_url.value],
       };
 
+      img.value.onload = function () {
+        imageSize.width = this.width;
+        imageSize.height = this.height;
+      };
+
+      img.value.src = image_url.value;
+
+      return postPayload;
+    };
+
+    watch(imageSize, async () => {
+      if (imageSize.width && imageSize.height) {
+        //Tensorflow rule (idk what is this :') LMAO)
+        img.value.crossOrigin = "anonymous";
+
+        const validContent = await nsfw.verify(img.value);
+
+        handleSubmit(validContent);
+      }
+    });
+
+    const handleSubmit = async (state) => {
+      const postPayload = readyPayload();
+      postPayload.state = state;
+
       const res = {};
 
       await post.publish({}, res, postPayload);
 
       if (res.value) {
-        toast.success(
-          "Đăng bài thành công, bài viết sẽ được chờ phê duyệt",
-          TOAST_OPTION
-        );
+        if (state) {
+          toast.success("Đăng bài thành công!", TOAST_OPTION);
+          emit("refreshContent");
+        } else {
+          toast.warning(
+            "Bài viết phát hiện nghi vấn nội dung nhạy cảm, chờ phê duyệt!",
+            TOAST_OPTION
+          );
+        }
+
         setTimeout(() => {
+          isLoading.value = false;
           handleCloseEditor();
         }, 2500);
       }
@@ -281,6 +333,7 @@ export default {
     });
 
     return {
+      isLoading,
       handleCloseEditor,
       isValidImage,
       isValidContent,
@@ -290,7 +343,7 @@ export default {
       handleSaveURL,
       isOpenEmoji,
       content,
-      handleSubmit,
+      readyPayload,
       resetImage,
     };
   },

@@ -1,13 +1,13 @@
 <template>
   <div class="w-full h-full relative">
     <StatusCreator @openStatusEditor="handleOpenStatusEditor" />
-    <StatusEditor :openEditor="triggerOpenEditor" />
+    <StatusEditor @refreshContent="fetchData" :openEditor="triggerOpenEditor" />
     <VueStatus @infinite="loadMore" :data="data" />
   </div>
 </template>
 
 <script>
-import { onMounted, ref, computed, onUnmounted } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRoute } from "vue-router";
 
 import StatusCreator from "@/components/StatusCreator.vue";
@@ -151,6 +151,7 @@ export default {
     }
 
     return {
+      fetchData,
       fakeData,
       handleOpenStatusEditor,
       triggerOpenEditor,
