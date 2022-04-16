@@ -90,14 +90,14 @@ module.exports = {
     //get name author
     const { user_name } = owner;
 
-    //check admin owner post -> [true] approve post = true
-    let isAdmin = false;
-    if (owner.roles.find((role) => role === "admin")) {
-      isAdmin = true;
+    //check contributions (points >= 300) -> approve post = true
+    let contributions = false;
+    if (owner.roles.find((role) => role === "admin") || owner?.points > 299) {
+      contributions = true;
     }
-
+    //check state = true -> [true]
     const post = new Post({
-      approve: isAdmin,
+      approve: contributions || postPayload?.state || false,
       title,
       content,
       plainText,
@@ -146,7 +146,7 @@ module.exports = {
     //check title if exist:
     if (payload.title) {
       //check exist post title
-      const duplicatedTitle = await Post.findOne({ title: payload.title }); 
+      const duplicatedTitle = await Post.findOne({ title: payload.title });
       existChecker(duplicatedTitle, "Duplicated title", res);
       //save new title
       post.title = payload.title;
@@ -159,7 +159,7 @@ module.exports = {
       post.content = payload.content;
     }
 
-    if(payload.tags){
+    if (payload.tags) {
       post.tags = payload.tags;
     }
 

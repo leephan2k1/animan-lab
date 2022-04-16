@@ -75,6 +75,7 @@ const schemas = {
     plainText: Joi.string().required().min(10),
     images_url: Joi.array().items(Joi.string()),
     tags: Joi.array().items(Joi.string()),
+    state: Joi.boolean(),
   }),
   deletePostSchema: Joi.object().keys({
     slug: Joi.string().min(1).required(),
