@@ -141,7 +141,6 @@ export default {
 
     const handleOpenImageReview = (_, post) => {
       triggerOpenImageReview.value = !triggerOpenImageReview.value;
-      console.log(triggerOpenImageReview.value);
       postPayload.value = post;
     };
 
