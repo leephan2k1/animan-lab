@@ -5,16 +5,13 @@ const resource = "/comments";
 
 const commentsAPI = {
   createComment: (commentPayload) => {
-    return axiosClient.post(`${resource}/create-comment`, commentPayload);
+    return axiosClient.post(`${resource}/comment`, commentPayload);
   },
   updateComment: (commentId, newContent) => {
-    return axiosClient.patch(
-      `${resource}/update-comment/${commentId}`,
-      newContent
-    );
+    return axiosClient.patch(`${resource}/comment/${commentId}`, newContent);
   },
   deleteComment: (commentId) => {
-    return axiosClient.delete(`${resource}/delete-comment/${commentId}`);
+    return axiosClient.delete(`${resource}/comment/${commentId}`);
   },
 
   getComments: (params) => {
