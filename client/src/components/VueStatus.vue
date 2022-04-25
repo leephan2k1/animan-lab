@@ -2,7 +2,7 @@
   <div class="w-full h-full relative">
     <ImageReview
       :triggerOpenImageReview="triggerOpenImageReview"
-      :imageURL="urlImageReview"
+      :postPayload="postPayload"
     />
 
     <!-- comment  -->
@@ -60,7 +60,7 @@
             <!-- content image  -->
             <div class="w-[70%] h-full md:h-[95%] absolute-center">
               <div
-                @click.stop="handleOpenImageReview(_, post?.images_url[0])"
+                @click.stop="handleOpenImageReview(_, post)"
                 class="cursor-pointer w-[80%] h-[80%] md:h-[95%] rounded-xl bg-center bg-cover bg-no-repeat"
                 :style="{
                   backgroundImage: `url(${post?.images_url[0]})`,
@@ -102,11 +102,10 @@
 </template>
 
 <script>
-//animate__pulse
 import { ref } from "vue";
 
 import StatusInteract from "@/components/StatusInteract.vue";
-import ImageReview from "@/components/ImageReview.vue";
+import ImageReview from "@/components/ShortPostDetails.vue";
 import PostComment from "@/components/PostComment.vue";
 
 import { isString } from "@/utils/checkType";
@@ -132,16 +131,18 @@ export default {
   },
   setup() {
     const isActiveLike = ref(false);
-
     const triggerOpenImageReview = ref(false);
     const commentAppear = ref(false);
-    const urlImageReview = ref("");
+
     const postId = ref("");
     const postSlug = ref("");
 
-    const handleOpenImageReview = (_, url) => {
+    const postPayload = ref({});
+
+    const handleOpenImageReview = (_, post) => {
       triggerOpenImageReview.value = !triggerOpenImageReview.value;
-      urlImageReview.value = url;
+      console.log(triggerOpenImageReview.value);
+      postPayload.value = post;
     };
 
     const handleOpenComment = (obj) => {
@@ -153,10 +154,10 @@ export default {
     return {
       isActiveLike,
       triggerOpenImageReview,
-      urlImageReview,
       commentAppear,
       postId,
       postSlug,
+      postPayload,
       isString,
       avatarHandler,
       handleOpenImageReview,
