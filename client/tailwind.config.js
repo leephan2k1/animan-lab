@@ -12,7 +12,8 @@ module.exports = {
       },
       aspectRatio: {
         "1/3": "1 / 3",
-        "4/3": "4 / 3",
+        "3/4": "3 / 4",
+        "3/5": "3 / 5",
       },
     },
     fontFamily: {

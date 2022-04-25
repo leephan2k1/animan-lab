@@ -262,6 +262,9 @@ export default {
     function onChangeEmail(event) {
       //reset css
       validateForm.existEmail = false;
+      validateForm.validEmail = true;
+      formRef.value["email"].classList.remove("error");
+
       if (debounceInput) {
         clearTimeout(debounceInput);
       }

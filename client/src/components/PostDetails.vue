@@ -19,7 +19,7 @@
               }"
               target="_blank"
               :style="{
-                backgroundImage: `url(${postOwner?.avatar})`,
+                backgroundImage: `url(${avatarHandler(postOwner)})`,
               }"
               class="w-11 h-11 rounded-full bg-center bg-cover bg-no-repeat overflow-hidden"
             ></router-link>
@@ -176,6 +176,7 @@ const userRepository = repositoryFactory.get("users");
 
 import { isEmptyObject } from "@/utils/checkType";
 import { tagColor } from "@/utils/postHandler";
+import { avatarHandler } from "@/utils/userHandler";
 import computeRoleName from "@/utils/computeLevelName";
 
 import usePost from "@/hooks/post";
@@ -442,6 +443,7 @@ export default {
       computeRoleName,
       tagColor,
       TAG_COLORS,
+      avatarHandler,
     };
   },
 };
