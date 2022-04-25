@@ -16,38 +16,48 @@
     <!-- content wrapper -->
     <div class="w-full h-full grid grid-cols-12 items-center">
       <!-- image content  -->
-      <div class="h-[750px] md:col-span-8 lg:col-span-9 col-span-12">
+      <div
+        class="h-full md:h-[550px] lg:h-[750px] md:col-span-8 lg:col-span-9 col-span-12"
+      >
         <img
           :src="postPayload?.images_url"
           alt="image-review"
-          class="min-w-1/2 w-fit max-w-3/4 h-[85%] aspect-3/5 mx-auto rounded-2xl overflow-hidden py-2"
+          class="min-w-1/2 w-fit max-w-3/4 h-[85%] aspect-3/4 mx-auto rounded-2xl overflow-hidden py-2"
         />
       </div>
 
       <!-- text content  -->
       <div
-        class="flex-col h-full md:flex hidden md:col-span-4 lg:col-span-3 bg-main rounded-tl-2xl"
+        class="flex-col h-full md:flex hidden md:col-span-4 lg:col-span-3 border-t-2 border-l-2 border-gray-400 rounded-tl-2xl"
       >
         <!-- post content detail  -->
         <div class="w-full h-fit">
           <!-- owner info  -->
           <div class="h-[100px] w-full flex items-center justify-around">
             <!-- avatar post owner  -->
-            <div
+            <router-link
+              :to="{
+                name: 'profileAchievements',
+                params: { username: postAuthor?.user_name },
+              }"
               :style="{
                 backgroundImage: `url(${avatarHandler(postAuthor)})`,
               }"
               class="ml-2 w-14 h-14 rounded-full bg-center bg-cover bg-no-repeat"
-            ></div>
+            ></router-link>
             <!-- user name post owner  -->
-            <p
+            <router-link
+              :to="{
+                name: 'profileAchievements',
+                params: { username: postAuthor?.user_name },
+              }"
               class="ml-2 w-3/4 whitespace-nowrap overflow-hidden text-ellipsis"
             >
               {{ postAuthor?.user_name }}
-            </p>
+            </router-link>
           </div>
           <!-- title content  -->
-          <p class="ml-2 w-4/5 h-fit mx-2 flex-wrap">
+          <p class="ml-4 w-4/5 h-fit mx-2 flex-wrap">
             {{ postPayload?.content }}
           </p>
         </div>
@@ -80,20 +90,23 @@ export default {
 
   setup(props) {
     const imageReviewDOM = ref(null);
-    const postAuthor = ref({});
+    const postAuthor = ref({
+      user_name: "default",
+    });
 
     const postPayload = computed(() => props.postPayload);
     const triggerOpen = computed(() => props.triggerOpenImageReview);
 
     watch([postPayload, triggerOpen], () => {
       postAuthor.value = postPayload.value?.author_id;
-      console.log(">>> ", postPayload.value);
 
       //style:
-      imageReviewDOM.value.classList.remove("hidden", "animate__fadeOut");
-      imageReviewDOM.value.classList.add("animate__fadeIn");
+      try {
+        imageReviewDOM.value.classList.remove("hidden", "animate__fadeOut");
+        imageReviewDOM.value.classList.add("animate__fadeIn");
 
-      app.appendChild(overlay);
+        app.appendChild(overlay);
+      } catch (err) {}
     });
 
     const app = document.querySelector("#app");
