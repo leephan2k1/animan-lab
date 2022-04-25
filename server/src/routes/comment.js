@@ -36,34 +36,30 @@ router.post(
 );
 
 /*
-/v1/comments/create-comment
+/v1/comments/comment/:id
 */
-router.post(
-  "/create-comment",
-  validateBody(schemas.commentSchema),
-  verifyAccessToken,
-  CommentController.createComment
-);
-
+router
+  .route("/comment")
+  .post(
+    validateBody(schemas.commentSchema),
+    verifyAccessToken,
+    CommentController.createComment
+  );
 /*
 /v1/comments/delete-comment/:id
 */
-router.delete(
-  "/delete-comment/:id",
-  validateParams(schemas.objectIdSchema, "id"),
-  verifyAccessToken,
-  CommentController.deleteComment
-);
-
-/*
-/v1/comments/update-comment/:id
-*/
-router.patch(
-  "/update-comment/:id",
-  validateParams(schemas.objectIdSchema, "id"),
-  validateBody(schemas.updateCommentSchema),
-  verifyAccessToken,
-  CommentController.updateComment
-);
+router
+  .route("/comment/:id")
+  .delete(
+    validateParams(schemas.objectIdSchema, "id"),
+    verifyAccessToken,
+    CommentController.deleteComment
+  )
+  .patch(
+    validateParams(schemas.objectIdSchema, "id"),
+    validateBody(schemas.updateCommentSchema),
+    verifyAccessToken,
+    CommentController.updateComment
+  );
 
 module.exports = router;
