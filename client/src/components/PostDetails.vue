@@ -102,12 +102,13 @@
           </div>
         </div>
       </div>
+
       <!-- content  -->
-      <div
+      <article
         id="content"
-        class="md:w-[60%] w-[80%] my-6 mx-auto h-fit"
+        class="md:w-[60%] w-[80%] my-6 mx-auto h-fit prose prose-img:rounded-xl prose-img:w-[85%] prose-img:mx-auto prose-a:text-blue-600 hover:prose-a:text-blue-500 prose-video:w-4/5 prose-video:rounded-xl prose-video:mx-auto"
         v-html="postData?.content"
-      ></div>
+      ></article>
 
       <!-- tags  -->
       <p class="w-full mx-4 mb-2">Tags:</p>
@@ -451,21 +452,8 @@ export default {
 
 <style lang="scss">
 #content {
-  h1 {
-    @apply font-bold text-lg;
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    @apply my-4;
-  }
-  p {
-    @apply my-2;
-    img {
-      @apply rounded-md overflow-hidden shadow-lg w-3/4 mx-auto;
-    }
+  iframe {
+    @apply w-4/5 aspect-video h-auto mx-auto rounded-xl;
   }
 }
 .active {

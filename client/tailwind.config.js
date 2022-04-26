@@ -21,5 +21,5 @@ module.exports = {
       logo: "SVN-Kashima Brush",
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
